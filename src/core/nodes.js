@@ -260,17 +260,36 @@ limitations under the License.
       this.attachDOM();
     }
 
+    /*
+     * Triggers the initial rendering of the component in given container.
+     */
+    async init(container) {
+      this.container = container;
+      await this.plugins.installAll();
+      this.originator.track(this);
+
+      const state =
+          await this.getInitialState.call(this.sandbox, this.props);
+      if (state.constructor !== Object) {
+        throw new Error('Initial state must be a plain object!');
+      }
+
+      this.commands.init(opr.Toolkit.Template.normalizeComponentProps(
+          state, this.constructor));
+      this.markAsReady();
+    }
+
+    /*
+     * The default implementation of the method returning
+     * the props passed from the parent.
+     */
     async getInitialState(props = {}) {
       return props;
     }
 
-    getUpdatedState(props = {}, state = {}) {
-      return {
-        ...state,
-        ...props,
-      };
-    }
-
+    /*
+     * Triggers the component update.
+     */
     update(description) {
       const state =
           this.getUpdatedState(description.props, this.description.props);
@@ -278,6 +297,17 @@ limitations under the License.
         throw new Error('Updated state must be a plain object!');
       }
       this.commands.update(state);
+    }
+
+    /*
+     * The default implementation of the method returning
+     * the current state with overrides by the props passed from the parent.
+     */
+    getUpdatedState(props = {}, state = {}) {
+      return {
+        ...state,
+        ...props,
+      };
     }
 
     set commands(commands) {
@@ -314,22 +344,6 @@ limitations under the License.
         };
       }
       return dispatcher;
-    }
-
-    async init(container) {
-      this.container = container;
-      await this.plugins.installAll();
-      this.originator.track(this);
-
-      const state =
-          await this.getInitialState.call(this.sandbox, this.props);
-      if (state.constructor !== Object) {
-        throw new Error('Initial state must be a plain object!');
-      }
-
-      this.commands.init(opr.Toolkit.Template.normalizeComponentProps(
-          state, this.constructor));
-      this.markAsReady();
     }
 
     createPlugins(toolkit) {
