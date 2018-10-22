@@ -274,6 +274,9 @@ limitations under the License.
     update(description) {
       const state =
           this.getUpdatedState(description.props, this.description.props);
+      if (state.constructor !== Object) {
+        throw new Error('Updated state must be a plain object!');
+      }
       this.commands.update(state);
     }
 
@@ -317,12 +320,15 @@ limitations under the License.
       this.container = container;
       await this.plugins.installAll();
       this.originator.track(this);
+
       const state =
           await this.getInitialState.call(this.sandbox, this.props);
       if (state.constructor !== Object) {
         throw new Error('Initial state must be a plain object!');
       }
-      this.commands.init(state);
+
+      this.commands.init(opr.Toolkit.Template.normalizeComponentProps(
+          state, this.constructor));
       this.markAsReady();
     }
 

@@ -54,19 +54,16 @@ limitations under the License.
         return [];
       }
 
-      const ComponentClass = this.root.constructor;
-      const normalizedState = opr.Toolkit.Template.normalizeComponentProps(
-          nextState, ComponentClass);
-
       const description = opr.Toolkit.Template.describe([
-        ComponentClass,
-        normalizedState,
+        this.root.constructor,
+        nextState,
       ]);
+
       if (!currentState) {
         this.addPatch(opr.Toolkit.Patch.initRootComponent(this.root));
       }
       this.componentPatches(this.root, description);
-      this.root.state = normalizedState;
+      this.root.state = nextState;
       return this.patches;
     }
 
