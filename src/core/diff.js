@@ -50,6 +50,10 @@ limitations under the License.
      */
     rootPatches(currentState, nextState) {
 
+      if (!currentState) {
+        this.addPatch(opr.Toolkit.Patch.initRootComponent(this.root));
+      }
+
       if (Diff.deepEqual(currentState, nextState)) {
         return [];
       }
@@ -59,9 +63,6 @@ limitations under the License.
         nextState,
       ]);
 
-      if (!currentState) {
-        this.addPatch(opr.Toolkit.Patch.initRootComponent(this.root));
-      }
       this.componentPatches(this.root, description);
       this.root.state = nextState;
       return this.patches;
