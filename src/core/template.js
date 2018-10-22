@@ -56,9 +56,12 @@ limitations under the License.
           }
           if (index === 1 && type === 'props') {
             if (details.type === 'component') {
-              const componentProps =
+              const isRoot =
+                  details.component.prototype instanceof opr.Toolkit.Root;
+              const componentProps = isRoot ?
+                  item :
                   this.normalizeComponentProps(item, details.component);
-              if (componentProps) {
+              if (isNotEmpty(componentProps)) {
                 details.props = componentProps;
               }
             } else {
@@ -116,9 +119,7 @@ limitations under the License.
      * Returns either a non-empty props object or null.
      */
     static normalizeComponentProps(props = {}, ComponentClass) {
-      const normalized =
-          this.normalizeProps(props, ComponentClass.defaultProps || {});
-      return isNotEmpty(normalized) ? normalized : null;
+      return this.normalizeProps(props, ComponentClass.defaultProps);
     }
 
     /*

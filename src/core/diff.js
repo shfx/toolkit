@@ -54,15 +54,19 @@ limitations under the License.
         return [];
       }
 
+      const ComponentClass = this.root.constructor;
+      const normalizedState = opr.Toolkit.Template.normalizeComponentProps(
+          nextState, ComponentClass);
+
       const description = opr.Toolkit.Template.describe([
-        this.root.constructor,
-        nextState,
+        ComponentClass,
+        normalizedState,
       ]);
       if (!currentState) {
         this.addPatch(opr.Toolkit.Patch.initRootComponent(this.root));
       }
       this.componentPatches(this.root, description);
-      this.root.state = nextState;
+      this.root.state = normalizedState;
       return this.patches;
     }
 
@@ -141,7 +145,7 @@ limitations under the License.
     childPatches(child, description) {
       if (child.isComponent()) {
         if (child.isRoot()) {
-          // TODO: support Root updates
+          return child.update(description);
         }
         return this.componentPatches(child, description);
       }

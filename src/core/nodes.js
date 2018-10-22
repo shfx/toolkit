@@ -260,6 +260,23 @@ limitations under the License.
       this.attachDOM();
     }
 
+    async getInitialState(props = {}) {
+      return props;
+    }
+
+    getUpdatedState(props = {}, state = {}) {
+      return {
+        ...state,
+        ...props,
+      };
+    }
+
+    update(description) {
+      const state =
+          this.getUpdatedState(description.props, this.description.props);
+      this.commands.update(state);
+    }
+
     set commands(commands) {
       this[COMMANDS] = commands;
     }
@@ -300,7 +317,8 @@ limitations under the License.
       this.container = container;
       await this.plugins.installAll();
       this.originator.track(this);
-      const state = await this.getInitialState.call(this.sandbox, this.props);
+      const state =
+          await this.getInitialState.call(this.sandbox, this.props);
       if (state.constructor !== Object) {
         throw new Error('Initial state must be a plain object!');
       }
@@ -424,17 +442,6 @@ limitations under the License.
 
     getReducers() {
       return [];
-    }
-
-    async getInitialState(props = {}) {
-      return props;
-    }
-
-    async getUpdatedState(props = {}, currentState = {}) {
-      return {
-        ...state,
-        ...props,
-      };
     }
 
     destroy() {
