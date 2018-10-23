@@ -1156,7 +1156,9 @@ limitations under the License.
     constructor(root) {
 
       super();
+
       this.$root = root;
+      this.isBeingMoved_ = false;
 
       const shadow = this.attachShadow({
         mode: 'open',
@@ -1187,12 +1189,18 @@ limitations under the License.
       return true;
     }
 
-    connectedCallback() {
-      clearTimeout(this.pendingDestruction);
+    async connectedCallback() {
+      opr.Toolkit.assert(
+          this.$root, 'Custom Element is not bound to Root component!');
+      if (this.isBeingMoved_) {
+        this.isBeingMoved_ = false;
+      }
     }
 
     disconnectedCallback() {
-      this.pendingDestruction = setTimeout(() => this.destroy(), 50);
+      if (!this.isBeingMoved_) {
+        this.destroy();
+      }
     }
 
     destroy() {
@@ -1289,6 +1297,9 @@ limitations under the License.
           'Specified node is not a child of this element');
       this.children.splice(from, 1);
       this.children.splice(to, 0, child);
+      if (child.ref.isComponentElement) {
+        child.ref.isBeingMoved_ = true;
+      }
       this.ref.removeChild(child.ref);
       this.ref.insertBefore(child.ref, this.ref.children[to]);
     }
@@ -2458,17 +2469,6 @@ limitations under the License.
    */
   class Description {
 
-    static create(options) {
-      return options.type === 'component' ?
-                                  new ComponentDescription(options) :
-                                  new ElementDescription(options);
-    }
-
-    constructor(type, key = null) {
-      this.type = type;
-      this.key = key;
-    }
-
     get childrenAsTemplates() {
       if (this.children) {
         return this.children.map(child => child.asTemplate);
@@ -2503,17 +2503,13 @@ limitations under the License.
    */
   class ComponentDescription extends Description {
 
-    constructor({component, children, props}) {
+    constructor(component) {
 
-      super(opr.Toolkit.Component.NodeType, props && props.key);
+      super();
 
       this.component = component;
-      if (children) {
-        this.children = children;
-      }
-      if (props) {
-        this.props = props;
-      }
+      this.type = 'component';
+
       Object.defineProperty(this, 'asTemplate', {
         enumerable: false,
         configurable: false,
@@ -2560,53 +2556,42 @@ limitations under the License.
    */
   class ElementDescription extends Description {
 
-    constructor({name, text, children, props}) {
+    constructor(name) {
 
-      super(opr.Toolkit.VirtualElement.NodeType, props && props.key);
+      super();
 
       this.name = name;
-      if (text) {
-        this.text = text;
-      }
-      if (children) {
-        this.children = children;
-      }
-      if (props) {
-        Object.assign(this, props);
-      }
+      this.type = 'element';
 
       Object.defineProperty(this, 'asTemplate', {
         enumerable: false,
         configurable: false,
         get: () => {
           const template = [this.name];
-          if (props) {
-            const flatten = () => {
-              const object = {};
-              if (props.key) {
-                object.key = props.key;
-              }
-              if (props.class) {
-                object.class = props.class;
-              }
-              if (props.style) {
-                object.style = props.style;
-              }
-              if (props.attrs) {
-                Object.assign(object, props.attrs);
-              }
-              if (props.dataset) {
-                object.dataset = props.dataset;
-              }
-              if (props.listeners) {
-                Object.assign(object, props.listeners);
-              }
-              if (props.properties) {
-                object.properties = props.properties;
-              }
-              return object;
-            };
-            template.push(flatten(props));
+          const props = {};
+          if (this.key) {
+            props.key = this.key;
+          }
+          if (this.class) {
+            props.class = this.class;
+          }
+          if (this.style) {
+            props.style = this.style;
+          }
+          if (this.attrs) {
+            Object.assign(props, this.attrs);
+          }
+          if (this.dataset) {
+            props.dataset = this.dataset;
+          }
+          if (this.listeners) {
+            Object.assign(props, this.listeners);
+          }
+          if (this.properties) {
+            props.properties = this.properties;
+          }
+          if (Object.keys(props).length) {
+            template.push(props);
           }
           if (this.children) {
             template.push(...this.children.map(child => child.asTemplate));
@@ -3261,20 +3246,20 @@ limitations under the License.
       }
 
       if (Array.isArray(template) && template.length) {
-        const details = {};
+        let description = null;
         for (const [item, type, index] of template.map(
                  (item, index) => [item, this.getItemType(item), index])) {
           if (index === 0) {
             switch (type) {
             case 'string':
-              details.type = 'element';
-              details.name = item;
+              description =
+                  new opr.Toolkit.Description.ElementDescription(item);
               break;
             case 'component':
             case 'function':
             case 'symbol':
-              details.type = 'component';
-              details.component = opr.Toolkit.resolveComponentClass(item, type);
+              description = new opr.Toolkit.Description.ComponentDescription(
+                  opr.Toolkit.resolveComponentClass(item, type));
               break;
             default:
               console.error('Invalid node type:', item,
@@ -3285,11 +3270,14 @@ limitations under the License.
             continue;
           }
           if (index === 1 && type === 'props') {
-            const props = details.type === 'component'
-                              ? this.getComponentProps(item, details.component)
-                              : this.getElementProps(item);
-            if (props) {
-              details.props = props;
+            if (description.type === 'component') {
+              const props = this.getComponentProps(item, description.component);
+              if (props) {
+                description.props = props;
+              }
+            }
+            if (description.type === 'element') {
+              this.supplementElementFromProps(item, description);
             }
             continue;
           }
@@ -3297,30 +3285,30 @@ limitations under the License.
             continue;
           }
           if (type === 'string' || type === 'number' || item === true) {
-            if (details.component) {
+            if (description.component) {
               console.error(
                   `Invalid text item found at index: ${index}, template:`,
                   template);
               throw new Error('Components cannot define text content');
             }
-            if (details.children) {
+            if (description.children) {
               console.error(
                   `Invalid node item found at index: ${index}, template:`,
                   template);
               throw new Error(
                   'Elements with child nodes cannot define text content');
             }
-            details.text = String(item);
+            description.text = String(item);
             continue;
           } else if (type === 'node') {
-            if (typeof details.text === 'string') {
+            if (typeof description.text === 'string') {
               console.error(
                   `Invalid node item found at index: ${index}, template:`,
                   template);
               throw new Error('Text elements cannot have child nodes!');
             }
-            details.children = details.children || [];
-            details.children.push(this.describe(item));
+            description.children = description.children || [];
+            description.children.push(this.describe(item));
           } else {
             console.error('Invalid item', item, `at index: ${index}, template:`,
                           template);
@@ -3328,7 +3316,7 @@ limitations under the License.
           }
         }
 
-        return opr.Toolkit.Description.create(details);
+        return description;
       }
 
       console.error('Invalid template definition:', template);
@@ -3370,44 +3358,43 @@ limitations under the License.
      * Normalizes specified element props object and returns either
      * a non-empty object containing only supported props or null.
      */
-    static getElementProps(object) {
-      const props = {};
-      for (const [key, value] of Object.entries(object)) {
+    static supplementElementFromProps(props, element) {
+      for (const [key, value] of Object.entries(props)) {
         if (key === 'key') {
           if (isDefined(value)) {
-            props.key = value;
+            element.key = value;
           }
         } else if (key === 'class') {
           const className = this.getClassName(value);
           if (className) {
-            props.class = className;
+            element.class = className;
           }
         } else if (key === 'style') {
           const style = this.getStyle(value);
           if (style) {
-            props.style = style;
+            element.style = style;
           }
         } else if (key === 'dataset') {
           const dataset = this.getDataset(value);
           if (dataset) {
-            props.dataset = dataset;
+            element.dataset = dataset;
           }
         } else if (key === 'properties') {
           const properties = this.getProperties(value);
           if (properties) {
-            props.properties = properties;
+            element.properties = properties;
           }
         } else if (key === 'attrs') {
           const customAttrs = this.getCustomAttributes(value);
           if (customAttrs) {
-            props.custom = props.custom || {};
-            props.custom.attrs = customAttrs;
+            element.custom = element.custom || {};
+            element.custom.attrs = customAttrs;
           }
         } else if (key === 'on') {
           const customListeners = this.getCustomListeners(value);
           if (customListeners) {
-            props.custom = props.custom || {};
-            props.custom.listeners = customListeners;
+            element.custom = element.custom || {};
+            element.custom.listeners = customListeners;
           }
         } else {
 
@@ -3419,21 +3406,20 @@ limitations under the License.
           if (SUPPORTED_ATTRIBUTES.includes(key)) {
             const attr = this.getAttributeValue(value);
             if (isDefined(attr)) {
-              props.attrs = props.attrs || {};
-              props.attrs[key] = attr;
+              element.attrs = element.attrs || {};
+              element.attrs[key] = attr;
             }
           } else if (SUPPORTED_EVENTS.includes(key)) {
             const listener = this.getListener(value, key);
             if (listener) {
-              props.listeners = props.listeners || {};
-              props.listeners[key] = value;
+              element.listeners = element.listeners || {};
+              element.listeners[key] = value;
             }
           } else {
             console.warn('Unsupported property:', key);
           }
         }
       }
-      return isNotEmpty(props) ? props : null;
     }
 
     /*
@@ -3672,10 +3658,10 @@ limitations under the License.
       if (!description) {
         return null;
       }
-      if (description.isElement) {
+      if (description.type === 'element') {
         return new opr.Toolkit.VirtualElement(description, parentNode);
       }
-      if (description.isComponent) {
+      if (description.type === 'component') {
         return this.createComponent(description, parentNode);
       }
       throw new Error(`Unsupported node type: ${description.type}`)
