@@ -123,62 +123,63 @@ limitations under the License.
    */
   class ElementDescription extends Description {
 
-    constructor({name, text, children, props}) {
+    constructor(name) {
 
-      super(opr.Toolkit.VirtualElement.NodeType, props && props.key);
+      // {name, text, children, props}
 
+      super(opr.Toolkit.VirtualElement.NodeType, /* props && props.key */ null);
       this.name = name;
-      if (text) {
-        this.text = text;
-      }
-      if (children) {
-        this.children = children;
-      }
-      if (props) {
-        Object.assign(this, props);
-      }
+      // if (text) {
+      //   this.text = text;
+      // }
+      // if (children) {
+      //   this.children = children;
+      // }
+      // if (props) {
+      //   Object.assign(this, props);
+      // }
 
-      Object.defineProperty(this, 'asTemplate', {
-        enumerable: false,
-        configurable: false,
-        get: () => {
-          const template = [this.name];
-          if (props) {
-            const flatten = () => {
-              const object = {};
-              if (props.key) {
-                object.key = props.key;
-              }
-              if (props.class) {
-                object.class = props.class;
-              }
-              if (props.style) {
-                object.style = props.style;
-              }
-              if (props.attrs) {
-                Object.assign(object, props.attrs);
-              }
-              if (props.dataset) {
-                object.dataset = props.dataset;
-              }
-              if (props.listeners) {
-                Object.assign(object, props.listeners);
-              }
-              if (props.properties) {
-                object.properties = props.properties;
-              }
-              return object;
-            };
-            template.push(flatten(props));
-          }
-          if (this.children) {
-            template.push(...this.children.map(child => child.asTemplate));
-          } else if (typeof this.text === 'string') {
-            template.push(this.text);
-          }
-          return template;
-        },
-      });
+      // Object.defineProperty(this, 'asTemplate', {
+      //   enumerable: false,
+      //   configurable: false,
+      //   get: () => {
+      //     const template = [this.name];
+      //     if (props) {
+      //       const flatten = () => {
+      //         const object = {};
+      //         if (props.key) {
+      //           object.key = props.key;
+      //         }
+      //         if (props.class) {
+      //           object.class = props.class;
+      //         }
+      //         if (props.style) {
+      //           object.style = props.style;
+      //         }
+      //         if (props.attrs) {
+      //           Object.assign(object, props.attrs);
+      //         }
+      //         if (props.dataset) {
+      //           object.dataset = props.dataset;
+      //         }
+      //         if (props.listeners) {
+      //           Object.assign(object, props.listeners);
+      //         }
+      //         if (props.properties) {
+      //           object.properties = props.properties;
+      //         }
+      //         return object;
+      //       };
+      //       template.push(flatten(props));
+      //     }
+      //     if (this.children) {
+      //       template.push(...this.children.map(child => child.asTemplate));
+      //     } else if (typeof this.text === 'string') {
+      //       template.push(this.text);
+      //     }
+      //     return template;
+      //   },
+      // });
     }
 
     isCompatible(desc) {

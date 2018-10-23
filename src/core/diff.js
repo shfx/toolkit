@@ -29,7 +29,9 @@ limitations under the License.
     /*
      * Adds the patch to the underlying list.
      */
-    addPatch(patch) { return this.patches.push(patch); }
+    addPatch(patch) {
+      return this.patches.push(patch);
+    }
 
     /*
      * Applies all the patches onto the bound root node.
