@@ -15,9 +15,9 @@ limitations under the License.
 */
 
 {
-  class Service {
+  const Service = {
 
-    static validate(listeners) {
+    validate(listeners) {
       if (opr.Toolkit.isDebug()) {
         // clang-format off
         /* eslint-disable max-len */
@@ -47,8 +47,8 @@ limitations under the License.
         // clang-format on
       }
       return this.events.filter(event => listeners[event] instanceof Function);
-    }
-  }
+    },
+  };
 
   module.exports = Service;
 }
