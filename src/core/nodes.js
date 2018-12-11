@@ -99,8 +99,8 @@ limitations under the License.
       if (attachDOM) {
         this.attachDOM();
       }
-      // the rendered child node is inserted right after instantiation
-      this.child = null;
+      // the rendered content is inserted right after instantiation
+      this.content = null;
     }
 
     /*
@@ -110,10 +110,10 @@ limitations under the License.
       opr.Toolkit.assert(
           node.parentNode === this,
           'Specified node does not have a valid parent!');
-      this.child.parentNode = null;
+      this.content.parentNode = null;
       node.parentNode = this;
-      this.child.ref.replaceWith(node.ref);
-      this.child = node;
+      this.content.ref.replaceWith(node.ref);
+      this.content = node;
     }
 
     hasOwnMethod(method) {
@@ -133,22 +133,22 @@ limitations under the License.
     }
 
     get childElement() {
-      if (this.child) {
-        if (this.child.isElement() || this.child.isRoot()) {
-          return this.child;
+      if (this.content) {
+        if (this.content.isElement() || this.content.isRoot()) {
+          return this.content;
         }
-        if (this.child.isComponent()) {
-          return this.child.childElement;
+        if (this.content.isComponent()) {
+          return this.content.childElement;
         }
       }
       return null;
     }
 
     get placeholder() {
-      if (this.child.isComment()) {
-        return this.child;
+      if (this.content.isComment()) {
+        return this.content;
       }
-      return this.child.placeholder || null;
+      return this.content.placeholder || null;
     }
 
     render() {
@@ -187,7 +187,7 @@ limitations under the License.
     }
 
     get ref() {
-      return this.child.ref;
+      return this.content.ref;
     }
 
     isCompatible(node) {
@@ -195,14 +195,14 @@ limitations under the License.
     }
 
     attachDOM() {
-      if (this.child) {
-        this.child.attachDOM();
+      if (this.content) {
+        this.content.attachDOM();
       }
     }
 
     detachDOM() {
-      if (this.child) {
-        this.child.detachDOM();
+      if (this.content) {
+        this.content.detachDOM();
       }
     }
   }
@@ -235,7 +235,7 @@ limitations under the License.
       this.ready = new Promise(resolve => {
         this.markAsReady = resolve;
       });
-      this.child = opr.Toolkit.VirtualDOM.createFromDescription(
+      this.content = opr.Toolkit.VirtualDOM.createFromDescription(
           new opr.Toolkit.Description.CommentDescription(
               this.constructor.displayName));
       this.attachDOM();

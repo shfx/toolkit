@@ -51,7 +51,8 @@ limitations under the License.
       const component = new ComponentClass(description, parentNode);
       const nodeDescription = opr.Toolkit.Renderer.render(
           component, description.props, description.childrenAsTemplates);
-      component.child = this.createFromDescription(nodeDescription, component);
+      component.content =
+          this.createFromDescription(nodeDescription, component);
       return component;
     },
 

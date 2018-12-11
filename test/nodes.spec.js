@@ -29,7 +29,7 @@ describe('Nodes', () => {
     const node = VirtualDOM.createFromDescription(
                                 Template.describe(template), root);
     if (node) {
-      root.child = node;
+      root.content = node;
     }
     return root;
   }
@@ -176,7 +176,7 @@ describe('Nodes', () => {
           Component,
         ],
       ]);
-      const element = app.child;
+      const element = app.content;
       const component = element.children[0];
 
       // then
@@ -200,9 +200,9 @@ describe('Nodes', () => {
           ],
         ],
       ]);
-      const element = app.child;
+      const element = app.content;
       const component = element.children[0];
-      const subcomponent = component.child;
+      const subcomponent = component.content;
 
       // then
       assert(element.isElement());
@@ -223,7 +223,7 @@ describe('Nodes', () => {
           'span',
         ],
       ]);
-      const parent = app.child;
+      const parent = app.content;
       const child = parent.children[0];
 
       // then
@@ -270,7 +270,7 @@ describe('Nodes', () => {
       const app = createRoot(container, [
         'div',
       ]);
-      const element = app.child;
+      const element = app.content;
 
       // then
       assert(element.isElement());
@@ -284,7 +284,7 @@ describe('Nodes', () => {
 
       // when
       const app = createRoot(container, [Component]);
-      const component = app.child;
+      const component = app.content;
 
       // then
       assert(component.isComponent());
@@ -303,7 +303,7 @@ describe('Nodes', () => {
           'span',
         ],
       ]);
-      const span = app.child.children[0];
+      const span = app.content.children[0];
 
       // then
       assert(span.isElement());
@@ -322,7 +322,7 @@ describe('Nodes', () => {
           Component,
         ],
       ]);
-      const component = app.child.children[0];
+      const component = app.content.children[0];
 
       // then
       assert(component.isComponent());
@@ -343,7 +343,7 @@ describe('Nodes', () => {
           Component,
         ],
       ]);
-      const component = app.child.children[0];
+      const component = app.content.children[0];
 
       // then
       assert(component.isComponent());
@@ -377,7 +377,7 @@ describe('Nodes', () => {
         const root = createRootInstance(Root);
         root.container = container;
         const element = createElement('section', root);
-        root.child = element;
+        root.content = element;
         const component = createComponent();
         element.insertChild(component);
         const eventName = 'event-name';
@@ -496,7 +496,7 @@ describe('Nodes', () => {
           component.setContent(subcomponent);
 
           // then
-          assert.equal(component.child, subcomponent);
+          assert.equal(component.content, subcomponent);
           assert.equal(subcomponent.parentNode, component);
         });
 
@@ -511,7 +511,7 @@ describe('Nodes', () => {
           component.setContent(element);
 
           // then
-          assert.equal(component.child, element);
+          assert.equal(component.content, element);
           assert.equal(element.parentNode, component);
         });
       });
@@ -528,7 +528,7 @@ describe('Nodes', () => {
         const app = createRoot(container, [
           'div',
         ]);
-        const element = app.child;
+        const element = app.content;
 
         // then
         assert(element.isElement());
@@ -547,8 +547,8 @@ describe('Nodes', () => {
             'div',
           ],
         ]);
-        const component = app.child;
-        const element = component.child;
+        const component = app.content;
+        const element = component.content;
 
         // then
         assert(component.isComponent());
@@ -571,9 +571,9 @@ describe('Nodes', () => {
             ],
           ],
         ]);
-        const component = app.child;
-        const subcomponent = component.child;
-        const element = subcomponent.child;
+        const component = app.content;
+        const subcomponent = component.content;
+        const element = subcomponent.content;
 
         // then
         assert(component.isComponent());

@@ -1406,7 +1406,7 @@ describe('Diff => calculate patches', () => {
           const root = createRootInstance(Root);
           const component = VirtualDOM.createFromDescription(
               Template.describe([Component, props, ...children]), root);
-          root.child = component;
+          root.content = component;
           const description =
               Template.describe([Component, nextProps, ...nextChildren]);
           return [

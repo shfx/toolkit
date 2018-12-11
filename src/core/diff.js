@@ -99,7 +99,7 @@ limitations under the License.
 
     componentContentPatches(description, parent) {
 
-      const child = parent.child;
+      const content = parent.content;
 
       const {
         Diff,
@@ -107,26 +107,26 @@ limitations under the License.
         VirtualDOM,
       } = opr.Toolkit;
 
-      if (!child && !description) {
+      if (!content && !description) {
         return;
       }
 
       // insert
-      if (!child && description) {
+      if (!content && description) {
         throw new Error('Invalid component state!');
       }
 
       // remove
-      if (child && !description) {
+      if (content && !description) {
         throw new Error('Invalid component state!');
       }
 
       // update
-      if (child.description.isCompatible(description)) {
-        if (Diff.deepEqual(child.description, description)) {
+      if (content.description.isCompatible(description)) {
+        if (Diff.deepEqual(content.description, description)) {
           return;
         }
-        this.childPatches(child, description, parent);
+        this.childPatches(content, description, parent);
         return;
       }
 
