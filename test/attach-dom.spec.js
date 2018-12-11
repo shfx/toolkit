@@ -27,7 +27,7 @@ describe('Virtual Element => Attach DOM', () => {
     const template = typeof content === 'string' ? [name, props, content] :
                                                    [name, props, ...content];
     const description = Template.describe(template);
-    const root = VirtualDOM.createRoot(Root);
+    const root = createRootInstance(Root);
     const element = VirtualDOM.createFromDescription(description, root);
     root.child = element;
     return element;
@@ -99,7 +99,7 @@ describe('Virtual Element => Attach DOM', () => {
   describe('=> create element', () => {
 
     const createFromTemplate = template => {
-      const root = VirtualDOM.createRoot(Root);
+      const root = createRootInstance(Root);
       const node =
           VirtualDOM.createFromDescription(Template.describe(template), root);
       root.child = node;

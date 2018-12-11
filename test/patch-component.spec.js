@@ -26,14 +26,14 @@ describe('Patch component => apply', () => {
   };
 
   const createRootWith = template => {
-    const root = VirtualDOM.createRoot(Root);
+    const root = createRootInstance(Root);
     container = document.createElement('main');
     root.container = container;
     Patch.initRootComponent(root).apply();
     let node = null;
     if (template) {
       node = createFromTemplate(template, root);
-      Patch.replaceChild(root.child, node, root).apply();
+      Patch.setContent(node, root).apply();
     }
     return [root, node];
   };
@@ -47,7 +47,7 @@ describe('Patch component => apply', () => {
   it('creates root component', () => {
 
     // given
-    const root = VirtualDOM.createRoot(Root);
+    const root = createRootInstance(Root);
     const container = document.createElement('section');
     root.container = container;
 
@@ -93,7 +93,7 @@ describe('Patch component => apply', () => {
       const component = createFromTemplate([Component], root);
 
       // when
-      Patch.replaceChild(root.child, component, root).apply();
+      Patch.setContent(component, root).apply();
 
       // then
       assert.equal(root.container, container);
@@ -118,7 +118,7 @@ describe('Patch component => apply', () => {
       // given
       const [root] = createRootWith([Subcomponent]);
       const commentNode = createComment(root);
-      Patch.replaceChild(root.child, commentNode, root).apply();
+      Patch.setContent(commentNode, root).apply();
       const component = createFromTemplate([Component], root);
 
       // then
@@ -129,7 +129,7 @@ describe('Patch component => apply', () => {
       assert.equal(container.firstChild, root.placeholder.ref);
 
       // when
-      Patch.replaceChild(root.child, component, root).apply();
+      Patch.setContent(component, root).apply();
 
       // then
       assert.equal(root.container, container);
@@ -183,7 +183,7 @@ describe('Patch component => apply', () => {
       const subcomponent = createFromTemplate([Subcomponent], component);
 
       // when
-      Patch.replaceChild(component.child, subcomponent, component).apply();
+      Patch.setContent(subcomponent, component).apply();
 
       // then
       assert.equal(component.child, subcomponent);
@@ -240,8 +240,7 @@ describe('Patch component => apply', () => {
       const component = createFromTemplate([Component], parentComponent);
 
       // when
-      Patch.replaceChild(parentComponent.child, component, parentComponent)
-          .apply();
+      Patch.setContent(component, parentComponent).apply();
 
       // then
       assert.equal(parentComponent.child, component);
@@ -276,7 +275,7 @@ describe('Patch component => apply', () => {
       ], root);
 
       // when
-      Patch.replaceChild(root.child, component, root).apply();
+      Patch.setContent(component, root).apply();
 
       // then
       assert.equal(root.container, container);
@@ -328,7 +327,7 @@ describe('Patch component => apply', () => {
       ], component);
 
       // when
-      Patch.replaceChild(component.child, subcomponent, component).apply();
+      Patch.setContent(subcomponent, component).apply();
 
       // then
       assert.equal(component.child, subcomponent);
@@ -384,8 +383,7 @@ describe('Patch component => apply', () => {
       ], parentComponent);
 
       // when
-      Patch.replaceChild(
-          parentComponent.placeholder, component, parentComponent).apply();
+      Patch.setContent(component, parentComponent).apply();
 
       // then
       assert.equal(parentComponent.child, component);
@@ -417,7 +415,7 @@ describe('Patch component => apply', () => {
       ], root);
 
       // when
-      Patch.replaceChild(root.child, element, root).apply();
+      Patch.setContent(element, root).apply();
 
       // then
       assert.equal(root.container, container);
@@ -450,7 +448,7 @@ describe('Patch component => apply', () => {
       ], component);
 
       // when
-      Patch.replaceChild(component.child, element, component).apply();
+      Patch.setContent(element, component).apply();
 
       // then
       assert.equal(root.child, component);
@@ -485,7 +483,7 @@ describe('Patch component => apply', () => {
       ], subcomponent);
 
       // when
-      Patch.replaceChild(subcomponent.child, element, subcomponent).apply();
+      Patch.setContent(element, subcomponent).apply();
 
       // then
       assert.equal(element.container, container);
@@ -518,7 +516,7 @@ describe('Patch component => apply', () => {
 
       // when
       const placeholder = createComment(root);
-      Patch.replaceChild(element, placeholder, root).apply();
+      Patch.setContent(placeholder, root).apply();
 
       // then
       assert(root.placeholder);
@@ -552,7 +550,7 @@ describe('Patch component => apply', () => {
 
       // when
       const placeholder = createComment(component);
-      Patch.replaceChild(element, placeholder, component).apply();
+      Patch.setContent(placeholder, component).apply();
 
       // then
       assert(root.placeholder);
@@ -590,7 +588,7 @@ describe('Patch component => apply', () => {
 
       // when
       const placeholder = createComment(subcomponent);
-      Patch.replaceChild(element, placeholder, subcomponent).apply();
+      Patch.setContent(placeholder, subcomponent).apply();
 
       // then
       assert(root.placeholder);
@@ -620,7 +618,7 @@ describe('Patch component => apply', () => {
 
       // when
       const placeholder = createComment(root);
-      Patch.replaceChild(component, placeholder, root).apply();
+      Patch.setContent(placeholder, root).apply();
 
       // then
       assert(root.placeholder);
@@ -651,7 +649,7 @@ describe('Patch component => apply', () => {
 
       // when
       const placeholder = createComment(root);
-      Patch.replaceChild(component, placeholder, root).apply();
+      Patch.setContent(placeholder, root).apply();
 
       // then
       assert(root.placeholder);
@@ -678,7 +676,7 @@ describe('Patch component => apply', () => {
 
       // when
       const placeholder = createComment(component);
-      Patch.replaceChild(subcomponent, placeholder, component).apply();
+      Patch.setContent(placeholder, component).apply();
 
       // then
       assert(root.placeholder);
@@ -713,7 +711,7 @@ describe('Patch component => apply', () => {
 
       // when
       const placeholder = createComment(component);
-      Patch.replaceChild(subcomponent, placeholder, component).apply();
+      Patch.setContent(placeholder, component).apply();
 
       // then
       assert(root.placeholder);
@@ -745,7 +743,7 @@ describe('Patch component => apply', () => {
       ], component);
 
       // when
-      Patch.replaceChild(component.child, subcomponent, component).apply();
+      Patch.setContent(subcomponent, component).apply();
 
       // then
       assert.equal(component.child, subcomponent);
@@ -767,7 +765,7 @@ describe('Patch component => apply', () => {
       ], component);
 
       // when
-      Patch.replaceChild(component.child, span, component).apply();
+      Patch.setContent(span, component).apply();
 
       // then
       assert.equal(component.child, span);
@@ -789,7 +787,7 @@ describe('Patch component => apply', () => {
       ], component);
 
       // when
-      Patch.replaceChild(component.child, subcomponent, component).apply();
+      Patch.setContent(subcomponent, component).apply();
 
       // then
       assert.equal(component.child, subcomponent);
@@ -811,7 +809,7 @@ describe('Patch component => apply', () => {
       ], component);
 
       // when
-      Patch.replaceChild(component.child, div, component).apply();
+      Patch.setContent(div, component).apply();
 
       // then
       assert.equal(component.child, div);

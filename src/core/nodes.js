@@ -104,18 +104,15 @@ limitations under the License.
     }
 
     /*
-     * This is the only method making modifications to the component's child as
-     * Component always needs a child node to book it's place in the node tree.
+     * Sets the component content.
      */
-    replaceChild(child, node) {
-      opr.Toolkit.assert(
-          this.child === child, 'Replaced node is not a child of this node!');
+    setContent(node) {
       opr.Toolkit.assert(
           node.parentNode === this,
           'Specified node does not have a valid parent!');
-      child.parentNode = null;
+      this.child.parentNode = null;
       node.parentNode = this;
-      child.ref.replaceWith(node.ref);
+      this.child.ref.replaceWith(node.ref);
       this.child = node;
     }
 

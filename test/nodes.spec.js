@@ -23,7 +23,7 @@ describe('Nodes', () => {
         return template;
       }
     }
-    const root = VirtualDOM.createRoot(Root);
+    const root = createRootInstance(Root);
     root.container = container;
 
     const node = VirtualDOM.createFromDescription(
@@ -43,7 +43,7 @@ describe('Nodes', () => {
     return createFromTemplate([Component]);
   }
 
-  const root = VirtualDOM.createRoot(Root);
+  const root = createRootInstance(Root);
   const createElement = (name, parentNode) =>
       VirtualDOM.createFromDescription(Template.describe([name]), parentNode);
 
@@ -374,7 +374,7 @@ describe('Nodes', () => {
         const container = document.createElement('container');
         container.dispatchEvent = dispatchEvent;
 
-        const root = opr.Toolkit.VirtualDOM.createRoot(Root);
+        const root = createRootInstance(Root);
         root.container = container;
         const element = createElement('section', root);
         root.child = element;
@@ -476,7 +476,7 @@ describe('Nodes', () => {
         subcomponent.parentNode = component;
 
         // when
-        component.replaceChild(component.child, subcomponent);
+        component.setContent(subcomponent);
 
         // then
         assert.equal(component.placeholder, subcomponent.placeholder);
@@ -493,7 +493,7 @@ describe('Nodes', () => {
 
 
           // when
-          component.replaceChild(component.child, subcomponent);
+          component.setContent(subcomponent);
 
           // then
           assert.equal(component.child, subcomponent);
@@ -508,7 +508,7 @@ describe('Nodes', () => {
           element.parentNode = component;
 
           // when
-          component.replaceChild(component.child, element);
+          component.setContent(element);
 
           // then
           assert.equal(component.child, element);
@@ -623,7 +623,7 @@ describe('Nodes', () => {
         element.parentNode = component;
 
         // when
-        component.replaceChild(component.child, element);
+        component.setContent(element);
 
         // then
         assert.equal(component.placeholder, null);
@@ -638,7 +638,7 @@ describe('Nodes', () => {
            subcomponent.parentNode = component;
 
            // when
-           component.replaceChild(component.child, subcomponent);
+           component.setContent(subcomponent);
 
            // then
            assert(component.placeholder);
@@ -651,7 +651,7 @@ describe('Nodes', () => {
   describe('Root', () => {
 
     const container = document.createElement('body');
-    const root = VirtualDOM.createRoot(Root);
+    const root = createRootInstance(Root);
     root.container = container;
 
     describe('get initial state', () => {

@@ -172,6 +172,7 @@ limitations under the License.
           this.onNodeCreated(patch.node);
           return;
         case Type.REPLACE_CHILD:
+        case Type.SET_CONTENT:
           this.onNodeDestroyed(patch.child);
           this.onNodeCreated(patch.node);
           return;
@@ -201,6 +202,7 @@ limitations under the License.
           this.onNodeAttached(patch.node);
           return;
         case Type.REPLACE_CHILD:
+        case Type.SET_CONTENT:
           this.onNodeDetached(patch.child);
           this.onNodeAttached(patch.node);
           return;

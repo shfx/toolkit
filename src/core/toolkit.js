@@ -156,8 +156,12 @@ limitations under the License.
     async createRoot(component, props = {}) {
       if (typeof component === 'string') {
         const RootClass = await loader.preload(component);
+        const description = opr.Toolkit.Template.describe([
+          RootClass,
+          props,
+        ]);
         if (RootClass.prototype instanceof opr.Toolkit.Root) {
-          return opr.Toolkit.VirtualDOM.createRoot(RootClass, props, null);
+          return opr.Toolkit.VirtualDOM.createRoot(description, null);
         }
         console.error(
             'Specified class is not a root component: ', ComponentClass);
@@ -165,9 +169,9 @@ limitations under the License.
       }
       const description = opr.Toolkit.Template.describe([
         component,
+        props,
       ]);
-      return opr.Toolkit.VirtualDOM.createRoot(
-          description.component, props, null);
+      return opr.Toolkit.VirtualDOM.createRoot(description, null);
     }
 
     async render(component, container, props = {}) {
