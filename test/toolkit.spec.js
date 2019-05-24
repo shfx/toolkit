@@ -85,8 +85,9 @@ describe('Toolkit', () => {
     await opr.Toolkit.configure({});
 
     // when
-    const mainRoot = await opr.Toolkit.render(MainRoot, document.body);
-    const shadowRoot = await opr.Toolkit.render(ShadowRoot, document.body);
+    const container = document.createElement('section');
+    const mainRoot = await opr.Toolkit.render(MainRoot, container);
+    const shadowRoot = await opr.Toolkit.render(ShadowRoot, container);
 
     // then
     assert.equal(opr.Toolkit.tracked.length, 2);

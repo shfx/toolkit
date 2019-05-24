@@ -12,7 +12,8 @@ $global.createRootInstance = RootClass => {
     VirtualDOM,
   } = opr.Toolkit;
   const description = Template.describe([RootClass]);
-  return VirtualDOM.createRoot(description, null, false);
+  const container = document.createElement('section');
+  return VirtualDOM.createRoot(description, null, false, container);
 };
 
 $global.createWebComponent = async WebComponent => {

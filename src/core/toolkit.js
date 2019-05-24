@@ -169,7 +169,7 @@ limitations under the License.
       }
     }
 
-    async createRoot(component, props = {}) {
+    async createRoot(component, props = {}, container) {
       if (typeof component === 'string') {
         const RootClass = await loader.preload(component);
         const description = opr.Toolkit.Template.describe([
@@ -177,7 +177,8 @@ limitations under the License.
           props,
         ]);
         if (RootClass.prototype instanceof opr.Toolkit.Root) {
-          return opr.Toolkit.VirtualDOM.createRoot(description, null);
+          return opr.Toolkit.VirtualDOM.createRoot(
+              description, null, false, container);
         }
         console.error(
             'Specified class is not a root component: ', ComponentClass);
@@ -187,13 +188,14 @@ limitations under the License.
         component,
         props,
       ]);
-      return opr.Toolkit.VirtualDOM.createRoot(description, null);
+      return opr.Toolkit.VirtualDOM.createRoot(
+          description, null, false, container);
     }
 
     async render(component, container, props = {}) {
       await this.ready;
-      const root = await this.createRoot(component, props);
-      return root.mount(container);
+      const root = await this.createRoot(component, props, container);
+      return root.mount();
     }
   }
 

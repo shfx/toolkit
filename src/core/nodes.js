@@ -279,9 +279,13 @@ limitations under the License.
       return [];
     }
 
-    constructor(description, parentNode = null) {
+    constructor(description, parentNode = null, container) {
       super(description, parentNode, /*= attachDOM */ false);
-      this.plugins = this.createPlugins();
+
+      this.container = container;
+      this.plugins = this.createPlugins().installAll();
+      opr.Toolkit.track(this);
+
       if (description.children) {
         this.createChildren();
       }
@@ -303,13 +307,9 @@ limitations under the License.
     }
 
     /*
-     * Triggers the initial rendering of the component in given container.
+     * Triggers the initial rendering of the component.
      */
-    async init(container) {
-      this.container = container;
-      await this.plugins.installAll();
-      opr.Toolkit.track(this);
-
+    async init() {
       const state = await this.getInitialState.call(
           this.sandbox, this.description.props || {});
       if (state.constructor !== Object) {
@@ -411,13 +411,13 @@ limitations under the License.
       };
     }
 
-    async mount(container) {
+    async mount() {
       if (this.constructor.elementName) {
         // triggers this.init() from element's connected callback
-        container.appendChild(this.ref);
+        this.container.appendChild(this.ref);
         await this.ready;
       } else {
-        await this.init(container);
+        await this.init();
       }
       return this;
     }
@@ -431,7 +431,7 @@ limitations under the License.
       }
     }
 
-    createCustomElement(toolkit) {
+    createCustomElement() {
       const defineCustomElementClass = RootClass => {
         let ElementClass = customElements.get(RootClass.elementName);
         if (!ElementClass) {
@@ -479,7 +479,7 @@ limitations under the License.
     }
 
     get container() {
-      return this[CONTAINER];
+      return this[CONTAINER] || this.parentNode.ref;
     }
 
     getReducers() {
@@ -531,7 +531,7 @@ limitations under the License.
       const stylesheets = root.getStylesheets();
 
       const onSuccess = () => {
-        root.init(shadow);
+        root.init();
       };
 
       if (stylesheets && stylesheets.length) {

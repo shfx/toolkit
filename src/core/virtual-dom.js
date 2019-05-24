@@ -61,7 +61,8 @@ limitations under the License.
      *
      * If the root class declares a custom element name
      */
-    createRoot(description, parentNode, requireCustomElement = false) {
+    createRoot(
+        description, parentNode, requireCustomElement = false, container) {
       try {
         const ComponentClass = description.component;
         if (requireCustomElement && !ComponentClass.elementName) {
@@ -70,7 +71,7 @@ limitations under the License.
                                  ComponentClass.displayName
                                }" does not define custom element name!`);
         }
-        return new ComponentClass(description, parentNode);
+        return new ComponentClass(description, parentNode, container);
       } catch (error) {
         console.error('Error rendering root component:', description);
         throw error;
