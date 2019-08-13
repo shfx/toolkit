@@ -33,115 +33,40 @@ Dependencies required for showing particular UI fragments are defined within the
 Apps can be isolated within custom elements as Web components.
 Multiple apps rendered on the same page share dependencies, as these are stateless by design. All stateful components are encapsulated within apps.
 
-## Examples
-
-Simple counter app with anonymous render method:
+## Example
 
 ```js
-const CounterApp = await opr.Toolkit.render(
-    props =>
-        ['main',
-         [
-           'div',
-           {
-             class: 'header',
-           },
-           props.header,
-         ],
-         [
-           'div',
-           {
-             class: 'content',
-             onClick: () => {
-               CounterApp.commands.update({
-                 value: CounterApp.state.value + 1,
-               });
-             },
-           },
-           `Value: ${props.value}`,
-         ],
-], document.body, {
-  header: 'Simple counter',
-  value: 0,
-});
-```
+class Counter extends opr.Toolkit.Component {
 
-App encapsulated within custom element displaying data coming from an external service:
+  static defaultProps = {
+    value: 0;
+  };
 
-```js
-class RandomService extends opr.Toolkit.Service {
-
-  static init() {
-    this.listeners = new Set();
-    this.generate();
-    setInterval(() => {
-      this.generate();
-      this.notifyListeners(this.value);
-    }, 2000);
+  onUpdated() {
+    setTimeout(this.increment, 1000);
   }
 
-  static getValue() {
-    return this.value;
-  }
-
-  static generate() {
-    this.value = Math.floor(256 * Math.random());
-  }
-
-  static notifyListeners(value) {
-    for (const listener of this.listeners) {
-      listener(value);
-    }
-  }
-
-  static get events() {
-    return ['onValueChanged'];
-  }
-
-  static connect(listeners) {
-    this.validate(listeners);
-    this.listeners.add(listeners.onValueChanged);
-    return () => {
-      // disconnect method
-      this.listeners.delete(listeners.onValueChanged);
-    };
-  }
-}
-
-RandomService.init();
-
-class RandomApp extends opr.Toolkit.Root {
-
-  static get elementName(){
-    return 'encapsulated-component';
-  }
-
-  async getInitialState() {
-    return {
-      value: RandomService.getValue(),
-    };
-  }
-
-  onValueChanged(value) {
-    this.commands.setState({
-      value,
-    });
-  }
-
-  onAttached() {
-    // automatically disconnects when detached from DOM
-    this.connectTo(RandomService, {
-      onValueChanged: this.onValueChanged,
+  increment() {
+    this.commands.update({
+      value: this.props.value + 1,
     });
   }
 
   render() {
-    return [
-      'section',
+    render [
+      'div',
       `Value: ${this.props.value}`,
     ];
   }
 }
 
-opr.Toolkit.render(RandomApp, document.body);
+opr.Toolkit.render(Counter, document.body);
+
+```
+
+## Demo
+```sh
+npm install
+npm run release
+npm run demo
 ```
