@@ -14,46 +14,41 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-{
-  class State {
-
-    constructor(root) {
-      this.root = root;
-      this.current = null;
-    }
-
-    /*
-     * By default returns the props passed from the parent.
-     */
-    getInitialState(props = {}) {
-      return props;
-    }
-
-    /*
-     * By default returns the props passed from the parent,
-     * ignoring the current state.
-     */
-    getUpdatedState(props = {}, state = {}) {
-      return props;
-    }
-
-    /*
-     * Updates the underlying model to the specified value.
-     */
-    update(state) {
-      this.previous = this.current;
-      this.current = state;
-    }
-
-    /*
-     * Clears references to used objects.
-     */
-    destroy() {
-      this.root = null;
-      this.current = null;
-      this.previous = null;
-    }
+export default class State {
+  constructor(root) {
+    this.root = root;
+    this.current = null;
   }
 
-  module.exports = State;
+  /*
+   * By default returns the props passed from the parent.
+   */
+  getInitialState(props = {}) {
+    return props;
+  }
+
+  /*
+   * By default returns the props passed from the parent,
+   * ignoring the current state.
+   */
+  getUpdatedState(props = {}, state = {}) {
+    return props;
+  }
+
+  /*
+   * Updates the underlying model to the specified value.
+   */
+  update(state) {
+    this.previous = this.current;
+    this.current = state;
+  }
+
+  /*
+   * Clears references to used objects.
+   */
+  destroy() {
+    this.root = null;
+    this.current = null;
+    this.previous = null;
+  }
 }

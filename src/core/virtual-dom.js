@@ -16,7 +16,6 @@ limitations under the License.
 
 {
   const VirtualDOM = {
-
     /*
      * Creates a new Virtual DOM structure from given description.
      */
@@ -34,7 +33,7 @@ limitations under the License.
         case 'text':
           return new opr.Toolkit.Text(description, parent);
         default:
-          throw new Error(`Unsupported node type: ${description.type}`)
+          throw new Error(`Unsupported node type: ${description.type}`);
       }
     },
 
@@ -45,14 +44,23 @@ limitations under the License.
       const ComponentClass = description.component;
       if (ComponentClass.prototype instanceof opr.Toolkit.WebComponent) {
         return this.createWebComponent(
-            description, parent && parent.rootNode, context,
-            /*= requireCustomElement */ true);
+          description,
+          parent && parent.rootNode,
+          context,
+          /*= requireCustomElement */ true
+        );
       }
       const component = new ComponentClass(description, parent, context);
       const nodeDescription = opr.Toolkit.Renderer.render(
-          component, description.props, description.childrenAsTemplates);
-      component.content =
-          this.createFromDescription(nodeDescription, component, context);
+        component,
+        description.props,
+        description.childrenAsTemplates
+      );
+      component.content = this.createFromDescription(
+        nodeDescription,
+        component,
+        context
+      );
       return component;
     },
 
@@ -60,13 +68,17 @@ limitations under the License.
      * Creates a new Web Component instance from given description.
      */
     createWebComponent(
-        description, parent, context, requireCustomElement = false) {
+      description,
+      parent,
+      context,
+      requireCustomElement = false
+    ) {
       try {
         const ComponentClass = description.component;
         if (requireCustomElement && !ComponentClass.elementName) {
-          throw new Error(`Root component "${
-              ComponentClass
-                  .displayName}" does not define custom element name!`);
+          throw new Error(
+            `Root component "${ComponentClass.displayName}" does not define custom element name!`
+          );
         }
         return new ComponentClass(description, parent, context);
       } catch (error) {
