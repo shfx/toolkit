@@ -269,7 +269,7 @@ const CONTAINER = Symbol('container');
 const CUSTOM_ELEMENT = Symbol('custom-element');
 const COMMANDS = Symbol('commands');
 
-class WebComponent extends Component {
+export class WebComponent extends Component {
   static get NodeType() {
     return 'root';
   }

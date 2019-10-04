@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 import Toolkit from './core/toolkit';
-import nodes from './core/nodes';
+import nodes, {WebComponent} from './core/nodes';
 
 import Browser from './core/browser';
 import Description from './core/description';
@@ -56,3 +56,5 @@ Object.assign(Toolkit.prototype, nodes, {
 
 window.opr = window.opr || {};
 window.opr.Toolkit = new Toolkit();
+
+module.exports = window.opr.Toolkit;
