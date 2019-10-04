@@ -32,7 +32,7 @@
     "no-fallthrough": [
       "error",
       {
-        "commentPattern": "falls?(\\s|\\-)?through"
+        "commentPattern": "falls?(\\s|-)?through"
       }
     ],
     "no-invalid-this": "error",

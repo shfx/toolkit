@@ -77,7 +77,10 @@ limitations under the License.
         const ComponentClass = description.component;
         if (requireCustomElement && !ComponentClass.elementName) {
           throw new Error(
-            `Root component "${ComponentClass.displayName}" does not define custom element name!`
+            [
+              `Root component "${ComponentClass.displayName}"`,
+              'does not define custom element name!',
+            ].join(' ')
           );
         }
         return new ComponentClass(description, parent, context);

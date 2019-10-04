@@ -15,15 +15,19 @@ const dev = mode === 'development';
 export default {
   input: 'src/release.js',
   output: {
+    sourcemap: dev,
     file: `${targetDir}/toolkit-${packageJson.version}.js`,
     format: 'cjs',
   },
   plugins: [
     replace({
+      'process.browser': true,
+      'process.platform': JSON.stringify(process.platform),
       'process.env.NODE_ENV': JSON.stringify(mode),
     }),
     resolve({
-      mainFields: ['main'],
+      preferBuiltins: false,
+      browser: true,
     }),
     babel({
       extensions: ['.js'],
@@ -51,9 +55,9 @@ export default {
     }),
     commonjs(),
     sourcemaps(),
-    // !dev &&
-    //   terser({
-    //     module: true
-    //   })
+    !dev &&
+      terser({
+        module: true,
+      }),
   ],
 };

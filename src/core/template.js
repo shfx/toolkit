@@ -216,7 +216,10 @@ export default {
               const names = getValidElementNamesFor(key)
                 .map(key => `"${key}"`)
                 .join(', ');
-              const message = `The "${key}" attribute is not supported on "${element}" elements.`;
+              const message = [
+                `The "${key}" attribute is not supported`,
+                `on "${element}" elements.`,
+              ].join(' ');
               const hint = `Use one of ${names}.`;
               console.warn(message, hint);
             }
@@ -336,7 +339,7 @@ export default {
 
   getStyleProperty(value, name) {
     if (typeof value === 'string') {
-      return value || "''";
+      return value || '\'\'';
     } else if ([true, false, null, undefined].includes(value)) {
       return null;
     } else if (Array.isArray(value)) {

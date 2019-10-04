@@ -14,6 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import loader from 'lazy-module-loader';
+
+window.loader = loader;
+
 const INIT = Symbol('init');
 
 /* Function to Component mapping. */

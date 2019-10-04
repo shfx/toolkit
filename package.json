@@ -47,7 +47,7 @@
     "dom-test": "^0.4.0",
     "eslint": "^5.16.0",
     "express": "^4.17.1",
-    "lazy-module-loader": "^1.0.0",
+    "lazy-module-loader": "https://github.com/shfx/lazy-module-loader.git#exporting-issues",
     "mocha": "^6.2.0",
     "npm-watch": "0.6.0",
     "nyc": "^14.1.1",

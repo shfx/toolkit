@@ -187,7 +187,10 @@ class Component extends VirtualNode {
   }
 
   hasOwnMethod(method) {
-    return this.constructor.prototype.hasOwnProperty(method);
+    return Object.prototype.hasOwnProperty.call(
+      this.constructor.prototype,
+      method
+    );
   }
 
   connectTo(service, listeners) {
