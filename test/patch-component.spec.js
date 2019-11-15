@@ -1,11 +1,5 @@
 describe('Patch component => apply', () => {
-
-  const {
-    Description,
-    Patch,
-    Template,
-    VirtualDOM,
-  } = opr.Toolkit;
+  const {Description, Patch, Template, VirtualDOM} = opr.Toolkit;
 
   let container;
 
@@ -40,12 +34,12 @@ describe('Patch component => apply', () => {
 
   const createComment = component => {
     const description = new Description.CommentDescription(
-        component.constructor.name);
+      component.constructor.name,
+    );
     return VirtualDOM.createFromDescription(description, component);
   };
 
   it('creates root component', () => {
-
     // given
     const root = createRootInstance(Root);
     const container = document.createElement('section');
@@ -59,15 +53,11 @@ describe('Patch component => apply', () => {
   });
 
   it('updates component', () => {
-
     // given
     const props = {
       foo: 'bar',
     };
-    const component = createFromTemplate([
-      Component,
-      props,
-    ]);
+    const component = createFromTemplate([Component, props]);
 
     // when
     const description = Template.describe([
@@ -84,9 +74,7 @@ describe('Patch component => apply', () => {
   });
 
   describe('add component', () => {
-
     it('adds empty component to a root', () => {
-
       // given
       const [root] = createRootWith(null);
 
@@ -114,7 +102,6 @@ describe('Patch component => apply', () => {
     });
 
     it('adds empty component to emptied root', () => {
-
       // given
       const [root] = createRootWith([Subcomponent]);
       const commentNode = createComment(root);
@@ -150,19 +137,12 @@ describe('Patch component => apply', () => {
     });
 
     it('adds empty component to a component', () => {
-
       // given
       const [, divElement] = createRootWith([
         'div',
-        [
-          'span',
-        ],
-        [
-          Component,
-        ],
-        [
-          'span',
-        ],
+        ['span'],
+        [Component],
+        ['span'],
       ]);
 
       // then
@@ -194,7 +174,8 @@ describe('Patch component => apply', () => {
 
       assert.equal(component.placeholder, subcomponent.placeholder);
       assert(
-          component.placeholder.description.text.includes(Subcomponent.name));
+        component.placeholder.description.text.includes(Subcomponent.name),
+      );
 
       const comment = component.placeholder.ref;
 
@@ -207,22 +188,12 @@ describe('Patch component => apply', () => {
     });
 
     it('adds empty component to a subcomponent', () => {
-
       // given
       const [, divElement] = createRootWith([
         'div',
-        [
-          'span',
-        ],
-        [
-          Component,
-          [
-            Subcomponent,
-          ],
-        ],
-        [
-          'span',
-        ],
+        ['span'],
+        [Component, [Subcomponent]],
+        ['span'],
       ]);
 
       assert(divElement.ref);
@@ -250,8 +221,9 @@ describe('Patch component => apply', () => {
       assert(parentComponent.placeholder.isComment());
 
       assert.equal(parentComponent.placeholder, component.placeholder);
-      assert(parentComponent.placeholder.description.text.includes(
-          Component.name));
+      assert(
+        parentComponent.placeholder.description.text.includes(Component.name),
+      );
 
       const comment = parentComponent.placeholder.ref;
 
@@ -264,15 +236,9 @@ describe('Patch component => apply', () => {
     });
 
     it('adds component with a child element to a root', () => {
-
       // given
       const [root] = createRootWith();
-      const component = createFromTemplate([
-        Component,
-        [
-          'span',
-        ],
-      ], root);
+      const component = createFromTemplate([Component, ['span']], root);
 
       // when
       Patch.setContent(component, root).apply();
@@ -290,19 +256,12 @@ describe('Patch component => apply', () => {
     });
 
     it('adds component with a child element to a component', () => {
-
       // given
       const [, divElement] = createRootWith([
         'div',
-        [
-          'span',
-        ],
-        [
-          Component,
-        ],
-        [
-          'span',
-        ],
+        ['span'],
+        [Component],
+        ['span'],
       ]);
 
       assert(divElement.ref);
@@ -319,12 +278,7 @@ describe('Patch component => apply', () => {
       assert(placeholder);
       assert(placeholder.textContent.includes('Component'));
 
-      const subcomponent = createFromTemplate([
-        Subcomponent,
-        [
-          'a',
-        ],
-      ], component);
+      const subcomponent = createFromTemplate([Subcomponent, ['a']], component);
 
       // when
       Patch.setContent(subcomponent, component).apply();
@@ -345,22 +299,12 @@ describe('Patch component => apply', () => {
     });
 
     it('adds component with a child element to a subcomponent', () => {
-
       // given
       const [, divElement] = createRootWith([
         'div',
-        [
-          'span',
-        ],
-        [
-          Component,
-          [
-            Subcomponent,
-          ],
-        ],
-        [
-          'span',
-        ],
+        ['span'],
+        [Component, [Subcomponent]],
+        ['span'],
       ]);
 
       assert(divElement.ref);
@@ -375,12 +319,7 @@ describe('Patch component => apply', () => {
       assert(placeholder);
       assert(placeholder.textContent.includes('Subcomponent'));
 
-      const component = createFromTemplate([
-        Component,
-        [
-          'p',
-        ],
-      ], parentComponent);
+      const component = createFromTemplate([Component, ['p']], parentComponent);
 
       // when
       Patch.setContent(component, parentComponent).apply();
@@ -402,17 +341,10 @@ describe('Patch component => apply', () => {
   });
 
   describe('add element', () => {
-
     it('adds element to the root ', () => {
-
       // given
       const [root] = createRootWith();
-      const element = createFromTemplate([
-        'div',
-        [
-          'span',
-        ],
-      ], root);
+      const element = createFromTemplate(['div', ['span']], root);
 
       // when
       Patch.setContent(element, root).apply();
@@ -428,7 +360,6 @@ describe('Patch component => apply', () => {
     });
 
     it('adds element to a component ', () => {
-
       // given
       const [root, component] = createRootWith([Component]);
 
@@ -440,12 +371,7 @@ describe('Patch component => apply', () => {
       assert(component.placeholder.ref);
       assert(component.placeholder.ref.textContent.includes('Component'));
 
-      const element = createFromTemplate([
-        'div',
-        [
-          'span',
-        ],
-      ], component);
+      const element = createFromTemplate(['div', ['span']], component);
 
       // when
       Patch.setContent(element, component).apply();
@@ -460,7 +386,6 @@ describe('Patch component => apply', () => {
     });
 
     it('adds element to a subcomponent', () => {
-
       // given
       const [root, component] = createRootWith([Component, [Subcomponent]]);
 
@@ -472,15 +397,9 @@ describe('Patch component => apply', () => {
       const subcomponent = component.content;
 
       assert(component.placeholder.ref);
-      assert(
-          component.placeholder.ref.textContent.includes('Subcomponent'));
+      assert(component.placeholder.ref.textContent.includes('Subcomponent'));
 
-      const element = createFromTemplate([
-        'div',
-        [
-          'span',
-        ],
-      ], subcomponent);
+      const element = createFromTemplate(['div', ['span']], subcomponent);
 
       // when
       Patch.setContent(element, subcomponent).apply();
@@ -499,13 +418,9 @@ describe('Patch component => apply', () => {
   });
 
   describe('remove element', () => {
-
     it('removes element from root', () => {
-
       // given
-      const [root, element] = createRootWith([
-        'div',
-      ]);
+      const [root, element] = createRootWith(['div']);
 
       // then
       assert.equal(element.container, container);
@@ -532,14 +447,8 @@ describe('Patch component => apply', () => {
     });
 
     it('removes element from component', () => {
-
       // given
-      const [root, component] = createRootWith([
-        Component,
-        [
-          'div',
-        ],
-      ]);
+      const [root, component] = createRootWith([Component, ['div']]);
       const element = component.content;
 
       // then
@@ -566,16 +475,10 @@ describe('Patch component => apply', () => {
     });
 
     it('removes element from subcomponent', () => {
-
       // given
       const [root, component] = createRootWith([
         Component,
-        [
-          Subcomponent,
-          [
-            'div',
-          ],
-        ],
+        [Subcomponent, ['div']],
       ]);
       const subcomponent = component.content;
       const element = subcomponent.content;
@@ -605,9 +508,7 @@ describe('Patch component => apply', () => {
   });
 
   describe('remove component', () => {
-
     it('removes empty component from root', () => {
-
       // given
       const [root, component] = createRootWith([Component]);
 
@@ -633,14 +534,8 @@ describe('Patch component => apply', () => {
     });
 
     it('removes component with child element from root', () => {
-
       // given
-      const [root, component] = createRootWith([
-        Component,
-        [
-          'div',
-        ],
-      ]);
+      const [root, component] = createRootWith([Component, ['div']]);
       const element = component.content;
 
       // then
@@ -664,7 +559,6 @@ describe('Patch component => apply', () => {
     });
 
     it('removes empty component from parent component', () => {
-
       // given
       const [root, component] = createRootWith([Component, [Subcomponent]]);
       const subcomponent = component.content;
@@ -691,16 +585,10 @@ describe('Patch component => apply', () => {
     });
 
     it('removes component with child element from component', () => {
-
       // given
       const [root, component] = createRootWith([
         Component,
-        [
-          Subcomponent,
-          [
-            'div',
-          ],
-        ],
+        [Subcomponent, ['div']],
       ]);
       const subcomponent = component.content;
       const element = subcomponent.content;
@@ -727,20 +615,11 @@ describe('Patch component => apply', () => {
   });
 
   describe('replace child', () => {
-
     it('replaces element with component', () => {
-
       // given
-      const component = createFromTemplate([
-        Component,
-        [
-          'p',
-        ],
-      ]);
+      const component = createFromTemplate([Component, ['p']]);
 
-      const subcomponent = createFromTemplate([
-        Subcomponent,
-      ], component);
+      const subcomponent = createFromTemplate([Subcomponent], component);
 
       // when
       Patch.setContent(subcomponent, component).apply();
@@ -751,18 +630,10 @@ describe('Patch component => apply', () => {
     });
 
     it('replaces element with element', () => {
-
       // given
-      const component = createFromTemplate([
-        Component,
-        [
-          'p',
-        ],
-      ]);
+      const component = createFromTemplate([Component, ['p']]);
 
-      const span = createFromTemplate([
-        'span',
-      ], component);
+      const span = createFromTemplate(['span'], component);
 
       // when
       Patch.setContent(span, component).apply();
@@ -773,18 +644,10 @@ describe('Patch component => apply', () => {
     });
 
     it('replaces component with component', () => {
-
       // given
-      const component = createFromTemplate([
-        Component,
-        [
-          Component,
-        ],
-      ]);
+      const component = createFromTemplate([Component, [Component]]);
 
-      const subcomponent = createFromTemplate([
-        Subcomponent,
-      ], component);
+      const subcomponent = createFromTemplate([Subcomponent], component);
 
       // when
       Patch.setContent(subcomponent, component).apply();
@@ -795,18 +658,10 @@ describe('Patch component => apply', () => {
     });
 
     it('replaces component with element', () => {
-
       // given
-      const component = createFromTemplate([
-        Component,
-        [
-          Component,
-        ],
-      ]);
+      const component = createFromTemplate([Component, [Component]]);
 
-      const div = createFromTemplate([
-        'div',
-      ], component);
+      const div = createFromTemplate(['div'], component);
 
       // when
       Patch.setContent(div, component).apply();

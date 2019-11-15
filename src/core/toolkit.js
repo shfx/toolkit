@@ -15,22 +15,25 @@ limitations under the License.
 */
 
 import loader from 'lazy-module-loader';
+import Template from './template';
+import Plugins from './plugins';
+import VirtualDOM from './virtual-dom';
+import nodes from './nodes';
 
-window.loader = loader;
+globalThis.loader = loader;
 
 const INIT = Symbol('init');
 
 /* Function to Component mapping. */
 const pureComponentClassRegistry = new Map();
 
-export default class Toolkit {
+class Toolkit {
   constructor() {
     this.roots = new Set();
     this.settings = null;
     this.ready = new Promise(resolve => {
       this[INIT] = resolve;
     });
-    this.assert = console.assert;
   }
 
   /*
@@ -77,7 +80,7 @@ export default class Toolkit {
   }
 
   createPlugins(manifests = []) {
-    const plugins = new opr.Toolkit.Plugins(null);
+    const plugins = new Plugins(null);
     for (const manifest of manifests) {
       plugins.register(manifest);
     }
@@ -109,7 +112,7 @@ export default class Toolkit {
     if (ComponentClass) {
       return ComponentClass;
     }
-    ComponentClass = class PureComponent extends opr.Toolkit.Component {
+    ComponentClass = class PureComponent extends nodes.Component {
       render() {
         fn.bind(this)(this.props);
       }
@@ -128,14 +131,14 @@ export default class Toolkit {
     if (!ComponentClass) {
       throw new Error(`Error resolving component class for '${id}'`);
     }
-    if (!(ComponentClass.prototype instanceof opr.Toolkit.Component)) {
+    if (!(ComponentClass.prototype instanceof nodes.Component)) {
       console.error(
         'Module:',
         ComponentClass,
-        'is not a component extending opr.Toolkit.Component!'
+        'is not a component extending Component!',
       );
       throw new Error(
-        `Module defined with id "${id}" is not a component class.`
+        `Module defined with id "${id}" is not a component class.`,
       );
     }
     return ComponentClass;
@@ -177,15 +180,15 @@ export default class Toolkit {
   async createRoot(component, props = {}) {
     if (typeof component === 'string') {
       const RootClass = await loader.preload(component);
-      const description = opr.Toolkit.Template.describe([RootClass, props]);
-      if (RootClass.prototype instanceof opr.Toolkit.WebComponent) {
-        return opr.Toolkit.VirtualDOM.createWebComponent(description, null);
+      const description = Template.describe([RootClass, props]);
+      if (RootClass.prototype instanceof nodes.WebComponent) {
+        return VirtualDOM.createWebComponent(description, null);
       }
       console.error('Specified class is not a WebComponent: ', ComponentClass);
       throw new Error('Invalid Web Component class!');
     }
-    const description = opr.Toolkit.Template.describe([component, props]);
-    return opr.Toolkit.VirtualDOM.createWebComponent(description, null);
+    const description = Template.describe([component, props]);
+    return VirtualDOM.createWebComponent(description, null);
   }
 
   async render(component, container, props = {}) {
@@ -194,3 +197,5 @@ export default class Toolkit {
     return root.mount(container);
   }
 }
+
+export default new Toolkit();

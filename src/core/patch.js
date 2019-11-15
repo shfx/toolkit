@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import utils from './utils';
+
 const INIT_ROOT_COMPONENT = {
   type: Symbol('init-root-component'),
   apply: function() {
@@ -33,18 +35,14 @@ const UPDATE_NODE = {
 const SET_ATTRIBUTE = {
   type: Symbol('set-attribute'),
   apply: function() {
-    const attr = this.isCustom
-      ? this.name
-      : opr.Toolkit.utils.getAttributeName(this.name);
+    const attr = this.isCustom ? this.name : utils.getAttributeName(this.name);
     this.target.ref.setAttribute(attr, this.value);
   },
 };
 const REMOVE_ATTRIBUTE = {
   type: Symbol('remove-attribute'),
   apply: function() {
-    const attr = this.isCustom
-      ? this.name
-      : opr.Toolkit.utils.getAttributeName(this.name);
+    const attr = this.isCustom ? this.name : utils.getAttributeName(this.name);
     this.target.ref.removeAttribute(attr);
   },
 };
@@ -93,18 +91,14 @@ const SET_CLASS_NAME = {
 const ADD_LISTENER = {
   type: Symbol('add-listener'),
   apply: function() {
-    const event = this.isCustom
-      ? this.name
-      : opr.Toolkit.utils.getEventName(this.name);
+    const event = this.isCustom ? this.name : utils.getEventName(this.name);
     this.target.ref.addEventListener(event, this.listener);
   },
 };
 const REPLACE_LISTENER = {
   type: Symbol('replace-listener'),
   apply: function() {
-    const event = this.isCustom
-      ? this.name
-      : opr.Toolkit.utils.getEventName(this.name);
+    const event = this.isCustom ? this.name : utils.getEventName(this.name);
     this.target.ref.removeEventListener(event, this.removed);
     this.target.ref.addEventListener(event, this.added);
   },
@@ -112,9 +106,7 @@ const REPLACE_LISTENER = {
 const REMOVE_LISTENER = {
   type: Symbol('remove-listener'),
   apply: function() {
-    const event = this.isCustom
-      ? this.name
-      : opr.Toolkit.utils.getEventName(this.name);
+    const event = this.isCustom ? this.name : utils.getEventName(this.name);
     this.target.ref.removeEventListener(event, this.listener);
   },
 };
@@ -193,7 +185,7 @@ const PatchTypes = Object.keys(Types).reduce((result, key) => {
 export default class Patch {
   constructor(def) {
     this.type = def.type;
-    this.apply = def.apply || opr.Toolkit.noop;
+    this.apply = def.apply || utils.noop;
   }
 
   static initRootComponent(root) {

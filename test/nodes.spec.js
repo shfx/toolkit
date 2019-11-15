@@ -1,9 +1,5 @@
 describe('Nodes', () => {
-
-  const {
-    VirtualDOM,
-    Template,
-  } = opr.Toolkit;
+  const {VirtualDOM, Template} = opr.Toolkit;
 
   class Root extends opr.Toolkit.Root {
     render() {
@@ -27,12 +23,14 @@ describe('Nodes', () => {
     root.container = container;
 
     const node = VirtualDOM.createFromDescription(
-                                Template.describe(template), root);
+      Template.describe(template),
+      root
+    );
     if (node) {
       root.content = node;
     }
     return root;
-  }
+  };
 
   const createComponent = (template = null) => {
     class Component extends opr.Toolkit.Component {
@@ -41,18 +39,17 @@ describe('Nodes', () => {
       }
     }
     return createFromTemplate([Component]);
-  }
+  };
 
   const root = createRootInstance(Root);
   const createElement = (name, parentNode) =>
-      VirtualDOM.createFromDescription(Template.describe([name]), parentNode);
+    VirtualDOM.createFromDescription(Template.describe([name]), parentNode);
 
   const component = new opr.Toolkit.Component({}, [], null);
   const element = createElement('section');
   const comment = new opr.Toolkit.Comment('Dummy', null);
 
   describe('get node type', () => {
-
     it('returns "root" for a root', () => {
       assert.equal(root.nodeType, 'root');
     });
@@ -71,7 +68,6 @@ describe('Nodes', () => {
   });
 
   describe('is root', () => {
-
     it('returns true for a root', () => {
       assert(root.isRoot());
     });
@@ -87,11 +83,9 @@ describe('Nodes', () => {
     it('returns false for a comment', () => {
       assert(!comment.isRoot());
     });
-
   });
 
   describe('is component', () => {
-
     it('returns true for a root', () => {
       assert(root.isComponent());
     });
@@ -107,11 +101,9 @@ describe('Nodes', () => {
     it('returns false for a comment', () => {
       assert(!comment.isComponent());
     });
-
   });
 
   describe('is element', () => {
-
     it('returns false for a root', () => {
       assert(!root.isElement());
     });
@@ -127,11 +119,9 @@ describe('Nodes', () => {
     it('returns false for a comment', () => {
       assert(!comment.isElement());
     });
-
   });
 
   describe('is comment', () => {
-
     it('returns false for a root', () => {
       assert(!root.isComment());
     });
@@ -150,9 +140,7 @@ describe('Nodes', () => {
   });
 
   describe('get parent element', () => {
-
     it('returns null for a root component', () => {
-
       // given
       const container = document.createElement('container');
 
@@ -165,17 +153,11 @@ describe('Nodes', () => {
     });
 
     it('returns parent element for a child component', () => {
-
       // given
       const container = document.createElement('container');
 
       // when
-      const app = createRoot(container, [
-        'div',
-        [
-          Component,
-        ],
-      ]);
+      const app = createRoot(container, ['div', [Component]]);
       const element = app.content;
       const component = element.children[0];
 
@@ -186,20 +168,11 @@ describe('Nodes', () => {
     });
 
     it('returns ancestor element for a nested component', () => {
-
       // given
       const container = document.createElement('container');
 
       // when
-      const app = createRoot(container, [
-        'div',
-        [
-          Component,
-          [
-            Component,
-          ],
-        ],
-      ]);
+      const app = createRoot(container, ['div', [Component, [Component]]]);
       const element = app.content;
       const component = element.children[0];
       const subcomponent = component.content;
@@ -212,17 +185,11 @@ describe('Nodes', () => {
     });
 
     it('returns parent element for a child element', () => {
-
       // given
       const container = document.createElement('container');
 
       // when
-      const app = createRoot(container, [
-        'div',
-        [
-          'span',
-        ],
-      ]);
+      const app = createRoot(container, ['div', ['span']]);
       const parent = app.content;
       const child = parent.children[0];
 
@@ -233,7 +200,6 @@ describe('Nodes', () => {
     });
 
     it('returns null for detached element', () => {
-
       // given
       class Component extends opr.Toolkit.Component {
         render() {
@@ -248,9 +214,7 @@ describe('Nodes', () => {
   });
 
   describe('get container', () => {
-
     it('returns container for a root component', () => {
-
       // given
       const container = document.createElement('container');
 
@@ -262,23 +226,19 @@ describe('Nodes', () => {
     });
 
     it('returns container for a top-level element', () => {
-
       // given
       const container = document.createElement('container');
 
       // when
-      const app = createRoot(container, [
-        'div',
-      ]);
+      const app = createRoot(container, ['div']);
       const element = app.content;
 
       // then
       assert(element.isElement());
       assert.equal(element.container, container);
-    })
+    });
 
     it('returns container for a top-level component', () => {
-
       // given
       const container = document.createElement('container');
 
@@ -292,17 +252,11 @@ describe('Nodes', () => {
     });
 
     it('returns container for a nested element', () => {
-
       // given
       const container = document.createElement('container');
 
       // when
-      const app = createRoot(container, [
-        'div',
-        [
-          'span',
-        ],
-      ]);
+      const app = createRoot(container, ['div', ['span']]);
       const span = app.content.children[0];
 
       // then
@@ -311,17 +265,11 @@ describe('Nodes', () => {
     });
 
     it('returns container for a nested component', () => {
-
       // given
       const container = document.createElement('container');
 
       // when
-      const app = createRoot(container, [
-        'div',
-        [
-          Component,
-        ],
-      ]);
+      const app = createRoot(container, ['div', [Component]]);
       const component = app.content.children[0];
 
       // then
@@ -331,18 +279,11 @@ describe('Nodes', () => {
   });
 
   describe('get root node', () => {
-
     it('returns closest root node for a component', () => {
-
       const container = document.createElement('container');
 
       // when
-      const app = createRoot(container, [
-        'div',
-        [
-          Component,
-        ],
-      ]);
+      const app = createRoot(container, ['div', [Component]]);
       const component = app.content.children[0];
 
       // then
@@ -352,11 +293,8 @@ describe('Nodes', () => {
   });
 
   describe('Component', () => {
-
     describe('render', () => {
-
       it('returns undefined by default', () => {
-
         // given
         const component = root;
 
@@ -366,9 +304,7 @@ describe('Nodes', () => {
     });
 
     describe('register service', () => {
-
       it('stores a reference to the clean-up task', () => {
-
         // given
         const disconnect = () => {};
         const Service = class {
@@ -393,7 +329,6 @@ describe('Nodes', () => {
       });
 
       it('passes the listeners object to the connect method', () => {
-
         // given
         const listeners = {
           onSomeEvent: () => {},
@@ -416,20 +351,15 @@ describe('Nodes', () => {
     });
 
     describe('get ref', () => {
-
       it('returns element for component with child element', () => {
-
         // given
-        const component = createComponent([
-          'span',
-        ]);
+        const component = createComponent(['span']);
 
         // then
         assert.equal(component.ref.nodeName, 'SPAN');
       });
 
       it('returns comment node for empty component', () => {
-
         // given
         const component = createComponent();
 
@@ -439,9 +369,7 @@ describe('Nodes', () => {
     });
 
     describe('replace child', () => {
-
       it('removes the comment', () => {
-
         // given
         const component = createComponent();
         const subcomponent = createComponent();
@@ -455,14 +383,11 @@ describe('Nodes', () => {
       });
 
       describe('establishes the parent-child relation', () => {
-
         it('between component and subcomponent', () => {
-
           // given
           const component = createComponent();
           const subcomponent = createComponent();
           subcomponent.parentNode = component;
-
 
           // when
           component.setContent(subcomponent);
@@ -473,7 +398,6 @@ describe('Nodes', () => {
         });
 
         it('between component and element', () => {
-
           // given
           const component = createComponent();
           const element = createElement('span');
@@ -490,16 +414,12 @@ describe('Nodes', () => {
     });
 
     describe('get child element', () => {
-
       it('returns child element for an app component', () => {
-
         // given
         const container = document.createElement('container');
 
         // when
-        const app = createRoot(container, [
-          'div',
-        ]);
+        const app = createRoot(container, ['div']);
         const element = app.content;
 
         // then
@@ -508,17 +428,11 @@ describe('Nodes', () => {
       });
 
       it('returns child element for a parent component', () => {
-
         // given
         const container = document.createElement('container');
 
         // when
-        const app = createRoot(container, [
-          Component,
-          [
-            'div',
-          ],
-        ]);
+        const app = createRoot(container, [Component, ['div']]);
         const component = app.content;
         const element = component.content;
 
@@ -529,20 +443,11 @@ describe('Nodes', () => {
       });
 
       it('returns leaf element for a top-level component', () => {
-
         // given
         const container = document.createElement('container');
 
         // when
-        const app = createRoot(container, [
-          Component,
-          [
-            Component,
-            [
-              'div',
-            ],
-          ],
-        ]);
+        const app = createRoot(container, [Component, [Component, ['div']]]);
         const component = app.content;
         const subcomponent = component.content;
         const element = subcomponent.content;
@@ -556,7 +461,6 @@ describe('Nodes', () => {
       });
 
       it('returns null for empty component', () => {
-
         // when
         const component = createComponent();
 
@@ -565,7 +469,6 @@ describe('Nodes', () => {
       });
 
       it('returns null for component with comment node', () => {
-
         // when
         const component = createComponent();
 
@@ -575,9 +478,7 @@ describe('Nodes', () => {
     });
 
     describe('get placeholder', () => {
-
       it('returns a comment for a new component', () => {
-
         // given
         const component = createComponent();
 
@@ -588,7 +489,6 @@ describe('Nodes', () => {
       });
 
       it('returns null for a component with a child element', () => {
-
         // given
         const component = createComponent();
         const element = createElement('span');
@@ -601,40 +501,35 @@ describe('Nodes', () => {
         assert.equal(component.placeholder, null);
       });
 
-      it('returns a subcomponents placeholder for a component with a child',
-         () => {
+      it('returns a placeholder for a component with a child', () => {
+        // given
+        const component = createComponent();
+        const subcomponent = createComponent();
+        subcomponent.parentNode = component;
 
-           // given
-           const component = createComponent();
-           const subcomponent = createComponent();
-           subcomponent.parentNode = component;
+        // when
+        component.setContent(subcomponent);
 
-           // when
-           component.setContent(subcomponent);
-
-           // then
-           assert(component.placeholder);
-           assert(component.placeholder.isComment());
-           assert(component.placeholder, subcomponent.placeholder);
-         });
+        // then
+        assert(component.placeholder);
+        assert(component.placeholder.isComment());
+        assert(component.placeholder, subcomponent.placeholder);
+      });
     });
   });
 
   describe('Root', () => {
-
     const container = document.createElement('body');
     const root = createRootInstance(Root);
     root.container = container;
 
     describe('get initial state', () => {
-
       it('by default returns an empty object', async () => {
         assert.deepEqual(await root.getInitialState(), {});
       });
     });
 
     describe('get reducers', () => {
-
       it('by default returns an empty array', () => {
         assert.deepEqual(root.getReducers(), []);
       });
@@ -642,11 +537,8 @@ describe('Nodes', () => {
   });
 
   describe('Element', () => {
-
     describe('insert child', () => {
-
       it('inserts an element', () => {
-
         // given
         const element = createElement('section');
         const child = createElement('div');
@@ -660,7 +552,6 @@ describe('Nodes', () => {
       });
 
       it('inserts a component', () => {
-
         // given
         const element = createElement('section');
         const child = createComponent();
@@ -674,7 +565,6 @@ describe('Nodes', () => {
       });
 
       it('inserts child at the beginning', () => {
-
         // given
         const element = createElement('section');
         const component = createComponent();
@@ -690,7 +580,6 @@ describe('Nodes', () => {
       });
 
       it('inserts child in the middle', () => {
-
         // given
         const element = createElement('section');
         const firstComponent = createComponent();
@@ -708,7 +597,6 @@ describe('Nodes', () => {
       });
 
       it('inserts child at the end', () => {
-
         // given
         const element = createElement('section');
         const component = createComponent();
@@ -722,13 +610,10 @@ describe('Nodes', () => {
         assert.deepEqual(element.children, [component, child]);
         assert.equal(child.parentNode, element);
       });
-
     });
 
     describe('remove child', () => {
-
       it('removes multiple children', () => {
-
         // given
         const parent = createElement('section');
         const component = createComponent();
@@ -749,7 +634,6 @@ describe('Nodes', () => {
       });
 
       it('removes the last child', () => {
-
         // given
         const parent = createElement('section');
         const child = createComponent();
@@ -764,7 +648,6 @@ describe('Nodes', () => {
       });
 
       it('ignores node not being child', () => {
-
         const parent = createElement('section');
         const node = createComponent();
 
@@ -774,9 +657,7 @@ describe('Nodes', () => {
     });
 
     describe('create commands dispatcher', () => {
-
       it('creates a dispatcher', () => {
-
         // given
         const root = createRoot();
 
@@ -785,4 +666,4 @@ describe('Nodes', () => {
       });
     });
   });
-})
+});

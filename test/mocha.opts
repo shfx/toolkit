@@ -1,4 +1,5 @@
---require ./test/config/init.js
+--require @babel/register
+--file ./test/config/init.js
 --slow 250
 --timeout 2000
 --colors

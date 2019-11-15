@@ -1,9 +1,5 @@
 describe('Lifecycle', () => {
-
-  const {
-    Lifecycle,
-    Patch,
-  } = opr.Toolkit;
+  const {Lifecycle, Patch} = opr.Toolkit;
 
   let spy = sinon.spy();
 
@@ -91,21 +87,16 @@ describe('Lifecycle', () => {
   });
 
   describe('on created', () => {
-
     const assertOnCreatedCalled = (...components) => {
       assert.equal(spy.callCount, components.length);
       assertCalled(components.map(component => ['onCreated', component]));
     };
 
     describe('=> is called when: ', () => {
-
       it('creating root component', () => {
-
         // given
         const root = createRootInstance(Root);
-        const patches = [
-          Patch.initRootComponent(root),
-        ];
+        const patches = [Patch.initRootComponent(root)];
 
         // when
         Lifecycle.beforeUpdate(patches);
@@ -115,13 +106,10 @@ describe('Lifecycle', () => {
       });
 
       it('adding component', () => {
-
         // given
         const root = createRootInstance(Root);
         const component = createFromTemplate([Component], root);
-        const patches = [
-          Patch.insertChild(component, 0, root),
-        ];
+        const patches = [Patch.insertChild(component, 0, root)];
 
         // when
         Lifecycle.beforeUpdate(patches);
@@ -131,18 +119,10 @@ describe('Lifecycle', () => {
       });
 
       it('adding nested components', () => {
-
         // given
         const root = createRootInstance(Root);
-        const component = createFromTemplate([
-          Component,
-          [
-            Subcomponent,
-          ],
-        ], root);
-        const patches = [
-          Patch.insertChild(component, 0, root),
-        ];
+        const component = createFromTemplate([Component, [Subcomponent]], root);
+        const patches = [Patch.insertChild(component, 0, root)];
 
         // when
         Lifecycle.beforeUpdate(patches);
@@ -152,18 +132,10 @@ describe('Lifecycle', () => {
       });
 
       it('adding element containing component', () => {
-
         // given
         const root = createRootInstance(Root);
-        const element = createFromTemplate([
-          'div',
-          [
-            Component,
-          ],
-        ], root);
-        const patches = [
-          Patch.insertChild(element, 0, root),
-        ];
+        const element = createFromTemplate(['div', [Component]], root);
+        const patches = [Patch.insertChild(element, 0, root)];
 
         // when
         Lifecycle.beforeUpdate(patches);
@@ -173,24 +145,13 @@ describe('Lifecycle', () => {
       });
 
       it('adding element containing nested components', () => {
-
         // given
         const root = createRootInstance(Root);
-        const element = createFromTemplate([
-          'div',
-          [
-            Component,
-            [
-              'span',
-              [
-                Subcomponent,
-              ],
-            ],
-          ],
-        ], root);
-        const patches = [
-          Patch.insertChild(element, 0, root),
-        ];
+        const element = createFromTemplate(
+          ['div', [Component, ['span', [Subcomponent]]]],
+          root,
+        );
+        const patches = [Patch.insertChild(element, 0, root)];
 
         // when
         Lifecycle.beforeUpdate(patches);
@@ -200,16 +161,11 @@ describe('Lifecycle', () => {
       });
 
       it('inserting component', () => {
-
         // given
         const root = createRootInstance(Root);
-        const element = createFromTemplate([
-          'div',
-        ], root);
+        const element = createFromTemplate(['div'], root);
         const component = createFromTemplate([Component], root);
-        const patches = [
-          Patch.insertChild(component, 0, element),
-        ];
+        const patches = [Patch.insertChild(component, 0, element)];
 
         // when
         Lifecycle.beforeUpdate(patches);
@@ -219,25 +175,12 @@ describe('Lifecycle', () => {
       });
 
       it('inserting nested components', () => {
-
         // given
         const root = createRootInstance(Root);
-        const div = createFromTemplate([
-          'div',
-          [
-            'span',
-          ],
-        ], root);
+        const div = createFromTemplate(['div', ['span']], root);
         const span = div.child;
-        const component = createFromTemplate([
-          Component,
-          [
-            Subcomponent,
-          ],
-        ], root);
-        const patches = [
-          Patch.insertChild(component, 1, span),
-        ];
+        const component = createFromTemplate([Component, [Subcomponent]], root);
+        const patches = [Patch.insertChild(component, 1, span)];
 
         // when
         Lifecycle.beforeUpdate(patches);
@@ -247,21 +190,11 @@ describe('Lifecycle', () => {
       });
 
       it('inserting element containing component', () => {
-
         // given
         const root = createRootInstance(Root);
-        const div = createFromTemplate([
-          'div',
-        ], root);
-        const span = createFromTemplate([
-          'span',
-          [
-            Component,
-          ],
-        ], root);
-        const patches = [
-          Patch.insertChild(span, 0, div),
-        ];
+        const div = createFromTemplate(['div'], root);
+        const span = createFromTemplate(['span', [Component]], root);
+        const patches = [Patch.insertChild(span, 0, div)];
 
         // when
         Lifecycle.beforeUpdate(patches);
@@ -271,21 +204,13 @@ describe('Lifecycle', () => {
       });
 
       it('inserting element containing nested components', () => {
-
         // given
         const root = createRootInstance(Root);
-        const div = createFromTemplate([
-          'div',
-        ], root);
-        const span = createFromTemplate([
-          'span',
-          [
-            Component,
-            [
-              Subcomponent,
-            ],
-          ],
-        ], root);
+        const div = createFromTemplate(['div'], root);
+        const span = createFromTemplate(
+          ['span', [Component, [Subcomponent]]],
+          root,
+        );
         const patches = [Patch.insertChild(span, 0, div)];
 
         // when
@@ -298,20 +223,15 @@ describe('Lifecycle', () => {
   });
 
   describe('on attached', () => {
-
     const assertOnAttachedCalled = (...components) => {
       assertCalled(components.map(component => ['onAttached', component]));
     };
 
     describe('=> is called when: ', () => {
-
       it('created root component', () => {
-
         // given
         const root = createRootInstance(Root);
-        const patches = [
-          Patch.initRootComponent(root),
-        ];
+        const patches = [Patch.initRootComponent(root)];
 
         // when
         Lifecycle.afterUpdate(patches);
@@ -321,15 +241,10 @@ describe('Lifecycle', () => {
       });
 
       it('added component', () => {
-
         // given
         const root = createRootInstance(Root);
-        const component = createFromTemplate([
-          Component,
-        ], root);
-        const patches = [
-          Patch.insertChild(component, root),
-        ];
+        const component = createFromTemplate([Component], root);
+        const patches = [Patch.insertChild(component, root)];
 
         // when
         Lifecycle.afterUpdate(patches);
@@ -339,18 +254,10 @@ describe('Lifecycle', () => {
       });
 
       it('added nested components', () => {
-
         // given
         const root = createRootInstance(Root);
-        const component = createFromTemplate([
-          Component,
-          [
-            Subcomponent,
-          ],
-        ], root);
-        const patches = [
-          Patch.insertChild(component, root),
-        ];
+        const component = createFromTemplate([Component, [Subcomponent]], root);
+        const patches = [Patch.insertChild(component, root)];
 
         // when
         Lifecycle.afterUpdate(patches);
@@ -360,18 +267,10 @@ describe('Lifecycle', () => {
       });
 
       it('added element containing component', () => {
-
         // given
         const root = createRootInstance(Root);
-        const element = createFromTemplate([
-          'div',
-          [
-            Component,
-          ],
-        ], root);
-        const patches = [
-          Patch.insertChild(element, root),
-        ];
+        const element = createFromTemplate(['div', [Component]], root);
+        const patches = [Patch.insertChild(element, root)];
 
         // when
         Lifecycle.afterUpdate(patches);
@@ -381,24 +280,13 @@ describe('Lifecycle', () => {
       });
 
       it('added element containing nested components', () => {
-
         // given
         const root = createRootInstance(Root);
-        const element = createFromTemplate([
-          'div',
-          [
-            Component,
-            [
-              'span',
-              [
-                Subcomponent,
-              ],
-            ],
-          ],
-        ], root);
-        const patches = [
-          Patch.insertChild(element, root),
-        ];
+        const element = createFromTemplate(
+          ['div', [Component, ['span', [Subcomponent]]]],
+          root,
+        );
+        const patches = [Patch.insertChild(element, root)];
 
         // when
         Lifecycle.afterUpdate(patches);
@@ -408,18 +296,11 @@ describe('Lifecycle', () => {
       });
 
       it('inserted component', () => {
-
         // given
         const root = createRootInstance(Root);
-        const element = createFromTemplate([
-          'div',
-        ], root);
-        const component = createFromTemplate([
-          Component,
-        ], element);
-        const patches = [
-          Patch.insertChild(component, 0, element),
-        ];
+        const element = createFromTemplate(['div'], root);
+        const component = createFromTemplate([Component], element);
+        const patches = [Patch.insertChild(component, 0, element)];
 
         // when
         Lifecycle.afterUpdate(patches);
@@ -429,25 +310,12 @@ describe('Lifecycle', () => {
       });
 
       it('inserted nested components', () => {
-
         // given
         const root = createRootInstance(Root);
-        const div = createFromTemplate([
-          'div',
-          [
-            'span',
-          ],
-        ], root);
+        const div = createFromTemplate(['div', ['span']], root);
         const span = div.children[0];
-        const component = createFromTemplate([
-          Component,
-          [
-            Subcomponent,
-          ],
-        ], span);
-        const patches = [
-          Patch.insertChild(component, 1, span),
-        ];
+        const component = createFromTemplate([Component, [Subcomponent]], span);
+        const patches = [Patch.insertChild(component, 1, span)];
 
         // when
         Lifecycle.afterUpdate(patches);
@@ -457,21 +325,11 @@ describe('Lifecycle', () => {
       });
 
       it('inserted element containing component', () => {
-
         // given
         const root = createRootInstance(Root);
-        const div = createFromTemplate([
-          'div',
-        ], root);
-        const span = createFromTemplate([
-          'span',
-          [
-            Component,
-          ],
-        ], div);
-        const patches = [
-          Patch.insertChild(span, 0, div),
-        ];
+        const div = createFromTemplate(['div'], root);
+        const span = createFromTemplate(['span', [Component]], div);
+        const patches = [Patch.insertChild(span, 0, div)];
 
         // when
         Lifecycle.afterUpdate(patches);
@@ -481,24 +339,14 @@ describe('Lifecycle', () => {
       });
 
       it('inserted element containing nested components', () => {
-
         // given
         const root = createRootInstance(Root);
-        const div = createFromTemplate([
-          'div',
-        ], root);
-        const span = createFromTemplate([
-          'span',
-          [
-            Component,
-            [
-              Subcomponent,
-            ],
-          ],
-        ], div);
-        const patches = [
-          Patch.insertChild(span, 0, div),
-        ];
+        const div = createFromTemplate(['div'], root);
+        const span = createFromTemplate(
+          ['span', [Component, [Subcomponent]]],
+          div,
+        );
+        const patches = [Patch.insertChild(span, 0, div)];
 
         // when
         Lifecycle.afterUpdate(patches);
@@ -510,7 +358,6 @@ describe('Lifecycle', () => {
   });
 
   describe('on props received', () => {
-
     const assertOnPropsReceivedCalled = (component, props) => {
       assert.equal(spy.callCount, 1);
       assert.equal(spy.firstCall.args[0], 'onPropsReceived');
@@ -519,14 +366,10 @@ describe('Lifecycle', () => {
     };
 
     it('=> is called before updating component', () => {
-
       // given
       const root = createRootInstance(Root);
       const props = {};
-      const component = createFromTemplate([
-        Component,
-        props,
-      ], root);
+      const component = createFromTemplate([Component, props], root);
 
       const updatedProps = {
         test: 'test',
@@ -536,9 +379,7 @@ describe('Lifecycle', () => {
         updatedProps,
       ]);
 
-      const patches = [
-        Patch.updateNode(component, description),
-      ];
+      const patches = [Patch.updateNode(component, description)];
 
       // when
       Lifecycle.beforeUpdate(patches);
@@ -549,7 +390,6 @@ describe('Lifecycle', () => {
   });
 
   describe('on updated', () => {
-
     const assertOnUpdatedCalled = (component, prevProps) => {
       assert.equal(spy.callCount, 1);
       assert.equal(spy.firstCall.args[0], 'onUpdated');
@@ -558,14 +398,10 @@ describe('Lifecycle', () => {
     };
 
     it('=> is called after updating component', () => {
-
       // given
       const root = createRootInstance(Root);
       const props = {};
-      const component = createFromTemplate([
-        Component,
-        props,
-      ], root);
+      const component = createFromTemplate([Component, props], root);
 
       const updatedProps = {
         foo: 'bar',
@@ -574,9 +410,7 @@ describe('Lifecycle', () => {
         Component,
         updatedProps,
       ]);
-      const patches = [
-        Patch.updateNode(component, description),
-      ];
+      const patches = [Patch.updateNode(component, description)];
 
       // when
       Lifecycle.afterUpdate(patches);
@@ -587,23 +421,16 @@ describe('Lifecycle', () => {
   });
 
   describe('on destroyed', () => {
-
     const assertOnDestroyedCalled = (...components) => {
       assertCalled(components.map(component => ['onDestroyed', component]));
     };
 
     describe('=> is called when: ', () => {
-
       it('removing component', () => {
-
         // given
-        const component = createRootWith([
-          Component,
-        ]);
+        const component = createRootWith([Component]);
 
-        const patches = [
-          Patch.removeChild(component, root),
-        ];
+        const patches = [Patch.removeChild(component, root)];
 
         // when
         Lifecycle.beforeUpdate(patches);
@@ -613,16 +440,9 @@ describe('Lifecycle', () => {
       });
 
       it('removing nested components', () => {
-
         // given
-        const component = createRootWith([
-          Component, [
-            Subcomponent,
-          ],
-        ]);
-        const patches = [
-          Patch.removeChild(component, root),
-        ];
+        const component = createRootWith([Component, [Subcomponent]]);
+        const patches = [Patch.removeChild(component, root)];
 
         // when
         Lifecycle.beforeUpdate(patches);
@@ -632,17 +452,9 @@ describe('Lifecycle', () => {
       });
 
       it('removing element containing component', () => {
-
         // given
-        const element = createRootWith([
-          'div',
-          [
-            Component,
-          ],
-        ]);
-        const patches = [
-          Patch.removeChild(element, root),
-        ];
+        const element = createRootWith(['div', [Component]]);
+        const patches = [Patch.removeChild(element, root)];
 
         // when
         Lifecycle.beforeUpdate(patches);
@@ -652,20 +464,9 @@ describe('Lifecycle', () => {
       });
 
       it('removing element containing nested components', () => {
-
         // given
-        const element = createRootWith([
-          'div',
-          [
-            Component,
-            [
-              Subcomponent,
-            ],
-          ],
-        ]);
-        const patches = [
-          Patch.removeChild(element, root),
-        ];
+        const element = createRootWith(['div', [Component, [Subcomponent]]]);
+        const patches = [Patch.removeChild(element, root)];
 
         // when
         Lifecycle.beforeUpdate(patches);
@@ -675,20 +476,11 @@ describe('Lifecycle', () => {
       });
 
       describe('from element:', () => {
-
         it('removing component', () => {
-
           // given
-          const element = createRootWith([
-            'div',
-            [
-              Component,
-            ],
-          ]);
+          const element = createRootWith(['div', [Component]]);
           const component = element.children[0];
-          const patches = [
-            Patch.removeChild(component, 0, element),
-          ];
+          const patches = [Patch.removeChild(component, 0, element)];
 
           // when
           Lifecycle.beforeUpdate(patches);
@@ -698,21 +490,10 @@ describe('Lifecycle', () => {
         });
 
         it('removing nested components', () => {
-
           // given
-          const element = createRootWith([
-            'div',
-            [
-              Component,
-              [
-                Subcomponent,
-              ],
-            ],
-          ]);
+          const element = createRootWith(['div', [Component, [Subcomponent]]]);
           const component = element.children[0];
-          const patches = [
-            Patch.removeChild(component, 0, element),
-          ];
+          const patches = [Patch.removeChild(component, 0, element)];
 
           // when
           Lifecycle.beforeUpdate(patches);
@@ -722,17 +503,8 @@ describe('Lifecycle', () => {
         });
 
         it('removing element containing component', () => {
-
           // given
-          const div = createRootWith([
-            'div',
-            [
-              'span',
-              [
-                Component,
-              ],
-            ],
-          ]);
+          const div = createRootWith(['div', ['span', [Component]]]);
           const span = div.children[0];
           const patches = [Patch.removeChild(span, 0, div)];
 
@@ -744,22 +516,10 @@ describe('Lifecycle', () => {
         });
 
         it('removing element containing nested components', () => {
-
           // given
           const div = createRootWith([
             'div',
-            [
-              'span',
-              [
-                Component,
-                [
-                  'span',
-                  [
-                    Subcomponent,
-                  ],
-                ],
-              ],
-            ],
+            ['span', [Component, ['span', [Subcomponent]]]],
           ]);
           const span = div.children[0];
           const patches = [Patch.removeChild(span, 0, div)];
@@ -774,7 +534,6 @@ describe('Lifecycle', () => {
     });
 
     it('cleans up bindings to services', () => {
-
       // given
       const disconnect = sinon.spy();
       const Service = class {
@@ -783,16 +542,9 @@ describe('Lifecycle', () => {
         }
       };
       const root = createRootInstance(Root);
-      const element = createFromTemplate([
-        'div',
-        [
-          Component,
-        ],
-      ], root);
+      const element = createFromTemplate(['div', [Component]], root);
       const component = element.children[0];
-      const patches = [
-        Patch.removeChild(component, 0, element),
-      ];
+      const patches = [Patch.removeChild(component, 0, element)];
 
       // when
       component.connectTo(Service);
@@ -805,23 +557,16 @@ describe('Lifecycle', () => {
   });
 
   describe('on detached', () => {
-
     const assertOnDetachedCalled = (...components) => {
       assertCalled(components.map(component => ['onDetached', component]));
     };
 
     describe('=> is called when: ', () => {
-
       it('removed component', () => {
-
         // given
         const root = createRootInstance(Root);
-        const component = createFromTemplate([
-          Component,
-        ], root);
-        const patches = [
-          Patch.removeChild(component, root),
-        ];
+        const component = createFromTemplate([Component], root);
+        const patches = [Patch.removeChild(component, root)];
 
         // when
         Lifecycle.afterUpdate(patches);
@@ -831,17 +576,9 @@ describe('Lifecycle', () => {
       });
 
       it('removed nested components', () => {
-
         // given
-        const component = createRootWith([
-          Component,
-          [
-            Subcomponent,
-          ],
-        ]);
-        const patches = [
-          Patch.removeChild(component, root),
-        ];
+        const component = createRootWith([Component, [Subcomponent]]);
+        const patches = [Patch.removeChild(component, root)];
 
         // when
         Lifecycle.afterUpdate(patches);
@@ -851,17 +588,9 @@ describe('Lifecycle', () => {
       });
 
       it('removed element containing component', () => {
-
         // given
-        const element = createRootWith([
-          'div',
-          [
-            Component,
-          ],
-        ]);
-        const patches = [
-          Patch.removeChild(element, root),
-        ];
+        const element = createRootWith(['div', [Component]]);
+        const patches = [Patch.removeChild(element, root)];
 
         // when
         Lifecycle.afterUpdate(patches);
@@ -871,23 +600,12 @@ describe('Lifecycle', () => {
       });
 
       it('removed element containing nested components', () => {
-
         // given
         const element = createRootWith([
           'div',
-          [
-            Component,
-            [
-              'span',
-              [
-                Subcomponent,
-              ],
-            ],
-          ],
+          [Component, ['span', [Subcomponent]]],
         ]);
-        const patches = [
-          Patch.removeChild(element, root),
-        ];
+        const patches = [Patch.removeChild(element, root)];
 
         // when
         Lifecycle.afterUpdate(patches);
@@ -897,20 +615,11 @@ describe('Lifecycle', () => {
       });
 
       describe('from element:', () => {
-
         it('removed component', () => {
-
           // given
-          const element = createRootWith([
-            'div',
-            [
-              Component,
-            ],
-          ]);
+          const element = createRootWith(['div', [Component]]);
           const component = element.children[0];
-          const patches = [
-            Patch.removeChild(component, 0, element),
-          ];
+          const patches = [Patch.removeChild(component, 0, element)];
 
           // when
           Lifecycle.afterUpdate(patches);
@@ -920,17 +629,8 @@ describe('Lifecycle', () => {
         });
 
         it('removed nested components', () => {
-
           // given
-          const element = createRootWith([
-            'div',
-            [
-              Component,
-              [
-                Subcomponent,
-              ],
-            ],
-          ]);
+          const element = createRootWith(['div', [Component, [Subcomponent]]]);
           const component = element.children[0];
           const patches = [Patch.removeChild(component, 0, element)];
 
@@ -942,21 +642,10 @@ describe('Lifecycle', () => {
         });
 
         it('removed element containing component', () => {
-
           // given
-          const div = createRootWith([
-            'div',
-            [
-              'span',
-              [
-                Component,
-              ],
-            ],
-          ]);
+          const div = createRootWith(['div', ['span', [Component]]]);
           const span = div.children[0];
-          const patches = [
-            Patch.removeChild(span, 0, div),
-          ];
+          const patches = [Patch.removeChild(span, 0, div)];
 
           // when
           Lifecycle.afterUpdate(patches);
@@ -966,19 +655,10 @@ describe('Lifecycle', () => {
         });
 
         it('removed element containing nested components', () => {
-
           // given
           const div = createRootWith([
             'div',
-            [
-              'span',
-              [
-                Component,
-                [
-                  Subcomponent,
-                ],
-              ],
-            ],
+            ['span', [Component, [Subcomponent]]],
           ]);
           const span = div.children[0];
           const patches = [Patch.removeChild(span, 0, div)];
@@ -994,33 +674,36 @@ describe('Lifecycle', () => {
   });
 
   describe('=> throws an error for unsupported node type in:', () => {
-
     const unsupportedNode = {
       nodeType: 'invalid',
     };
 
     it('on node created', () => {
       assert.throws(
-          () => Lifecycle.onNodeCreated(unsupportedNode),
-          'Unsupported node type: invalid');
+        () => Lifecycle.onNodeCreated(unsupportedNode),
+        'Unsupported node type: invalid',
+      );
     });
 
     it('on node attached', () => {
       assert.throws(
-          () => Lifecycle.onNodeAttached(unsupportedNode),
-          'Unsupported node type: invalid');
+        () => Lifecycle.onNodeAttached(unsupportedNode),
+        'Unsupported node type: invalid',
+      );
     });
 
     it('on node destroyed', () => {
       assert.throws(
-          () => Lifecycle.onNodeDestroyed(unsupportedNode),
-          'Unsupported node type: invalid');
+        () => Lifecycle.onNodeDestroyed(unsupportedNode),
+        'Unsupported node type: invalid',
+      );
     });
 
     it('on node detached', () => {
       assert.throws(
-          () => Lifecycle.onNodeDetached(unsupportedNode),
-          'Unsupported node type: invalid');
+        () => Lifecycle.onNodeDetached(unsupportedNode),
+        'Unsupported node type: invalid',
+      );
     });
   });
 });

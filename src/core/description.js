@@ -14,10 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import nodes from './nodes';
+
 /*
  * Normalized description of a template.
  * Is used to calculate differences between nodes.
  */
+
 export default class Description {
   get childrenAsTemplates() {
     if (this.children) {
@@ -58,7 +61,7 @@ class ComponentDescription extends Description {
   }
 
   get isRoot() {
-    return this.component.prototype instanceof opr.Toolkit.Root;
+    return this.component.prototype instanceof nodes.Root;
   }
 
   get asTemplate() {

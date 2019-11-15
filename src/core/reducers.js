@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import State from './state';
+
 const SET_STATE = Symbol('set-state');
 const UPDATE = Symbol('update');
 
@@ -58,7 +60,7 @@ const combineReducers = (...reducers) => {
       console.error(
         'Reducer:',
         reducer,
-        `conflicts an with exiting one with method: "${overriden}"`
+        `conflicts an with exiting one with method: "${overriden}"`,
       );
       throw new Error(`The "${overriden}" command is already defined!`);
     }
@@ -73,7 +75,7 @@ export default class Reducers {
    * Creates a new reducer-based state manager for given root component.
    */
   static create(root) {
-    class Reducers extends opr.Toolkit.State {
+    class Reducers extends State {
       constructor(root) {
         super(root);
         this.reducer = combineReducers(...(root.getReducers() || []));

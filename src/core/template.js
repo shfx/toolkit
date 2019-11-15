@@ -14,6 +14,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import Toolkit from './toolkit';
+import Description from './description';
+import Browser from './browser';
+import nodes from './nodes';
+import utils from './utils';
+
 const isDefined = value => value !== undefined && value !== null;
 const isFalsy = template => template === null || template === false;
 const isNotEmpty = object => Boolean(Object.keys(object).length);
@@ -32,7 +38,7 @@ export default {
         ComponentDescription,
         ElementDescription,
         TextDescription,
-      } = opr.Toolkit.Description;
+      } = Description;
 
       let description;
       for (const [item, type, index] of template.map((item, index) => [
@@ -49,7 +55,7 @@ export default {
             case 'function':
             case 'symbol':
               description = new ComponentDescription(
-                opr.Toolkit.resolveComponentClass(item, type)
+                Toolkit.resolveComponentClass(item, type),
               );
               break;
             default:
@@ -57,7 +63,7 @@ export default {
                 'Invalid node type:',
                 item,
                 `(${type}) at index: ${index}, template:`,
-                template
+                template,
               );
               throw new Error(`Invalid node type specified: ${type}`);
           }
@@ -86,14 +92,14 @@ export default {
             'Invalid item',
             item,
             `at index: ${index}, template:`,
-            template
+            template,
           );
           throw new Error(`Invalid item specified: ${type}`);
         }
       }
 
-      if (opr.Toolkit.isDebug()) {
-        opr.Toolkit.utils.deepFreeze(description);
+      if (Toolkit.isDebug()) {
+        utils.deepFreeze(description);
       }
       return description;
     }
@@ -129,7 +135,7 @@ export default {
     const props = this.getComponentProps(
       object,
       description.component,
-      description.isRoot
+      description.isRoot,
     );
     if (props) {
       description.props = props;
@@ -196,7 +202,7 @@ export default {
           isAttributeValid,
           getValidElementNamesFor,
           isEventSupported,
-        } = opr.Toolkit.Browser;
+        } = Browser;
 
         if (isAttributeSupported(key)) {
           const attr = this.getAttributeValue(value);
@@ -204,12 +210,12 @@ export default {
             description.attrs = description.attrs || {};
             description.attrs[key] = attr;
           }
-          if (opr.Toolkit.isDebug()) {
+          if (Toolkit.isDebug()) {
             const element = description.name;
             if (attr === undefined) {
               console.warn(
                 `Invalid undefined value for attribute "${key}"`,
-                `on element "${element}".`
+                `on element "${element}".`,
               );
             }
             if (!element.includes('-') && !isAttributeValid(key, element)) {
@@ -232,7 +238,7 @@ export default {
           }
         } else {
           console.warn(
-            `Unsupported property "${key}" on element "${description.name}".`
+            `Unsupported property "${key}" on element "${description.name}".`,
           );
         }
       }
@@ -246,7 +252,7 @@ export default {
     const type = typeof item;
     switch (type) {
       case 'function':
-        if (item.prototype instanceof opr.Toolkit.Component) {
+        if (item.prototype instanceof nodes.Component) {
           return 'component';
         }
         return 'function';
@@ -308,9 +314,9 @@ export default {
    * styling rules or null.
    */
   getStyle(object) {
-    opr.Toolkit.assert(
+    utils.assert(
       object.constructor === Object,
-      'Style must be a plain object!'
+      'Style must be a plain object!',
     );
 
     const reduceToNonEmptyValues = (style, [name, value]) => {
@@ -323,16 +329,16 @@ export default {
 
     const entries = Object.entries(object);
 
-    if (opr.Toolkit.isDebug()) {
+    if (Toolkit.isDebug()) {
       for (const [key, value] of entries.filter(
-        ([key]) => !opr.Toolkit.Browser.isStyleSupported(key)
+        ([key]) => !Browser.isStyleSupported(key),
       )) {
         console.warn(`Unsupported style property, key: ${key}, value:`, value);
       }
     }
 
     const style = Object.entries(object)
-      .filter(([key, value]) => opr.Toolkit.Browser.isStyleSupported(key))
+      .filter(([key, value]) => Browser.isStyleSupported(key))
       .reduce(reduceToNonEmptyValues, {});
     return isNotEmpty(style) ? style : null;
   },
@@ -349,9 +355,9 @@ export default {
     } else if (typeof value === 'object') {
       let whitelist;
       if (name === 'filter') {
-        whitelist = opr.Toolkit.Browser.SUPPORTED_FILTERS;
+        whitelist = Browser.SUPPORTED_FILTERS;
       } else if (name === 'transform') {
-        whitelist = opr.Toolkit.Browser.SUPPORTED_TRANSFORMS;
+        whitelist = Browser.SUPPORTED_TRANSFORMS;
       } else {
         throw new Error(`Unknown function list: ${JSON.stringify(value)}`);
       }
@@ -372,7 +378,7 @@ export default {
     for (const [key, value] of entries) {
       const stringValue = this.getAttributeValue(
         value,
-        /*= allowEmpty */ false
+        /*= allowEmpty */ false,
       );
       if (isDefined(stringValue)) {
         composite[key] = stringValue;
@@ -438,13 +444,13 @@ export default {
   getCustomAttributes(object, forComponent) {
     console.assert(
       object.constructor === Object,
-      'Expecting object for custom attributes!'
+      'Expecting object for custom attributes!',
     );
     const attrs = {};
     for (const [key, value] of Object.entries(object)) {
       const attr = this.getAttributeValue(value, /*= allowEmpty */ true);
       if (isDefined(attr)) {
-        const name = forComponent ? opr.Toolkit.utils.lowerDash(key) : key;
+        const name = forComponent ? utils.lowerDash(key) : key;
         attrs[name] = attr;
       }
     }
@@ -454,7 +460,7 @@ export default {
   getCustomListeners(object) {
     console.assert(
       object.constructor === Object,
-      'Expecting object for custom listeners!'
+      'Expecting object for custom listeners!',
     );
     const listeners = {};
     for (const [key, value] of Object.entries(object)) {

@@ -1,5 +1,4 @@
 describe('Sandbox', () => {
-
   const Sandbox = opr.Toolkit.Sandbox;
 
   class Component extends opr.Toolkit.Component {
@@ -9,9 +8,7 @@ describe('Sandbox', () => {
   }
 
   describe('create sandbox', () => {
-
     it('returns a sandbox containing own methods', () => {
-
       // given
       const SomeComponent = class extends opr.Toolkit.Component {
         a() {
@@ -23,7 +20,7 @@ describe('Sandbox', () => {
         render() {
           return null;
         }
-      }
+      };
       const component = createFromTemplate([SomeComponent]);
 
       // when
@@ -34,10 +31,9 @@ describe('Sandbox', () => {
       assert.equal(sandbox.a, sandbox.a);
       assert.equal(sandbox.a(), sandbox);
       assert.equal(sandbox.b(), 'b');
-    })
+    });
 
     it('returns a sandbox containing inherited methods', () => {
-
       // given
       const ParentComponent = class extends opr.Toolkit.Component {
         render() {
@@ -49,7 +45,7 @@ describe('Sandbox', () => {
         b() {
           return 666;
         }
-      }
+      };
 
       class SomeComponent extends ParentComponent {
         c() {
@@ -68,10 +64,9 @@ describe('Sandbox', () => {
       assert.equal(sandbox.b, sandbox.b);
       assert.equal(sandbox.b(), 666);
       assert.equal(sandbox.c(), 'c');
-    })
+    });
 
     it('does not return built-in component properties', () => {
-
       // given
       const component = createFromTemplate([Component]);
 
@@ -84,10 +79,9 @@ describe('Sandbox', () => {
       assert.equal(sandbox.nodeType, undefined);
       assert.equal(sandbox.onUpdated, undefined);
       assert.equal(sandbox.unknown, undefined);
-    })
+    });
 
     it('allows to get component children', () => {
-
       // given
       const component = createFromTemplate([Component]);
       const children = [];
@@ -98,10 +92,9 @@ describe('Sandbox', () => {
 
       // then
       assert.deepEqual(sandbox.children, children);
-    })
+    });
 
     it('allows to get root state as props', () => {
-
       const initialState = {
         counter: 0,
       };
@@ -127,7 +120,6 @@ describe('Sandbox', () => {
     });
 
     it('allows to get component props', () => {
-
       // given
       const component = createComponent();
       const props = {
@@ -140,10 +132,9 @@ describe('Sandbox', () => {
 
       // then
       assert.equal(sandbox.props, props);
-    })
+    });
 
     it('allows to get root-specific properties', () => {
-
       // given
       const dispatch = () => {};
       const component = createRoot();
@@ -157,7 +148,6 @@ describe('Sandbox', () => {
     });
 
     it('allows to register services', () => {
-
       // given
       const component = createComponent();
 
@@ -169,20 +159,23 @@ describe('Sandbox', () => {
     });
 
     it('ignores unknown properties', () => {
-
       // given
       const component = createComponent();
 
       // when
       const sandbox = Sandbox.create(component);
-      sandbox.unknown = 'unknown';
+
+      try {
+        sandbox.unknown = 'test';
+      } catch (e) {
+        assert.equal(e instanceof Error, true);
+      }
 
       // then
       assert.equal(sandbox.unknown, undefined);
     });
 
     it('returns a reference to the component', () => {
-
       // given
       const component = createComponent();
 
@@ -194,7 +187,6 @@ describe('Sandbox', () => {
     });
 
     it('returns component property', () => {
-
       // given
       class ComponentWithProperty extends opr.Toolkit.Component {
         get property() {

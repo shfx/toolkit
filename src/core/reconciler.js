@@ -13,6 +13,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
+
+import Diff from './diff';
+
 class Move {
   static Name = {
     INSERT: Symbol('insert'),
@@ -30,20 +33,20 @@ class Move {
   }
 
   static insert(item, at) {
-    return new Move(Name.INSERT, item, {at}, items => {
+    return new Move(Move.Name.INSERT, item, {at}, items => {
       items.splice(at, 0, item);
     });
   }
 
   static move(item, from, to) {
-    return new Move(Name.MOVE, item, {from, to}, items => {
+    return new Move(Move.Name.MOVE, item, {from, to}, items => {
       items.splice(from, 1);
       items.splice(to, 0, item);
     });
   }
 
   static remove(item, at) {
-    return new Move(Name.REMOVE, item, {at}, items => {
+    return new Move(Move.Name.REMOVE, item, {at}, items => {
       items.splice(at, 1);
     });
   }
@@ -110,7 +113,7 @@ export default {
       moves.push(move);
     }
 
-    if (opr.Toolkit.Diff.deepEqual(result, target)) {
+    if (Diff.deepEqual(result, target)) {
       moves.result = result;
       return moves;
     }
@@ -151,7 +154,7 @@ export default {
       const alternativeMoves = calculateIndexChanges(
         [...result],
         target,
-        /*= reversed */ true
+        /*= reversed */ true,
       );
       if (alternativeMoves.length <= defaultMoves.length) {
         moves.push(...alternativeMoves);

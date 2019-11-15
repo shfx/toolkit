@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import nodes from './nodes';
+
 const isFunction = (target, property) => typeof target[property] === 'function';
 
 const delegated = [
@@ -39,9 +41,7 @@ export default class Sandbox {
   }
 
   static create(component) {
-    const blacklist = Object.getOwnPropertyNames(
-      opr.Toolkit.Component.prototype
-    );
+    const blacklist = Object.getOwnPropertyNames(nodes.Component.prototype);
     const state = {};
     const autobound = {};
     return new Proxy(component, {
@@ -82,7 +82,7 @@ export default class Sandbox {
           return (autobound[property] = createBoundListener(
             target[property],
             target,
-            receiver
+            receiver,
           ));
         }
         return target[property];

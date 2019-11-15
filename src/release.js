@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 import Toolkit from './core/toolkit';
-import nodes, {WebComponent} from './core/nodes';
+import nodes from './core/nodes';
 
 import Browser from './core/browser';
 import Description from './core/description';
@@ -34,7 +34,7 @@ import Template from './core/template';
 import VirtualDOM from './core/virtual-dom';
 import utils from './core/utils';
 
-Object.assign(Toolkit.prototype, nodes, {
+Object.assign(Toolkit.constructor.prototype, nodes, {
   Browser,
   Description,
   Diff,
@@ -51,10 +51,7 @@ Object.assign(Toolkit.prototype, nodes, {
   Template,
   VirtualDOM,
   utils,
-  noop: () => {},
+  noop: utils.noop,
 });
 
-window.opr = window.opr || {};
-window.opr.Toolkit = new Toolkit();
-
-module.exports = window.opr.Toolkit;
+export default Toolkit;

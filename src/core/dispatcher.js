@@ -14,6 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import Renderer from './renderer';
+import utils from './utils';
+
 const Mode = {
   QUEUE: Symbol('queue-commands'),
   EXECUTE: Symbol('execute-commands'),
@@ -35,7 +38,7 @@ export default class Dispatcher {
     this.execute = command => {
       const prevState = state.current;
       const nextState = state.reducer(prevState, command);
-      opr.Toolkit.Renderer.update(root, prevState, nextState, command);
+      Renderer.update(root, prevState, nextState, command);
     };
 
     this.queueIncoming = () => {
@@ -76,7 +79,7 @@ export default class Dispatcher {
           level = level + 1;
           if (level >= 3) {
             throw new Error(
-              'Too many cycles updating state in lifecycle methods!'
+              'Too many cycles updating state in lifecycle methods!',
             );
           }
           const calls = [...this.queue];
@@ -96,6 +99,6 @@ export default class Dispatcher {
   }
 
   destroy() {
-    this.execute = opr.Toolkit.noop;
+    this.execute = utils.noop;
   }
 }

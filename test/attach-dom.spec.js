@@ -1,9 +1,5 @@
 describe('Virtual Element => Attach DOM', () => {
-
-  const {
-    Template,
-    VirtualDOM,
-  } = opr.Toolkit;
+  const {Template, VirtualDOM} = opr.Toolkit;
 
   class Root extends opr.Toolkit.Root {
     render() {
@@ -24,8 +20,10 @@ describe('Virtual Element => Attach DOM', () => {
   }
 
   const createElement = (name, props = {}, content = []) => {
-    const template = typeof content === 'string' ? [name, props, content] :
-                                                   [name, props, ...content];
+    const template =
+      typeof content === 'string'
+        ? [name, props, content]
+        : [name, props, ...content];
     const description = Template.describe(template);
     const root = createRootInstance(Root);
     const element = VirtualDOM.createFromDescription(description, root);
@@ -34,33 +32,29 @@ describe('Virtual Element => Attach DOM', () => {
   };
 
   describe('=> create element', () => {
-
     it('supports empty elements', () => {
-
       // when
       const element = createElement('span');
 
       // then
-      assert.equal(element.description.name, 'span')
+      assert.equal(element.description.name, 'span');
       assert(element.ref instanceof Element);
-      assert.equal(element.ref.tagName, 'SPAN')
+      assert.equal(element.ref.tagName, 'SPAN');
       assert(!element.ref.textContent);
     });
 
     it('supports text elements', () => {
-
       // when
       const element = createElement('span', {}, 'Text');
 
       // then
-      assert.equal(element.description.name, 'span')
+      assert.equal(element.description.name, 'span');
       assert(element.ref instanceof Element);
-      assert.equal(element.ref.tagName, 'SPAN')
+      assert.equal(element.ref.tagName, 'SPAN');
       assert.equal(element.ref.textContent, 'Text');
     });
 
     it('supports style attribute', () => {
-
       // when
       const element = createElement('span', {
         style: {
@@ -70,13 +64,12 @@ describe('Virtual Element => Attach DOM', () => {
 
       // then
       assert(element.ref instanceof Element);
-      assert.equal(element.ref.tagName, 'SPAN')
+      assert.equal(element.ref.tagName, 'SPAN');
       assert.equal(element.ref.style.length, 1);
       assert.deepEqual(element.ref.style.color, 'red');
     });
 
     it('supports adding event listeners', () => {
-
       // given
       const onClick = () => {};
       const onChange = () => {};
@@ -86,28 +79,28 @@ describe('Virtual Element => Attach DOM', () => {
 
       // then
       assert(element.ref instanceof Element);
-      assert.equal(element.ref.tagName, 'SPAN')
+      assert.equal(element.ref.tagName, 'SPAN');
       assert.equal(element.ref.textContent, 'Text');
       typeof window !== 'object' &&
-          assert.deepEqual(element.ref.eventListeners_, {
-            click: [onClick],
-            change: [onChange],
-          });
+        assert.deepEqual(element.ref.eventListeners_, {
+          click: [onClick],
+          change: [onChange],
+        });
     });
   });
 
   describe('=> create element', () => {
-
     const createFromTemplate = template => {
       const root = createRootInstance(Root);
-      const node =
-          VirtualDOM.createFromDescription(Template.describe(template), root);
+      const node = VirtualDOM.createFromDescription(
+        Template.describe(template),
+        root,
+      );
       root.child = node;
       return node;
     };
 
     it('creates a single element', () => {
-
       // given
       const element = createElement('div');
 
@@ -119,14 +112,8 @@ describe('Virtual Element => Attach DOM', () => {
     });
 
     it('creates two nested elements', () => {
-
       // when
-      const element = createFromTemplate([
-        'div',
-        [
-          'span',
-        ],
-      ]);
+      const element = createFromTemplate(['div', ['span']]);
 
       // then
       assert.equal(element.description.name, 'div');
@@ -137,17 +124,8 @@ describe('Virtual Element => Attach DOM', () => {
     });
 
     it('creates three nested elements', () => {
-
       // when
-      const element = createFromTemplate([
-        'div',
-        [
-          'span',
-          [
-            'a',
-          ],
-        ],
-      ]);
+      const element = createFromTemplate(['div', ['span', ['a']]]);
 
       // then
       assert.equal(element.description.name, 'div');
@@ -165,17 +143,8 @@ describe('Virtual Element => Attach DOM', () => {
     });
 
     it('supports component present within the tree', () => {
-
       // when
-      const element = createFromTemplate([
-        'div',
-        [
-          Component,
-          [
-            'span',
-          ],
-        ],
-      ]);
+      const element = createFromTemplate(['div', [Component, ['span']]]);
 
       // then
       assert.equal(element.description.name, 'div');
@@ -190,19 +159,10 @@ describe('Virtual Element => Attach DOM', () => {
     });
 
     it('supports nested components present within the tree', () => {
-
       // when
       const element = createFromTemplate([
         'div',
-        [
-          Component,
-          [
-            Subcomponent,
-            [
-              'span',
-            ],
-          ],
-        ],
+        [Component, [Subcomponent, ['span']]],
       ]);
 
       // then
@@ -222,19 +182,10 @@ describe('Virtual Element => Attach DOM', () => {
     });
 
     it('supports component with no children', () => {
-
       // when
       const element = createFromTemplate([
         'div',
-        [
-          Component,
-          [
-            'span',
-            [
-              Subcomponent,
-            ],
-          ],
-        ],
+        [Component, ['span', [Subcomponent]]],
       ]);
 
       // then
@@ -255,7 +206,6 @@ describe('Virtual Element => Attach DOM', () => {
     });
 
     it('creates properties', () => {
-
       // when
       const element = createFromTemplate([
         'video',
@@ -274,13 +224,9 @@ describe('Virtual Element => Attach DOM', () => {
     });
 
     describe('creates a comment node', () => {
-
       it('for a component with no child', () => {
-
         // when
-        const component = createFromTemplate([
-          Component,
-        ]);
+        const component = createFromTemplate([Component]);
 
         // then
         assert(component.content);
@@ -288,22 +234,17 @@ describe('Virtual Element => Attach DOM', () => {
       });
 
       it('for nested components with no child element', () => {
-
         // given
         const component = createFromTemplate([
           Component,
-          [
-            Component,
-            [
-              Subcomponent,
-            ],
-          ],
+          [Component, [Subcomponent]],
         ]);
 
         // then
         assert(component.content);
         assert(
-            component.placeholder.description.text.includes(Subcomponent.name));
+          component.placeholder.description.text.includes(Subcomponent.name),
+        );
       });
     });
   });

@@ -10,14 +10,15 @@ import packageJson from './package.json';
 const targetDir = './dist';
 
 const mode = process.env.NODE_ENV;
-const dev = mode === 'development';
+const dev = mode !== 'production';
 
 export default {
   input: 'src/release.js',
   output: {
     sourcemap: dev,
     file: `${targetDir}/toolkit-${packageJson.version}.js`,
-    format: 'cjs',
+    format: 'umd',
+    name: 'opr.Toolkit',
   },
   plugins: [
     replace({
@@ -33,25 +34,6 @@ export default {
       extensions: ['.js'],
       runtimeHelpers: true,
       exclude: ['node_modules/@babel/**'],
-      presets: [
-        [
-          '@babel/preset-env',
-          {
-            targets: {opera: 64},
-            modules: false,
-          },
-        ],
-      ],
-      plugins: [
-        '@babel/plugin-proposal-class-properties',
-        '@babel/plugin-syntax-dynamic-import',
-        [
-          '@babel/plugin-transform-runtime',
-          {
-            useESModules: true,
-          },
-        ],
-      ],
     }),
     commonjs(),
     sourcemaps(),

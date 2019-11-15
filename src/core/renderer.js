@@ -14,6 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import Toolkit from './toolkit';
+import Template from './template';
+import Diff from './diff';
+import Description from './description';
+import utils from './utils';
+import Lifecycle from './lifecycle';
+import Plugin from './plugins';
+
 export default {
   /*
    * Calls the component render method and transforms the returned template
@@ -24,10 +32,10 @@ export default {
     component.sandbox.children = children;
     const template = component.render.call(component.sandbox);
     if (template) {
-      return opr.Toolkit.Template.describe(template);
+      return Template.describe(template);
     }
     const text = component.constructor.displayName;
-    return new opr.Toolkit.Description.CommentDescription(text);
+    return new Description.CommentDescription(text);
   },
 
   /*
@@ -47,7 +55,7 @@ export default {
 
     this.onBeforeUpdate(update, root);
 
-    const diff = new opr.Toolkit.Diff(root, from, to);
+    const diff = new Diff(root, from, to);
     update.patches = diff.apply();
 
     this.onAfterUpdate(update, root);
@@ -113,13 +121,13 @@ export default {
     }
     if (description.listeners) {
       for (const [name, listener] of Object.entries(description.listeners)) {
-        const event = opr.Toolkit.utils.getEventName(name);
+        const event = utils.getEventName(name);
         element.addEventListener(event, listener);
       }
     }
     if (description.attrs) {
       for (const [attr, value] of Object.entries(description.attrs)) {
-        const name = opr.Toolkit.utils.getAttributeName(attr);
+        const name = utils.getAttributeName(attr);
         element.setAttribute(name, value);
       }
     }
@@ -181,7 +189,7 @@ class ComponentElement extends HTMLElement {
         throw new Error(`Error loading stylesheets: ${stylesheets.join(', ')}`);
       };
 
-      if (opr.Toolkit.isDebug()) {
+      if (Toolkit.isDebug()) {
         const style = document.createElement('style');
         style.textContent = imports;
         style.onload = onSuccess;
@@ -227,7 +235,6 @@ class ComponentElement extends HTMLElement {
   }
 
   destroy() {
-    const Lifecycle = opr.Toolkit.Lifecycle;
     const root = this.$root;
     Lifecycle.onComponentDestroyed(root);
     Lifecycle.onComponentDetached(root);
@@ -237,7 +244,6 @@ class ComponentElement extends HTMLElement {
 }
 
 const addPluginsAPI = element => {
-  const {Plugin} = opr.Toolkit.Plugins;
   element.install = (plugin, cascade = true) => {
     const installTo = root => {
       if (plugin instanceof Plugin) {

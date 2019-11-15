@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import Browser from './browser';
+
 const throttle = (fn, wait = 200, delayFirstEvent = false) => {
   let lastTimestamp = 0;
   let taskId = null;
@@ -101,8 +103,8 @@ const isSpecialProperty = prop =>
 
 const isSupportedAttribute = attr =>
   isSpecialProperty(attr) ||
-  opr.Toolkit.Browser.isAttributeSupported(attr) ||
-  opr.Toolkit.Browser.isEventSupported(attr);
+  Browser.isAttributeSupported(attr) ||
+  Browser.isEventSupported(attr);
 
 const postRender = fn => {
   // since Chromium 64 there are some problems with animations not being
@@ -127,6 +129,10 @@ const deepFreeze = obj => {
   return obj;
 };
 
+const noop = () => {};
+
+const assert = console.assert;
+
 export default {
   throttle,
   debounce,
@@ -139,4 +145,6 @@ export default {
   isSpecialProperty,
   postRender,
   deepFreeze,
+  noop,
+  assert,
 };

@@ -1,13 +1,9 @@
 describe('Patch element => apply', () => {
-
-  const {
-    Patch,
-  } = opr.Toolkit;
+  const {Patch} = opr.Toolkit;
 
   const createElement = name => createFromTemplate([name]);
 
   it('adds attribute', () => {
-
     // given
     const element = createFromTemplate(['input']);
 
@@ -23,10 +19,10 @@ describe('Patch element => apply', () => {
   });
 
   it('replaces attribute', () => {
-
     // given
     const element = createFromTemplate([
-      'input', {
+      'input',
+      {
         name: 'name',
         minLength: '50px',
       },
@@ -49,10 +45,10 @@ describe('Patch element => apply', () => {
   });
 
   it('removes attribute', () => {
-
     // given
     const element = createFromTemplate([
-      'input', {
+      'input',
+      {
         name: 'name',
         minLength: '50px',
       },
@@ -74,11 +70,8 @@ describe('Patch element => apply', () => {
   });
 
   it('adds data attributes', () => {
-
     // given
-    const element = createFromTemplate([
-      'div',
-    ]);
+    const element = createFromTemplate(['div']);
 
     // when
     Patch.setDataAttribute('id', '10', element).apply();
@@ -94,7 +87,6 @@ describe('Patch element => apply', () => {
   });
 
   it('replaces data attributes', () => {
-
     // given
     const element = createFromTemplate([
       'div',
@@ -130,7 +122,6 @@ describe('Patch element => apply', () => {
   });
 
   it('removes data attribute', () => {
-
     // given
     const element = createFromTemplate([
       'div',
@@ -163,7 +154,6 @@ describe('Patch element => apply', () => {
   });
 
   it('adds style property', () => {
-
     // given
     const element = createFromTemplate(['div']);
 
@@ -175,10 +165,10 @@ describe('Patch element => apply', () => {
   });
 
   it('replaces style property', () => {
-
     // given
     const element = createFromTemplate([
-      'div', {
+      'div',
+      {
         style: {
           textDecoration: 'underline',
         },
@@ -196,7 +186,6 @@ describe('Patch element => apply', () => {
   });
 
   it('removes style property', () => {
-
     // given
     const element = createFromTemplate([
       'div',
@@ -218,7 +207,6 @@ describe('Patch element => apply', () => {
   });
 
   it('adds class name', () => {
-
     // given
     const element = createFromTemplate([
       'div',
@@ -238,7 +226,6 @@ describe('Patch element => apply', () => {
   });
 
   it('removes class name', () => {
-
     // given
     const element = createFromTemplate([
       'div',
@@ -258,7 +245,6 @@ describe('Patch element => apply', () => {
   });
 
   it('adds listener', () => {
-
     // given
     const element = createFromTemplate(['div']);
     const onClick = () => {};
@@ -268,11 +254,10 @@ describe('Patch element => apply', () => {
 
     // then
     typeof window !== 'object' &&
-        assert.deepEqual(element.ref.eventListeners_.click, [onClick]);
+      assert.deepEqual(element.ref.eventListeners_.click, [onClick]);
   });
 
   it('replaces listener', () => {
-
     // given
     const doSomething = () => {};
     const doSomethingElse = () => {};
@@ -285,37 +270,39 @@ describe('Patch element => apply', () => {
 
     // then
     typeof window !== 'object' &&
-        assert.deepEqual(element.ref.eventListeners_.click, [doSomething]);
+      assert.deepEqual(element.ref.eventListeners_.click, [doSomething]);
 
     // when
-    Patch.replaceListener('onClick', doSomething, doSomethingElse, element)
-        .apply();
+    Patch.replaceListener(
+      'onClick',
+      doSomething,
+      doSomethingElse,
+      element,
+    ).apply();
 
     // then
     typeof window !== 'object' &&
-        assert.deepEqual(element.ref.eventListeners_.click, [doSomethingElse]);
+      assert.deepEqual(element.ref.eventListeners_.click, [doSomethingElse]);
   });
 
   it('removes listener', () => {
-
     // given
     const onClick = () => {};
     const element = createFromTemplate(['div', {onClick}]);
 
     // then
     typeof window !== 'object' &&
-        assert.deepEqual(element.ref.eventListeners_.click, [onClick]);
+      assert.deepEqual(element.ref.eventListeners_.click, [onClick]);
 
     // when
     Patch.removeListener('onClick', onClick, element).apply();
 
     // then
     typeof window !== 'object' &&
-        assert.deepEqual(element.ref.eventListeners_.click, []);
+      assert.deepEqual(element.ref.eventListeners_.click, []);
   });
 
   it('sets property', () => {
-
     // given
     const element = createFromTemplate(['div']);
 
@@ -330,7 +317,6 @@ describe('Patch element => apply', () => {
   });
 
   it('deletes property', () => {
-
     // given
     const element = createFromTemplate([
       'div',
@@ -341,8 +327,7 @@ describe('Patch element => apply', () => {
       },
     ]);
 
-    assert.equal(
-        element.description.properties.customAttribute, 'customValue');
+    assert.equal(element.description.properties.customAttribute, 'customValue');
     assert.equal(element.ref.customAttribute, 'customValue');
 
     // when
@@ -353,7 +338,6 @@ describe('Patch element => apply', () => {
   });
 
   it('replaces property', () => {
-
     // given
     const element = createFromTemplate([
       'div',
@@ -364,8 +348,7 @@ describe('Patch element => apply', () => {
       },
     ]);
 
-    assert.equal(
-        element.description.properties.customAttribute, 'customValue');
+    assert.equal(element.description.properties.customAttribute, 'customValue');
     assert.equal(element.ref.customAttribute, 'customValue');
 
     // when
@@ -376,11 +359,8 @@ describe('Patch element => apply', () => {
   });
 
   it('inserts child node to an empty element', () => {
-
     // given
-    const element = createFromTemplate([
-      'div',
-    ]);
+    const element = createFromTemplate(['div']);
     const span = createElement('span');
 
     // then
@@ -398,20 +378,8 @@ describe('Patch element => apply', () => {
   });
 
   it('inserts child node before other child', () => {
-
     // given
-    const element = createFromTemplate([
-      'div',
-      [
-        'span',
-      ],
-      [
-        'span',
-      ],
-      [
-        'span',
-      ],
-    ]);
+    const element = createFromTemplate(['div', ['span'], ['span'], ['span']]);
     const link = createElement('a');
 
     // then
@@ -431,14 +399,8 @@ describe('Patch element => apply', () => {
   });
 
   it('inserts child node at the end', () => {
-
     // given
-    const element = createFromTemplate([
-      'div',
-      [
-        'span',
-      ],
-    ]);
+    const element = createFromTemplate(['div', ['span']]);
     const link = createElement('a');
 
     // then
@@ -457,7 +419,6 @@ describe('Patch element => apply', () => {
     assert.equal(element.ref.childNodes[1], link.ref);
   });
   describe('move child node', () => {
-
     const Component = class extends opr.Toolkit.Component {
       render() {
         return this.children[0] || null;
@@ -465,20 +426,8 @@ describe('Patch element => apply', () => {
     };
 
     it('moves element', () => {
-
       // given
-      const element = createFromTemplate([
-        'div',
-        [
-          'p',
-        ],
-        [
-          'div',
-        ],
-        [
-          'span',
-        ],
-      ]);
+      const element = createFromTemplate(['div', ['p'], ['div'], ['span']]);
       const paragraph = element.children[0];
 
       // then
@@ -503,19 +452,11 @@ describe('Patch element => apply', () => {
     });
 
     it('moves component with child element', () => {
-
       // given
       const element = createFromTemplate([
         'div',
-        [
-          'p',
-        ],
-        [
-          Component,
-          [
-            'section',
-          ],
-        ],
+        ['p'],
+        [Component, ['section']],
         ['span'],
       ]);
       const component = element.children[1];
@@ -542,17 +483,8 @@ describe('Patch element => apply', () => {
     });
 
     it('moves empty component', () => {
-
       // given
-      const element = createFromTemplate([
-        'div',
-        [
-          Component,
-        ],
-        [
-          'span',
-        ],
-      ]);
+      const element = createFromTemplate(['div', [Component], ['span']]);
       const component = element.children[0];
 
       // then
@@ -575,7 +507,6 @@ describe('Patch element => apply', () => {
   });
 
   describe('replace child node', () => {
-
     const Component = class extends opr.Toolkit.Component {
       render() {
         return ['component'];
@@ -583,19 +514,11 @@ describe('Patch element => apply', () => {
     };
 
     it('replaces element with component', () => {
-
       // given
-      const element = createFromTemplate([
-        'div',
-        [
-          'p',
-        ],
-      ]);
+      const element = createFromTemplate(['div', ['p']]);
       const child = element.children[0];
 
-      const component = createFromTemplate([
-        Component,
-      ]);
+      const component = createFromTemplate([Component]);
 
       // when
       Patch.replaceChild(child, component, element).apply();
@@ -606,19 +529,11 @@ describe('Patch element => apply', () => {
     });
 
     it('replaces element with element', () => {
-
       // given
-      const element = createFromTemplate([
-        'div',
-        [
-          'p',
-        ],
-      ]);
+      const element = createFromTemplate(['div', ['p']]);
       const child = element.children[0];
 
-      const span = createFromTemplate([
-        'span',
-      ]);
+      const span = createFromTemplate(['span']);
 
       // when
       Patch.replaceChild(child, span, element).apply();
@@ -629,19 +544,11 @@ describe('Patch element => apply', () => {
     });
 
     it('replaces component with component', () => {
-
       // given
-      const element = createFromTemplate([
-        'div',
-        [
-          Component,
-        ],
-      ]);
+      const element = createFromTemplate(['div', [Component]]);
       const child = element.children[0];
 
-      const component = createFromTemplate([
-        Component,
-      ]);
+      const component = createFromTemplate([Component]);
 
       // when
       Patch.replaceChild(child, component, element).apply();
@@ -652,19 +559,11 @@ describe('Patch element => apply', () => {
     });
 
     it('replaces component with element', () => {
-
       // given
-      const element = createFromTemplate([
-        'div',
-        [
-          Component,
-        ],
-      ]);
+      const element = createFromTemplate(['div', [Component]]);
       const child = element.children[0];
 
-      const span = createFromTemplate([
-        'span',
-      ]);
+      const span = createFromTemplate(['span']);
 
       // when
       Patch.replaceChild(child, span, element).apply();
@@ -676,7 +575,6 @@ describe('Patch element => apply', () => {
   });
 
   describe('remove child node', () => {
-
     const Component = class extends opr.Toolkit.Component {
       render() {
         return this.children[0] || null;
@@ -684,20 +582,8 @@ describe('Patch element => apply', () => {
     };
 
     it('removes element', () => {
-
       // given
-      const element = createFromTemplate([
-        'div',
-        [
-          'p',
-        ],
-        [
-          'div',
-        ],
-        [
-          'span',
-        ],
-      ]);
+      const element = createFromTemplate(['div', ['p'], ['div'], ['span']]);
       const div = element.children[1];
 
       // then
@@ -742,20 +628,8 @@ describe('Patch element => apply', () => {
     });
 
     it('removes component with child element', () => {
-
       // given
-      const element = createFromTemplate([
-        'div',
-        [
-          'p',
-        ],
-        [
-          Component,
-          [
-            'span',
-          ],
-        ],
-      ]);
+      const element = createFromTemplate(['div', ['p'], [Component, ['span']]]);
       const component = element.children[1];
 
       // then
@@ -774,17 +648,8 @@ describe('Patch element => apply', () => {
     });
 
     it('removes empty component', () => {
-
       // given
-      const element = createFromTemplate([
-        'div',
-        [
-          'p',
-        ],
-        [
-          Component,
-        ],
-      ]);
+      const element = createFromTemplate(['div', ['p'], [Component]]);
       const component = element.children[1];
 
       // then
@@ -804,25 +669,19 @@ describe('Patch element => apply', () => {
   });
 
   it('sets text content', () => {
-
     // given
-    const element = createFromTemplate([
-      'div',
-      'one',
-    ]);
+    const element = createFromTemplate(['div', 'one']);
 
     assert.equal(element.description.children[0].text, 'one');
     assert.equal(element.ref.textContent, 'one');
 
     // when
 
-    const {
-      Description,
-      VirtualDOM,
-    } = opr.Toolkit;
+    const {Description, VirtualDOM} = opr.Toolkit;
 
     const two = VirtualDOM.createFromDescription(
-        new Description.TextDescription('two'));
+      new Description.TextDescription('two'),
+    );
     Patch.replaceChild(element.children[0], two, element).apply();
 
     // then
@@ -830,12 +689,8 @@ describe('Patch element => apply', () => {
   });
 
   it('removes text content', () => {
-
     // given
-    const element = createFromTemplate([
-      'div',
-      'one',
-    ]);
+    const element = createFromTemplate(['div', 'one']);
 
     assert.equal(element.description.children[0].text, 'one');
     assert.equal(element.ref.textContent, 'one');

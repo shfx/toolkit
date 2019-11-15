@@ -14,6 +14,17 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import Toolkit from './toolkit';
+import VirtualDOM from './virtual-dom';
+import Reducers from './reducers';
+import Plugins from './plugins';
+import Dispatcher from './dispatcher';
+import Sandbox from './sandbox';
+import Description from './description';
+import utils from './utils';
+import Renderer from './renderer';
+import Template from './template';
+
 /*
  * An abstract parent node.
  */
@@ -27,16 +38,12 @@ class VirtualNode {
 
   createChildren() {
     this.children = this.description.children.map(childDescription =>
-      this.createChild(childDescription)
+      this.createChild(childDescription),
     );
   }
 
   createChild(description) {
-    return opr.Toolkit.VirtualDOM.createFromDescription(
-      description,
-      this,
-      this.context
-    );
+    return VirtualDOM.createFromDescription(description, this, this.context);
   }
 
   get parentElement() {
@@ -88,10 +95,7 @@ class VirtualNode {
 
   replaceChild(child, node) {
     const index = this.children.indexOf(child);
-    opr.Toolkit.assert(
-      index >= 0,
-      'Specified node is not a child of this element!'
-    );
+    utils.assert(index >= 0, 'Specified node is not a child of this element!');
     this.children.splice(index, 1, node);
     child.parentNode = null;
     node.parentNode = this;
@@ -99,9 +103,9 @@ class VirtualNode {
   }
 
   moveChild(child, from, to) {
-    opr.Toolkit.assert(
+    utils.assert(
       this.children[from] === child,
-      'Specified node is not a child of this element!'
+      'Specified node is not a child of this element!',
     );
     this.children.splice(from, 1);
     this.children.splice(to, 0, child);
@@ -111,10 +115,7 @@ class VirtualNode {
 
   removeChild(child) {
     const index = this.children.indexOf(child);
-    opr.Toolkit.assert(
-      index >= 0,
-      'Specified node is not a child of this element!'
-    );
+    utils.assert(index >= 0, 'Specified node is not a child of this element!');
     this.children.splice(index, 1);
     if (!this.children.length) {
       delete this.children;
@@ -162,7 +163,7 @@ class Component extends VirtualNode {
 
   constructor(description, parent, context, attachDOM = true) {
     super(description, parent, context);
-    this.sandbox = opr.Toolkit.Sandbox.create(this);
+    this.sandbox = Sandbox.create(this);
     this.cleanUpTasks = [];
     this.isInitialized = attachDOM;
     if (attachDOM) {
@@ -176,9 +177,9 @@ class Component extends VirtualNode {
    * Sets the component content.
    */
   setContent(node) {
-    opr.Toolkit.assert(
+    utils.assert(
       node.parentNode === this,
-      'Specified node does not have a valid parent!'
+      'Specified node does not have a valid parent!',
     );
     this.content.parentNode = null;
     node.parentNode = this;
@@ -189,19 +190,19 @@ class Component extends VirtualNode {
   hasOwnMethod(method) {
     return Object.prototype.hasOwnProperty.call(
       this.constructor.prototype,
-      method
+      method,
     );
   }
 
   connectTo(service, listeners) {
-    opr.Toolkit.assert(
+    utils.assert(
       typeof service.connect === 'function',
-      'Services have to define the connect() method'
+      'Services have to define the connect() method',
     );
     const disconnect = service.connect(listeners);
-    opr.Toolkit.assert(
+    utils.assert(
       typeof disconnect === 'function',
-      'The result of the connect() method has to be a disconnect() method'
+      'The result of the connect() method has to be a disconnect() method',
     );
     disconnect.service = service;
     this.cleanUpTasks.push(disconnect);
@@ -281,8 +282,8 @@ export class WebComponent extends Component {
   constructor(description, parent = null, context = null) {
     super(description, parent, context, /*= attachDOM */ false);
     this.subroots = new Set();
-    this.state = opr.Toolkit.Reducers.create(this);
-    this.commands = opr.Toolkit.Dispatcher.create(this);
+    this.state = Reducers.create(this);
+    this.commands = Dispatcher.create(this);
     this.ready = new Promise(resolve => {
       this.markAsReady = resolve;
     });
@@ -294,7 +295,7 @@ export class WebComponent extends Component {
 
   attachDOM() {
     if (this.constructor.elementName) {
-      this.ref = opr.Toolkit.Renderer.createCustomElement(this);
+      this.ref = Renderer.createCustomElement(this);
       this.plugins.installAll();
       if (this.description.children) {
         this.createChildren();
@@ -307,10 +308,8 @@ export class WebComponent extends Component {
   }
 
   createPlaceholder() {
-    return opr.Toolkit.VirtualDOM.createFromDescription(
-      new opr.Toolkit.Description.CommentDescription(
-        this.constructor.displayName
-      )
+    return VirtualDOM.createFromDescription(
+      new Description.CommentDescription(this.constructor.displayName),
     );
   }
 
@@ -318,11 +317,11 @@ export class WebComponent extends Component {
    * Triggers the initial rendering of the component in given container.
    */
   async init() {
-    opr.Toolkit.track(this);
+    Toolkit.track(this);
 
     const state = await this.getInitialState.call(
       this.sandbox,
-      this.description.props || {}
+      this.description.props || {},
     );
     this.setState(state);
 
@@ -345,7 +344,7 @@ export class WebComponent extends Component {
     }
     const state = this.getUpdatedState(
       description.props || {},
-      this.state.current || {}
+      this.state.current || {},
     );
     this.setState(state);
   }
@@ -358,7 +357,7 @@ export class WebComponent extends Component {
       throw new Error('Web Component state must be a plain object!');
     }
     this.commands.setState(
-      opr.Toolkit.Template.normalizeComponentProps(state, this.constructor)
+      Template.normalizeComponentProps(state, this.constructor),
     );
   }
 
@@ -387,10 +386,10 @@ export class WebComponent extends Component {
   }
 
   createPlugins() {
-    const plugins = new opr.Toolkit.Plugins(this);
+    const plugins = new Plugins(this);
     const inherited = this.parentNode
       ? this.parentNode.plugins
-      : opr.Toolkit.plugins;
+      : Toolkit.plugins;
     for (const plugin of inherited) {
       plugins.register(plugin);
     }
@@ -412,12 +411,12 @@ export class WebComponent extends Component {
   getStylesheets() {
     const stylesheets = [];
     const stylesheetProviders = [...this.plugins].filter(plugin =>
-      plugin.isStylesheetProvider()
+      plugin.isStylesheetProvider(),
     );
     for (const plugin of stylesheetProviders) {
       if (typeof plugin.getStylesheets !== 'function') {
         throw new Error(
-          `Plugin '${plugin.name}' must provide the getStylesheets() method!`
+          `Plugin '${plugin.name}' must provide the getStylesheets() method!`,
         );
       }
       stylesheets.push(...plugin.getStylesheets());
@@ -498,7 +497,7 @@ class VirtualElement extends VirtualNode {
   }
 
   attachDOM() {
-    this.ref = opr.Toolkit.Renderer.createElement(this.description);
+    this.ref = Renderer.createElement(this.description);
     this.attachChildren();
   }
 

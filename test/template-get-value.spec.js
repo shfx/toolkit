@@ -1,11 +1,8 @@
 describe('Template', () => {
-
   const Template = opr.Toolkit.Template;
 
   describe('get class name', () => {
-
     it('supports strings', () => {
-
       // given
       const value = 'foo bar';
       const emptyString = '';
@@ -16,13 +13,12 @@ describe('Template', () => {
     });
 
     it('supports objects', () => {
-
       // given
       const value = {
-        'used': true,
+        used: true,
         'not-used': false,
-        'ignored': null,
-        'disregarded': undefined,
+        ignored: null,
+        disregarded: undefined,
       };
 
       // when
@@ -33,7 +29,6 @@ describe('Template', () => {
     });
 
     it('supports arrays', () => {
-
       // given
       const value = [
         'nobody',
@@ -53,7 +48,6 @@ describe('Template', () => {
     });
 
     it('supports array / array nesting', () => {
-
       // given
       const value = ['first', ['second', ['third']], 'fourth'];
 
@@ -65,9 +59,8 @@ describe('Template', () => {
     });
 
     it('supports array / object nesting', () => {
-
       // given
-      const value = ['first', {'second': true}, 'third'];
+      const value = ['first', {second: true}, 'third'];
 
       // when
       const className = Template.getClassName(value);
@@ -94,9 +87,7 @@ describe('Template', () => {
   });
 
   describe('get style', () => {
-
     it('supports strings', () => {
-
       // given
       const value = {
         color: 'black',
@@ -111,7 +102,6 @@ describe('Template', () => {
     });
 
     it('supports an empty string', () => {
-
       // given
       const value = {
         content: '',
@@ -127,7 +117,6 @@ describe('Template', () => {
     });
 
     it('supports numbers', () => {
-
       // given
       const value = {
         gridColumn: 2,
@@ -145,7 +134,6 @@ describe('Template', () => {
     });
 
     it('supports arrays', () => {
-
       // given
       const value = {
         width: [100, '%'],
@@ -179,16 +167,18 @@ describe('Template', () => {
     });
 
     it('ignores undefined', () => {
-      assert.deepEqual(Template.getStyle({
-        margin: 'auto',
-        color: undefined,
-      }), {
-        margin: 'auto',
-      });
+      assert.deepEqual(
+        Template.getStyle({
+          margin: 'auto',
+          color: undefined,
+        }),
+        {
+          margin: 'auto',
+        },
+      );
     });
 
     it('warns on unknown properties', () => {
-
       sinon.stub(console, 'warn');
       try {
         // given
@@ -203,14 +193,12 @@ describe('Template', () => {
         // then
         assert.equal(style, null);
         assert(console.warn.calledTwice);
-
       } finally {
         console.warn.restore();
       }
     });
 
     it('handles only known style properties', () => {
-
       sinon.stub(console, 'warn');
       try {
         // given
@@ -225,14 +213,12 @@ describe('Template', () => {
         // then
         assert.deepEqual(style, {color: 'green'});
         assert(console.warn.called);
-
       } finally {
         console.warn.restore();
       }
     });
 
     it('rejects unknown functions list', () => {
-
       // given
       const style = {
         background: {},
@@ -243,7 +229,6 @@ describe('Template', () => {
     });
 
     it('handles only valid transform functions', () => {
-
       // given
       const transform = {
         translate: [10, 'px'],
@@ -260,7 +245,6 @@ describe('Template', () => {
     });
 
     it('handles only valid filter functions', () => {
-
       // given
       const filter = {
         contrast: [10],
@@ -280,9 +264,7 @@ describe('Template', () => {
   });
 
   describe('get listeners', () => {
-
     it('handles known events', () => {
-
       // given
       const onClick = () => {};
       const onDoubleClick = () => {};
@@ -303,10 +285,8 @@ describe('Template', () => {
     });
 
     it('warns on unknown events', () => {
-
       sinon.stub(console, 'warn');
       try {
-
         // given
         const onMyEvent = () => {};
         const unknownListeners = {
@@ -320,15 +300,12 @@ describe('Template', () => {
         // then
         assert.deepEqual(element, {});
         assert(console.warn.calledOnce);
-
       } finally {
         console.warn.restore();
       }
-
     });
 
     it('supports functions', () => {
-
       // given
       const value = () => {};
 
@@ -340,7 +317,6 @@ describe('Template', () => {
     });
 
     it('ignores null', () => {
-
       // given
       const value = null;
 
@@ -352,7 +328,6 @@ describe('Template', () => {
     });
 
     it('ignores false', () => {
-
       // given
       const value = false;
 
@@ -364,7 +339,6 @@ describe('Template', () => {
     });
 
     it('ignores undefined', () => {
-
       // given
       const value = undefined;
 
@@ -385,7 +359,6 @@ describe('Template', () => {
   });
 
   describe('get attribute value', () => {
-
     it('supports strings', () => {
       assert.equal(Template.getAttributeValue('inherit'), 'inherit');
       assert.equal(Template.getAttributeValue('none'), 'none');
@@ -424,9 +397,7 @@ describe('Template', () => {
   });
 
   describe('get dataset', () => {
-
     it('supports strings', () => {
-
       // given
       const props = {
         value: 'test',
@@ -440,7 +411,6 @@ describe('Template', () => {
     });
 
     it('supports an empty string', () => {
-
       // given
       const props = {
         value: '',
@@ -454,7 +424,6 @@ describe('Template', () => {
     });
 
     it('handles true as an empty string', () => {
-
       // given
       const props = {
         value: true,
@@ -470,7 +439,6 @@ describe('Template', () => {
     });
 
     it('supports numbers', () => {
-
       // given
       const props = {
         width: 800,
@@ -488,7 +456,6 @@ describe('Template', () => {
     });
 
     it('supports arrays', () => {
-
       // given
       const props = {
         value: [90, 'deg'],
@@ -504,7 +471,6 @@ describe('Template', () => {
     });
 
     it('ignores false', () => {
-
       // given
       const props = {
         value: false,
@@ -518,7 +484,6 @@ describe('Template', () => {
     });
 
     it('ignores null', () => {
-
       // given
       const props = {
         value: null,
@@ -532,7 +497,6 @@ describe('Template', () => {
     });
 
     it('ignores undefined', () => {
-
       // given
       const props = {
         value: undefined,
@@ -546,7 +510,6 @@ describe('Template', () => {
     });
 
     it('rejects symbols', () => {
-
       // given
       const props = {
         value: Symbol('value'),
@@ -557,7 +520,6 @@ describe('Template', () => {
     });
 
     it('rejects functions', () => {
-
       // given
       const props = {
         value: () => {},
@@ -568,7 +530,6 @@ describe('Template', () => {
     });
 
     it('rejects objects', () => {
-
       // given
       const props = {
         value: {},
@@ -580,9 +541,7 @@ describe('Template', () => {
   });
 
   describe('get properties', () => {
-
     it('supports strings', () => {
-
       // given
       const props = {
         value: 'value',
@@ -596,7 +555,6 @@ describe('Template', () => {
     });
 
     it('supports objects', () => {
-
       // given
       const props = {
         value: {
@@ -612,7 +570,6 @@ describe('Template', () => {
     });
 
     it('supports arrays', () => {
-
       // given
       const props = {
         value: [1, 2, 3],
@@ -626,7 +583,6 @@ describe('Template', () => {
     });
 
     it('supports booleans', () => {
-
       // given
       const props = {
         foo: true,
@@ -641,7 +597,6 @@ describe('Template', () => {
     });
 
     it('supports symbols', () => {
-
       // given
       const props = {
         value: Symbol('value'),
@@ -655,7 +610,6 @@ describe('Template', () => {
     });
 
     it('supports null', () => {
-
       // given
       const props = {
         value: null,
@@ -669,7 +623,6 @@ describe('Template', () => {
     });
 
     it('supports undefined', () => {
-
       // given
       const props = {
         value: undefined,
@@ -684,9 +637,7 @@ describe('Template', () => {
   });
 
   describe('get custom listeners', () => {
-
     it('supports functions', () => {
-
       // given
       const myListener = () => {};
       const otherListener = () => {};
@@ -710,7 +661,6 @@ describe('Template', () => {
     });
 
     it('ignores null', () => {
-
       // given
       const props = {
         on: {
@@ -727,7 +677,6 @@ describe('Template', () => {
     });
 
     it('ignores false', () => {
-
       // given
       const props = {
         on: {
@@ -744,7 +693,6 @@ describe('Template', () => {
     });
 
     it('ignores undefined', () => {
-
       // given
       const props = {
         on: {
@@ -761,14 +709,13 @@ describe('Template', () => {
     });
 
     it('rejects anything else', () => {
-
       // given
       const createCustomListener = value =>
-          Template.assignPropsToElement({
-            on: {
-              'another-event': value,
-            },
-          });
+        Template.assignPropsToElement({
+          on: {
+            'another-event': value,
+          },
+        });
 
       // then
       assert.throws(() => createCustomListener(666));
@@ -779,9 +726,7 @@ describe('Template', () => {
   });
 
   describe('get custom attributes', () => {
-
     it('supports strings', () => {
-
       // given
       const props = {
         value: 'test',
@@ -795,7 +740,6 @@ describe('Template', () => {
     });
 
     it('supports an empty string', () => {
-
       // given
       const props = {
         value: '',
@@ -809,7 +753,6 @@ describe('Template', () => {
     });
 
     it('handles true as an empty string', () => {
-
       // given
       const props = {
         value: true,
@@ -825,7 +768,6 @@ describe('Template', () => {
     });
 
     it('supports numbers', () => {
-
       // given
       const props = {
         width: 800,
@@ -843,7 +785,6 @@ describe('Template', () => {
     });
 
     it('supports arrays', () => {
-
       // given
       const props = {
         value: [90, 'deg'],
@@ -859,7 +800,6 @@ describe('Template', () => {
     });
 
     it('ignores false', () => {
-
       // given
       const props = {
         value: false,
@@ -873,7 +813,6 @@ describe('Template', () => {
     });
 
     it('ignores null', () => {
-
       // given
       const props = {
         value: null,
@@ -887,7 +826,6 @@ describe('Template', () => {
     });
 
     it('ignores undefined', () => {
-
       // given
       const props = {
         value: undefined,
@@ -901,7 +839,6 @@ describe('Template', () => {
     });
 
     it('rejects symbols', () => {
-
       // given
       const props = {
         value: Symbol('symbol'),
@@ -912,7 +849,6 @@ describe('Template', () => {
     });
 
     it('rejects functions', () => {
-
       // given
       const props = {
         value: () => {},
@@ -923,7 +859,6 @@ describe('Template', () => {
     });
 
     it('rejects objects', () => {
-
       // given
       const props = {
         value: {

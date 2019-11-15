@@ -14,6 +14,14 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import Toolkit from './toolkit';
+import Patch from './patch';
+import Template from './template';
+import Lifecycle from './lifecycle';
+import Renderer from './renderer';
+import VirtualDOM from './virtual-dom';
+import Reconciler from './reconciler';
+
 export default class Diff {
   /*
    * Creates a new instance bound to a root component
@@ -37,11 +45,11 @@ export default class Diff {
    */
   apply() {
     if (this.patches.length) {
-      opr.Toolkit.Lifecycle.beforeUpdate(this.patches);
+      Lifecycle.beforeUpdate(this.patches);
       for (const patch of this.patches) {
         patch.apply();
       }
-      opr.Toolkit.Lifecycle.afterUpdate(this.patches);
+      Lifecycle.afterUpdate(this.patches);
     }
     return this.patches;
   }
@@ -52,7 +60,7 @@ export default class Diff {
    */
   calculate(currentState, nextState) {
     if (!currentState) {
-      this.addPatch(opr.Toolkit.Patch.initRootComponent(this.root));
+      this.addPatch(Patch.initRootComponent(this.root));
     }
 
     if (Diff.deepEqual(currentState, nextState)) {
@@ -62,11 +70,11 @@ export default class Diff {
     const template = [this.root.constructor, nextState];
     if (this.root.description.children) {
       template.push(
-        ...this.root.description.children.map(child => child.asTemplate)
+        ...this.root.description.children.map(child => child.asTemplate),
       );
     }
 
-    const description = opr.Toolkit.Template.describe(template);
+    const description = Template.describe(template);
 
     this.componentPatches(this.root, description);
     if (this.root.description.attrs || description.attrs) {
@@ -74,7 +82,7 @@ export default class Diff {
         this.root.description.attrs,
         description.attrs,
         this.root,
-        true
+        true,
       );
     }
   }
@@ -94,21 +102,19 @@ export default class Diff {
       return;
     }
 
-    const nodeDescription = opr.Toolkit.Renderer.render(
+    const nodeDescription = Renderer.render(
       component,
       description.props,
       description.childrenAsTemplates,
-      true
+      true,
     );
     this.componentContentPatches(nodeDescription, component);
 
-    this.addPatch(opr.Toolkit.Patch.updateNode(component, description));
+    this.addPatch(Patch.updateNode(component, description));
   }
 
   componentContentPatches(description, parent) {
     const content = parent.content;
-
-    const {Diff, Patch, VirtualDOM} = opr.Toolkit;
 
     if (!content && !description) {
       return;
@@ -137,7 +143,7 @@ export default class Diff {
     const node = VirtualDOM.createFromDescription(
       description,
       parent,
-      this.root
+      this.root,
     );
     this.addPatch(Patch.setContent(node, parent));
   }
@@ -150,7 +156,7 @@ export default class Diff {
     if (child.isComponent()) {
       if (child.isRoot()) {
         this.childrenPatches(child.children, description.children, child);
-        this.addPatch(opr.Toolkit.Patch.updateNode(child, description));
+        this.addPatch(Patch.updateNode(child, description));
         return child.update(description);
       }
       return this.componentPatches(child, description);
@@ -173,28 +179,28 @@ export default class Diff {
     this.classNamePatches(
       element.description.class,
       description.class,
-      element
+      element,
     );
     this.stylePatches(element.description.style, description.style, element);
     this.attributePatches(
       element.description.attrs,
       description.attrs,
-      element
+      element,
     );
     this.listenerPatches(
       element.description.listeners,
       description.listeners,
-      element
+      element,
     );
     this.datasetPatches(
       element.description.dataset,
       description.dataset,
-      element
+      element,
     );
     this.propertiesPatches(
       element.description.properties,
       description.properties,
-      element
+      element,
     );
 
     if (element.description.custom || description.custom) {
@@ -202,38 +208,36 @@ export default class Diff {
         element.description.custom && element.description.custom.attrs,
         description.custom && description.custom.attrs,
         element,
-        true
+        true,
       );
       this.listenerPatches(
         element.description.custom && element.description.custom.listeners,
         description.custom && description.custom.listeners,
         element,
-        true
+        true,
       );
     }
 
     if (element.children || description.children) {
       this.childrenPatches(element.children, description.children, element);
     }
-    this.addPatch(opr.Toolkit.Patch.updateNode(element, description));
+    this.addPatch(Patch.updateNode(element, description));
   }
 
   classNamePatches(current = '', next = '', target) {
     if (current !== next) {
-      this.addPatch(opr.Toolkit.Patch.setClassName(next, target));
+      this.addPatch(Patch.setClassName(next, target));
     }
   }
 
   stylePatches(current = {}, next = {}, target) {
-    const Patch = opr.Toolkit.Patch;
-
     const props = Object.keys(current);
     const nextProps = Object.keys(next);
 
     const added = nextProps.filter(prop => !props.includes(prop));
     const removed = props.filter(prop => !nextProps.includes(prop));
     const changed = props.filter(
-      prop => nextProps.includes(prop) && current[prop] !== next[prop]
+      prop => nextProps.includes(prop) && current[prop] !== next[prop],
     );
 
     for (let prop of added) {
@@ -248,15 +252,13 @@ export default class Diff {
   }
 
   attributePatches(current = {}, next = {}, target = null, isCustom = false) {
-    const Patch = opr.Toolkit.Patch;
-
     const attrs = Object.keys(current);
     const nextAttrs = Object.keys(next);
 
     const added = nextAttrs.filter(attr => !attrs.includes(attr));
     const removed = attrs.filter(attr => !nextAttrs.includes(attr));
     const changed = attrs.filter(
-      attr => nextAttrs.includes(attr) && current[attr] !== next[attr]
+      attr => nextAttrs.includes(attr) && current[attr] !== next[attr],
     );
 
     for (let attr of added) {
@@ -271,8 +273,6 @@ export default class Diff {
   }
 
   listenerPatches(current = {}, next = {}, target = null, isCustom = false) {
-    const Patch = opr.Toolkit.Patch;
-
     const listeners = Object.keys(current);
     const nextListeners = Object.keys(next);
 
@@ -284,7 +284,7 @@ export default class Diff {
         current[event] !== next[event] &&
         ((current[event].source === undefined &&
           next[event].source === undefined) ||
-          current[event].source !== next[event].source)
+          current[event].source !== next[event].source),
     );
 
     for (let event of added) {
@@ -292,7 +292,7 @@ export default class Diff {
     }
     for (let event of removed) {
       this.addPatch(
-        Patch.removeListener(event, current[event], target, isCustom)
+        Patch.removeListener(event, current[event], target, isCustom),
       );
     }
     for (let event of changed) {
@@ -302,22 +302,20 @@ export default class Diff {
           current[event],
           next[event],
           target,
-          isCustom
-        )
+          isCustom,
+        ),
       );
     }
   }
 
   datasetPatches(current = {}, next = {}, target) {
-    const Patch = opr.Toolkit.Patch;
-
     const attrs = Object.keys(current);
     const nextAttrs = Object.keys(next);
 
     const added = nextAttrs.filter(attr => !attrs.includes(attr));
     const removed = attrs.filter(attr => !nextAttrs.includes(attr));
     const changed = attrs.filter(
-      attr => nextAttrs.includes(attr) && current[attr] !== next[attr]
+      attr => nextAttrs.includes(attr) && current[attr] !== next[attr],
     );
 
     for (let attr of added) {
@@ -332,15 +330,13 @@ export default class Diff {
   }
 
   propertiesPatches(current = {}, next = {}, target = null) {
-    const Patch = opr.Toolkit.Patch;
-
     const keys = Object.keys(current);
     const nextKeys = Object.keys(next);
 
     const added = nextKeys.filter(key => !keys.includes(key));
     const removed = keys.filter(key => !nextKeys.includes(key));
     const changed = keys.filter(
-      key => nextKeys.includes(key) && !Diff.deepEqual(current[key], next[key])
+      key => nextKeys.includes(key) && !Diff.deepEqual(current[key], next[key]),
     );
 
     for (let key of added) {
@@ -355,7 +351,6 @@ export default class Diff {
   }
 
   childrenPatches(sourceNodes = [], targetDescriptions = [], parent) {
-    const {Patch, Reconciler, VirtualDOM} = opr.Toolkit;
     const Move = Reconciler.Move;
 
     const created = [];
@@ -365,7 +360,7 @@ export default class Diff {
       const node = VirtualDOM.createFromDescription(
         description,
         parent,
-        this.root
+        this.root,
       );
       created.push(node);
       createdNodesMap.set(key, node);
@@ -373,10 +368,10 @@ export default class Diff {
     };
 
     const from = sourceNodes.map(
-      (node, index) => node.key || Diff.createKey(index)
+      (node, index) => node.key || Diff.createKey(index),
     );
     const to = targetDescriptions.map(
-      (description, index) => description.key || Diff.createKey(index)
+      (description, index) => description.key || Diff.createKey(index),
     );
 
     const getNode = (key, isMove) => {
@@ -390,7 +385,7 @@ export default class Diff {
       return createNode(targetDescriptions[index], key);
     };
 
-    if (opr.Toolkit.isDebug()) {
+    if (Toolkit.isDebug()) {
       const assertUniqueKeys = keys => {
         if (keys.length) {
           const uniqueKeys = [...new Set(keys)];
@@ -404,13 +399,13 @@ export default class Diff {
     }
 
     const nodeFavoredToMove = sourceNodes.find(
-      node => node.description.props && node.description.props.beingDragged
+      node => node.description.props && node.description.props.beingDragged,
     );
 
     const moves = Reconciler.calculateMoves(
       from,
       to,
-      nodeFavoredToMove && nodeFavoredToMove.key
+      nodeFavoredToMove && nodeFavoredToMove.key,
     );
 
     const children = [...sourceNodes];
@@ -442,17 +437,17 @@ export default class Diff {
 
   elementChildPatches(child, description, parent) {
     if (child.description.isCompatible(description)) {
-      if (opr.Toolkit.Diff.deepEqual(child.description, description)) {
+      if (Diff.deepEqual(child.description, description)) {
         return;
       }
       this.childPatches(child, description);
     } else {
-      const node = opr.Toolkit.VirtualDOM.createFromDescription(
+      const node = VirtualDOM.createFromDescription(
         description,
         parent,
-        this.root
+        this.root,
       );
-      this.addPatch(opr.Toolkit.Patch.replaceChild(child, node, parent));
+      this.addPatch(Patch.replaceChild(child, node, parent));
     }
   }
 

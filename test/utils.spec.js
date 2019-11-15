@@ -1,5 +1,4 @@
 describe('Utils', () => {
-
   beforeEach(() => {
     sinon.stub(console, 'error');
   });
@@ -19,24 +18,29 @@ describe('Utils', () => {
   } = opr.Toolkit.utils;
 
   describe('throttle', () => {
-
     it('throttles using specified wait time', async () => {
-
       // given
       const wait = 50;
       const timestamps = [];
       const fn = () => timestamps.push(Date.now());
-      const waitTimes =
-          new Array(1000).fill(0).map(() => Math.floor(Math.random() * 200));
+      const waitTimes = new Array(1000)
+        .fill(0)
+        .map(() => Math.floor(Math.random() * 200));
 
       // when
       const throttled = throttle(fn, wait);
 
       await Promise.all(
-          waitTimes.map(waitTime => new Promise(resolve => setTimeout(() => {
-                                                  throttled();
-                                                  resolve();
-                                                }, waitTime))));
+        waitTimes.map(
+          waitTime =>
+            new Promise(resolve =>
+              setTimeout(() => {
+                throttled();
+                resolve();
+              }, waitTime),
+            ),
+        ),
+      );
 
       // then
       assert(timestamps.length <= 5);
@@ -47,30 +51,35 @@ describe('Utils', () => {
     });
 
     it('delays first event', async () => {
-
       // given
       const wait = 50;
       const timestamps = [];
       const startTimestamp = Date.now();
       const fn = () => timestamps.push(Date.now());
-      const waitTimes =
-          new Array(1000).fill(0).map(() => Math.floor(Math.random() * 200));
+      const waitTimes = new Array(1000)
+        .fill(0)
+        .map(() => Math.floor(Math.random() * 200));
 
       // when
       const throttled = throttle(fn, wait, true);
 
       await Promise.all(
-          waitTimes.map(waitTime => new Promise(resolve => setTimeout(() => {
-                                                  throttled();
-                                                  resolve();
-                                                }, waitTime))));
+        waitTimes.map(
+          waitTime =>
+            new Promise(resolve =>
+              setTimeout(() => {
+                throttled();
+                resolve();
+              }, waitTime),
+            ),
+        ),
+      );
 
       // then
       assert(timestamps[0] >= startTimestamp + wait);
     });
 
     it('does not throttle infrequent events', async () => {
-
       // given
       const wait = 20;
       const timestamps = [];
@@ -81,10 +90,16 @@ describe('Utils', () => {
       const throttled = throttle(fn, wait);
 
       await Promise.all(
-          waitTimes.map(waitTime => new Promise(resolve => setTimeout(() => {
-                                                  throttled();
-                                                  resolve();
-                                                }, waitTime))));
+        waitTimes.map(
+          waitTime =>
+            new Promise(resolve =>
+              setTimeout(() => {
+                throttled();
+                resolve();
+              }, waitTime),
+            ),
+        ),
+      );
 
       // then
       assert.equal(timestamps.length, 5);
@@ -95,7 +110,6 @@ describe('Utils', () => {
   });
 
   describe('lower dash', () => {
-
     const convertions = [
       ['attributeName', 'attribute-name'],
       ['TestString', 'test-string'],
@@ -110,7 +124,6 @@ describe('Utils', () => {
   });
 
   describe('get attribute name', () => {
-
     const convertions = [
       ['accessKey', 'accesskey'],
       ['tabIndex', 'tabindex'],
@@ -131,7 +144,6 @@ describe('Utils', () => {
     });
   });
   describe('get event name', () => {
-
     const convertions = [
       ['onClick', 'click'],
       ['onDoubleClick', 'dblclick'],
@@ -147,12 +159,11 @@ describe('Utils', () => {
   });
 
   describe('add data prefix', () => {
-
     const convertions = [
       ['reactorId', 'dataReactorId'],
       ['someCustomAttribute', 'dataSomeCustomAttribute'],
       ['name', 'dataName'],
-    ]
+    ];
 
     convertions.forEach(([from, to]) => {
       it(`converts "${from}" to "${to}"`, () => {
@@ -162,15 +173,13 @@ describe('Utils', () => {
   });
 
   describe('create UUID', () => {
-
     it('creates valid UUID', () => {
       const uuid = createUUID();
       assert.equal(/........-....-....-............/.test(uuid), true);
     });
-  })
+  });
 
   describe('is supported attribute', () => {
-
     it('returns true for standard attributes', () => {
       assert(isSupportedAttribute('name'));
       assert(isSupportedAttribute('id'));
@@ -200,5 +209,5 @@ describe('Utils', () => {
     it('returns false for invalid attribute', () => {
       assert.equal(isSupportedAttribute('invalid'), false);
     });
-  })
+  });
 });

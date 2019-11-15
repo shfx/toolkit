@@ -1,15 +1,8 @@
 describe('Virtual DOM => create element', () => {
-
-  const {
-    VirtualElement,
-    VirtualDOM,
-    Template,
-  } = opr.Toolkit;
+  const {VirtualElement, VirtualDOM, Template} = opr.Toolkit;
 
   describe('=> create from template', () => {
-
     it('supports nested markup', () => {
-
       // given
       const template = [
         'div',
@@ -29,7 +22,7 @@ describe('Virtual DOM => create element', () => {
       const div = createFromTemplate(template);
 
       // then
-      assert(div.isElement())
+      assert(div.isElement());
       assert.equal(div.description.name, 'div');
       assert.equal(div.description.children.length, 1);
       assert.equal(div.children.length, 1);
@@ -47,28 +40,14 @@ describe('Virtual DOM => create element', () => {
     });
 
     it('supports mixed element nodes with text nodes', () => {
-
       // given
-      const template = [
-        'div',
-        [
-          'span',
-          [
-            'a',
-            '1',
-            '2',
-            '3',
-          ],
-          'foo',
-          'bar',
-        ],
-      ];
+      const template = ['div', ['span', ['a', '1', '2', '3'], 'foo', 'bar']];
 
       // when
       const div = createFromTemplate(template);
 
       // then
-      assert(div.isElement())
+      assert(div.isElement());
       assert.equal(div.description.name, 'div');
       assert.equal(div.description.children.length, 1);
       assert.equal(div.children.length, 1);
@@ -88,7 +67,6 @@ describe('Virtual DOM => create element', () => {
   });
 
   it('creates an empty element', () => {
-
     // given
     const description = Template.describe(['span']);
 
@@ -106,12 +84,14 @@ describe('Virtual DOM => create element', () => {
   });
 
   it('creates an empty with key', () => {
-
     // given
     const key = 'unique';
-    const description = Template.describe(['span', {
-      key,
-    }]);
+    const description = Template.describe([
+      'span',
+      {
+        key,
+      },
+    ]);
 
     // when
     const element = VirtualDOM.createFromDescription(description);
@@ -125,7 +105,6 @@ describe('Virtual DOM => create element', () => {
   });
 
   it('creates an empty element with attributes and listeners', () => {
-
     // given
     const onChange = () => {};
     const props = {
@@ -134,10 +113,7 @@ describe('Virtual DOM => create element', () => {
       autoFocus: true,
       onChange,
     };
-    const description = Template.describe([
-      'input',
-      props,
-    ]);
+    const description = Template.describe(['input', props]);
 
     // when
     const element = VirtualDOM.createFromDescription(description);
@@ -159,12 +135,8 @@ describe('Virtual DOM => create element', () => {
   });
 
   it('creates a text element', () => {
-
     // given
-    const description = Template.describe([
-      'div',
-      'Text',
-    ]);
+    const description = Template.describe(['div', 'Text']);
 
     // when
     const element = VirtualDOM.createFromDescription(description);
@@ -179,13 +151,8 @@ describe('Virtual DOM => create element', () => {
   });
 
   it('creates element with two text nodes', () => {
-
     // given
-    const description = Template.describe([
-      'div',
-      'Text',
-      'Another text',
-    ]);
+    const description = Template.describe(['div', 'Text', 'Another text']);
 
     // when
     const element = VirtualDOM.createFromDescription(description);
@@ -202,7 +169,6 @@ describe('Virtual DOM => create element', () => {
   });
 
   it('creates element with attributes', () => {
-
     // given
     const description = Template.describe([
       'input',
@@ -227,7 +193,6 @@ describe('Virtual DOM => create element', () => {
   });
 
   it('creates element with data attributes', () => {
-
     // given
     const description = Template.describe([
       'input',
@@ -255,7 +220,6 @@ describe('Virtual DOM => create element', () => {
   });
 
   it('creates element with class names', () => {
-
     // given
     const description = Template.describe([
       'div',
@@ -265,13 +229,7 @@ describe('Virtual DOM => create element', () => {
           {
             bar: true,
           },
-          [
-            [
-              [
-                'nested',
-              ],
-            ],
-          ],
+          [[['nested']]],
         ],
       },
     ]);
@@ -289,7 +247,6 @@ describe('Virtual DOM => create element', () => {
   });
 
   it('creates a text element with attributes and listeners', () => {
-
     // given
     const onClickListener = () => {};
     const props = {
@@ -298,11 +255,7 @@ describe('Virtual DOM => create element', () => {
       title: 'Example',
       onClick: onClickListener,
     };
-    const description = Template.describe([
-      'a',
-      props,
-      'Example',
-    ]);
+    const description = Template.describe(['a', props, 'Example']);
 
     // when
     const element = VirtualDOM.createFromDescription(description);
@@ -311,9 +264,9 @@ describe('Virtual DOM => create element', () => {
     assert(element instanceof VirtualElement);
     assert.equal(element.description.name, 'a');
     assert.deepEqual(element.description.attrs, {
-      'href': 'http://www.example.com/',
-      'target': '_blank',
-      'title': 'Example',
+      href: 'http://www.example.com/',
+      target: '_blank',
+      title: 'Example',
     });
     assert.deepEqual(element.description.listeners, {
       onClick: onClickListener,
@@ -324,18 +277,13 @@ describe('Virtual DOM => create element', () => {
   });
 
   it('ignores null and undefined attribute values', () => {
-
     // given
     const props = {
       href: null,
       target: undefined,
       title: 'Test',
     };
-    const description = Template.describe([
-      'a',
-      props,
-      'Text',
-    ]);
+    const description = Template.describe(['a', props, 'Text']);
 
     // when
     const element = VirtualDOM.createFromDescription(description);
@@ -344,7 +292,7 @@ describe('Virtual DOM => create element', () => {
     assert(element instanceof VirtualElement);
     assert.equal(element.description.name, 'a');
     assert.deepEqual(element.description.attrs, {
-      'title': 'Test',
+      title: 'Test',
     });
     assert(element.children);
     assert.equal(element.children.length, 1);
@@ -352,18 +300,13 @@ describe('Virtual DOM => create element', () => {
   });
 
   describe('supports adding attributes', () => {
-
     it('adds string attributes', () => {
-
       // given
       const props = {
         title: 'Title',
         value: 'Value',
       };
-      const description = Template.describe([
-        'div',
-        props,
-      ]);
+      const description = Template.describe(['div', props]);
 
       // when
       const element = VirtualDOM.createFromDescription(description);
@@ -378,16 +321,12 @@ describe('Virtual DOM => create element', () => {
     });
 
     it('adds number attributes', () => {
-
       // given
       const props = {
         height: 0,
         width: 200,
       };
-      const description = Template.describe([
-        'span',
-        props,
-      ]);
+      const description = Template.describe(['span', props]);
 
       // when
       const element = VirtualDOM.createFromDescription(description);
@@ -402,16 +341,12 @@ describe('Virtual DOM => create element', () => {
     });
 
     it('adds boolean attributes', () => {
-
       // given
       const props = {
         checked: 'true',
         selected: true,
       };
-      const description = Template.describe([
-        'input',
-        props,
-      ]);
+      const description = Template.describe(['input', props]);
 
       // when
       const element = VirtualDOM.createFromDescription(description);
@@ -426,16 +361,12 @@ describe('Virtual DOM => create element', () => {
     });
 
     it('ignores null and undefined values', () => {
-
       // given
       const props = {
         title: undefined,
         type: null,
       };
-      const description = Template.describe([
-        'section',
-        props,
-      ]);
+      const description = Template.describe(['section', props]);
 
       // when
       const element = VirtualDOM.createFromDescription(description);
@@ -447,7 +378,6 @@ describe('Virtual DOM => create element', () => {
     });
 
     describe('add "class" attribute', () => {
-
       const createElementWithClasses = (element, classNames) => {
         const description = Template.describe([
           element,
@@ -459,7 +389,6 @@ describe('Virtual DOM => create element', () => {
       };
 
       it('supports strings', () => {
-
         // given
         const classNames = 'foo bar';
 
@@ -473,7 +402,6 @@ describe('Virtual DOM => create element', () => {
       });
 
       it('supports arrays', () => {
-
         // given
         const classNames = ['foo', null, 'bar', undefined];
 
@@ -487,7 +415,6 @@ describe('Virtual DOM => create element', () => {
       });
 
       it('supports objects', () => {
-
         // given
         const classNames = {
           foo: true,
@@ -506,7 +433,6 @@ describe('Virtual DOM => create element', () => {
       });
 
       it('supports nesting', () => {
-
         // given
         const classNames = [
           null,
@@ -528,7 +454,6 @@ describe('Virtual DOM => create element', () => {
       });
 
       it('keeps redundant classes', () => {
-
         // given
         const classNames = ['foo', 'bar', 'bar'];
 
@@ -543,7 +468,6 @@ describe('Virtual DOM => create element', () => {
     });
 
     describe('add "style" attribute', () => {
-
       const createElementWithStyle = (element, style) => {
         const description = Template.describe([
           element,
@@ -555,7 +479,6 @@ describe('Virtual DOM => create element', () => {
       };
 
       it('supports plain values', () => {
-
         // given
         const style = {
           display: 'inherit',
@@ -573,7 +496,6 @@ describe('Virtual DOM => create element', () => {
       });
 
       it('supports array values', () => {
-
         // given
         const style = {
           height: [10, 'em'],
@@ -593,7 +515,6 @@ describe('Virtual DOM => create element', () => {
       });
 
       it('ignores null and undefined values', () => {
-
         // given
         const style = {
           width: null,
@@ -610,7 +531,6 @@ describe('Virtual DOM => create element', () => {
       });
 
       describe('add "filter"', () => {
-
         const createElementWithFilter = (element, filter) => {
           const description = Template.describe([
             element,
@@ -624,7 +544,6 @@ describe('Virtual DOM => create element', () => {
         };
 
         it('supports known filters', () => {
-
           // given
           const filter = {
             blur: '5px',
@@ -640,12 +559,13 @@ describe('Virtual DOM => create element', () => {
           assert(element instanceof VirtualElement);
           assert.equal(element.description.name, 'section');
           assert.equal(
-              element.description.style.filter, 'blur(5px) saturate(2)');
+            element.description.style.filter,
+            'blur(5px) saturate(2)',
+          );
         });
       });
 
       describe('add "transform"', () => {
-
         const createElementWithTransform = (element, transform) => {
           const description = Template.describe([
             element,
@@ -659,7 +579,6 @@ describe('Virtual DOM => create element', () => {
         };
 
         it('supports known transforms', () => {
-
           // given
           const filter = {
             translate3d: '0, 0, 0',
@@ -675,8 +594,9 @@ describe('Virtual DOM => create element', () => {
           assert(element instanceof VirtualElement);
           assert.equal(element.description.name, 'section');
           assert.equal(
-              element.description.style.transform,
-              'translate3d(0, 0, 0) scale(2) rotate(90deg)');
+            element.description.style.transform,
+            'translate3d(0, 0, 0) scale(2) rotate(90deg)',
+          );
         });
       });
     });

@@ -14,6 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import Patch from './patch';
+
 export default {
   onComponentCreated(component) {
     if (component.hasOwnMethod('onCreated')) {
@@ -183,7 +185,7 @@ export default {
   },
 
   beforePatchApplied(patch) {
-    const Type = opr.Toolkit.Patch.Type;
+    const Type = Patch.Type;
     switch (patch.type) {
       case Type.INIT_ROOT_COMPONENT:
         this.onRootCreated(patch.root);
@@ -213,7 +215,7 @@ export default {
   },
 
   afterPatchApplied(patch) {
-    const Type = opr.Toolkit.Patch.Type;
+    const Type = Patch.Type;
     switch (patch.type) {
       case Type.INIT_ROOT_COMPONENT:
         this.onRootAttached(patch.root);

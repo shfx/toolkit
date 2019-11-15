@@ -14,6 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
+import Sandbox from './sandbox';
+import utils from './utils';
+
 const Permission = {
   LISTEN_FOR_UPDATES: 'listen-for-updates',
   REGISTER_METHOD: 'register-method',
@@ -22,9 +25,9 @@ const Permission = {
 
 class Plugin {
   constructor(manifest) {
-    opr.Toolkit.assert(
+    utils.assert(
       typeof manifest.name === 'string' && manifest.name.length,
-      'Plugin name must be a non-empty string!'
+      'Plugin name must be a non-empty string!',
     );
 
     Object.assign(this, manifest);
@@ -33,12 +36,12 @@ class Plugin {
     if (this.permissions === undefined) {
       this.permissions = [];
     } else {
-      opr.Toolkit.assert(
+      utils.assert(
         Array.isArray(this.permissions),
-        'Plugin permissions must be an array'
+        'Plugin permissions must be an array',
       );
       this.permissions = this.permissions.filter(permission =>
-        Object.values(Permission).includes(permission)
+        Object.values(Permission).includes(permission),
       );
     }
 
@@ -49,9 +52,9 @@ class Plugin {
     if (typeof manifest.install === 'function') {
       this.install = root => {
         const uninstall = manifest.install(root);
-        opr.Toolkit.assert(
+        utils.assert(
           typeof uninstall === 'function',
-          'The plugin installation must return the uninstall function!'
+          'The plugin installation must return the uninstall function!',
         );
         return uninstall;
       };
@@ -71,8 +74,7 @@ class Plugin {
     for (const permission of this.permissions) {
       switch (permission) {
         case Permission.REGISTER_METHOD:
-          sandbox.registerMethod = name =>
-            opr.Toolkit.Sandbox.registerPluginMethod(name);
+          sandbox.registerMethod = name => Sandbox.registerPluginMethod(name);
       }
     }
     return sandbox;
@@ -92,9 +94,9 @@ class Registry {
    * Adds the plugin to the registry
    */
   add(plugin) {
-    opr.Toolkit.assert(
+    utils.assert(
       !this.isRegistered(plugin.name),
-      `Plugin '${plugin.name}' is already registered!`
+      `Plugin '${plugin.name}' is already registered!`,
     );
     this.plugins.set(plugin.name, plugin);
     this.updateCache();
@@ -106,10 +108,7 @@ class Registry {
    */
   remove(name) {
     const plugin = this.plugins.get(name);
-    opr.Toolkit.assert(
-      plugin,
-      `No plugin found with the specified name: "${name}"`
-    );
+    utils.assert(plugin, `No plugin found with the specified name: "${name}"`);
     this.plugins.delete(name);
     this.updateCache();
     const uninstall = this.uninstalls.get(name);
