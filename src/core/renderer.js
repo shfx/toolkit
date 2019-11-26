@@ -182,8 +182,12 @@ class ComponentElement extends HTMLElement {
       root.init();
     };
 
-    if (stylesheets && stylesheets.length) {
-      const imports = cssImports(stylesheets);
+    if (stylesheets !== undefined) {
+      let imports = stylesheets;
+
+      if (Array.isArray(stylesheets)) {
+        imports = cssImports(imports);
+      }
 
       const onError = () => {
         throw new Error(`Error loading stylesheets: ${stylesheets.join(', ')}`);

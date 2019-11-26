@@ -113,7 +113,7 @@ describe('Template => describe', () => {
       assert.equal(description.children[1].name, 'span');
     });
 
-    it('detects component symbol with properties and filtered child nodes', () => {
+    it('detects component symbol with properties and filtered children', () => {
       // given
       class ComponentWithPropsAndChildren extends opr.Toolkit.Component {}
       const id = 'test/component-with-props-and-some-children';
@@ -592,8 +592,8 @@ describe('Template => describe', () => {
           'Invalid item',
           undefined,
           'at index: 2, template:',
-          element,
-        ),
+          element
+        )
       );
     });
 
@@ -612,8 +612,8 @@ describe('Template => describe', () => {
           'Invalid node type:',
           null,
           '(null) at index: 0, template:',
-          node,
-        ),
+          node
+        )
       );
     });
   });
@@ -718,8 +718,8 @@ describe('Template => describe', () => {
           'Invalid node type:',
           object,
           '(props) at index: 0, template:',
-          template,
-        ),
+          template
+        )
       );
     });
 
@@ -738,8 +738,8 @@ describe('Template => describe', () => {
           'Invalid node type:',
           number,
           '(number) at index: 0, template:',
-          template,
-        ),
+          template
+        )
       );
     });
 
@@ -757,8 +757,8 @@ describe('Template => describe', () => {
           'Invalid node type:',
           null,
           '(null) at index: 0, template:',
-          template,
-        ),
+          template
+        )
       );
     });
 
@@ -776,8 +776,8 @@ describe('Template => describe', () => {
           'Invalid node type:',
           true,
           '(boolean) at index: 0, template:',
-          template,
-        ),
+          template
+        )
       );
     });
 
@@ -795,8 +795,8 @@ describe('Template => describe', () => {
           'Invalid node type:',
           undefined,
           '(undefined) at index: 0, template:',
-          template,
-        ),
+          template
+        )
       );
     });
 
@@ -815,8 +815,8 @@ describe('Template => describe', () => {
           'Invalid item',
           fn,
           'at index: 1, template:',
-          template,
-        ),
+          template
+        )
       );
     });
   });

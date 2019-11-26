@@ -24,6 +24,7 @@ import Description from './description';
 import utils from './utils';
 import Renderer from './renderer';
 import Template from './template';
+import {log} from 'util';
 
 /*
  * An abstract parent node.
@@ -38,7 +39,7 @@ class VirtualNode {
 
   createChildren() {
     this.children = this.description.children.map(childDescription =>
-      this.createChild(childDescription),
+      this.createChild(childDescription)
     );
   }
 
@@ -105,7 +106,7 @@ class VirtualNode {
   moveChild(child, from, to) {
     utils.assert(
       this.children[from] === child,
-      'Specified node is not a child of this element!',
+      'Specified node is not a child of this element!'
     );
     this.children.splice(from, 1);
     this.children.splice(to, 0, child);
@@ -179,7 +180,7 @@ class Component extends VirtualNode {
   setContent(node) {
     utils.assert(
       node.parentNode === this,
-      'Specified node does not have a valid parent!',
+      'Specified node does not have a valid parent!'
     );
     this.content.parentNode = null;
     node.parentNode = this;
@@ -190,19 +191,19 @@ class Component extends VirtualNode {
   hasOwnMethod(method) {
     return Object.prototype.hasOwnProperty.call(
       this.constructor.prototype,
-      method,
+      method
     );
   }
 
   connectTo(service, listeners) {
     utils.assert(
       typeof service.connect === 'function',
-      'Services have to define the connect() method',
+      'Services have to define the connect() method'
     );
     const disconnect = service.connect(listeners);
     utils.assert(
       typeof disconnect === 'function',
-      'The result of the connect() method has to be a disconnect() method',
+      'The result of the connect() method has to be a disconnect() method'
     );
     disconnect.service = service;
     this.cleanUpTasks.push(disconnect);
@@ -309,7 +310,7 @@ export class WebComponent extends Component {
 
   createPlaceholder() {
     return VirtualDOM.createFromDescription(
-      new Description.CommentDescription(this.constructor.displayName),
+      new Description.CommentDescription(this.constructor.displayName)
     );
   }
 
@@ -321,7 +322,7 @@ export class WebComponent extends Component {
 
     const state = await this.getInitialState.call(
       this.sandbox,
-      this.description.props || {},
+      this.description.props || {}
     );
     this.setState(state);
 
@@ -344,7 +345,7 @@ export class WebComponent extends Component {
     }
     const state = this.getUpdatedState(
       description.props || {},
-      this.state.current || {},
+      this.state.current || {}
     );
     this.setState(state);
   }
@@ -357,7 +358,7 @@ export class WebComponent extends Component {
       throw new Error('Web Component state must be a plain object!');
     }
     this.commands.setState(
-      Template.normalizeComponentProps(state, this.constructor),
+      Template.normalizeComponentProps(state, this.constructor)
     );
   }
 
@@ -409,21 +410,30 @@ export class WebComponent extends Component {
   }
 
   getStylesheets() {
+    if (!Array.isArray(this.constructor.styles)) {
+      return this.constructor.styles;
+    }
+
     const stylesheets = [];
+
     const stylesheetProviders = [...this.plugins].filter(plugin =>
-      plugin.isStylesheetProvider(),
+      plugin.isStylesheetProvider()
     );
     for (const plugin of stylesheetProviders) {
       if (typeof plugin.getStylesheets !== 'function') {
         throw new Error(
-          `Plugin '${plugin.name}' must provide the getStylesheets() method!`,
+          `Plugin '${plugin.name}' must provide the getStylesheets() method!`
         );
       }
       stylesheets.push(...plugin.getStylesheets());
     }
+
     if (Array.isArray(this.constructor.styles)) {
       stylesheets.push(...this.constructor.styles);
     }
+
+    console.log(stylesheets);
+
     return stylesheets;
   }
 
