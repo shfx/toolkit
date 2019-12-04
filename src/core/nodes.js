@@ -24,7 +24,6 @@ import Description from './description';
 import utils from './utils';
 import Renderer from './renderer';
 import Template from './template';
-import {log} from 'util';
 
 /*
  * An abstract parent node.
@@ -431,8 +430,6 @@ export class WebComponent extends Component {
     if (Array.isArray(this.constructor.styles)) {
       stylesheets.push(...this.constructor.styles);
     }
-
-    console.log(stylesheets);
 
     return stylesheets;
   }
