@@ -50,6 +50,7 @@ class Toolkit {
 
   import(path) {
     const modulePath = loader.path(path);
+    console.log(path, modulePath);
     return new Promise((resolve, reject) => {
       const script = document.createElement('script');
       script.src = modulePath;
@@ -127,6 +128,7 @@ class Toolkit {
    * with the specified id.
    */
   resolveLoadedClass(id) {
+    console.log(id);
     const ComponentClass = loader.get(id);
     if (!ComponentClass) {
       throw new Error(`Error resolving component class for '${id}'`);
