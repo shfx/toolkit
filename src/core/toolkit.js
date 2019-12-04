@@ -14,13 +14,10 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-import loader from 'lazy-module-loader';
 import Template from './template';
 import Plugins from './plugins';
 import VirtualDOM from './virtual-dom';
 import nodes from './nodes';
-
-globalThis.loader = loader;
 
 const INIT = Symbol('init');
 
@@ -46,23 +43,6 @@ class Toolkit {
     this.settings = settings;
     this.plugins = this.createPlugins(options.plugins);
     this[INIT](true);
-  }
-
-  import(path) {
-    const modulePath = loader.path(path);
-    console.log(path, modulePath);
-    return new Promise((resolve, reject) => {
-      const script = document.createElement('script');
-      script.src = modulePath;
-      script.type = 'module';
-      script.onload = () => {
-        resolve();
-      };
-      script.onerror = error => {
-        reject(error);
-      };
-      document.head.appendChild(script);
-    });
   }
 
   /*
@@ -128,7 +108,6 @@ class Toolkit {
    * with the specified id.
    */
   resolveLoadedClass(id) {
-    console.log(id);
     const ComponentClass = loader.get(id);
     if (!ComponentClass) {
       throw new Error(`Error resolving component class for '${id}'`);
@@ -137,10 +116,10 @@ class Toolkit {
       console.error(
         'Module:',
         ComponentClass,
-        'is not a component extending Component!',
+        'is not a component extending Component!'
       );
       throw new Error(
-        `Module defined with id "${id}" is not a component class.`,
+        `Module defined with id "${id}" is not a component class.`
       );
     }
     return ComponentClass;

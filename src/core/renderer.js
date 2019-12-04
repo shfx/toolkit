@@ -161,7 +161,7 @@ export default {
 
 const cssImports = paths =>
   paths
-    .map(loader.path)
+    .map(loader ? loader.path : x => x)
     .map(path => `@import url(${path});`)
     .join('\n');
 

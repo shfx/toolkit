@@ -44,7 +44,6 @@
     "@babel/plugin-transform-runtime": "^7.6.2",
     "@babel/preset-env": "^7.6.2",
     "@babel/register": "^7.7.0",
-    "lazy-module-loader": "https://github.com/shfx/lazy-module-loader.git#exporting-issues",
     "rollup": "^1.21.4",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-commonjs": "^10.1.0",
