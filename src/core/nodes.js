@@ -206,6 +206,8 @@ class Component extends VirtualNode {
     );
     disconnect.service = service;
     this.cleanUpTasks.push(disconnect);
+
+    return disconnect;
   }
 
   get childElement() {
