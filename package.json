@@ -38,33 +38,33 @@
   },
   "homepage": "https://github.com/operasoftware/toolkit#readme",
   "dependencies": {
-    "@babel/core": "^7.6.2",
-    "@babel/plugin-proposal-class-properties": "^7.5.5",
-    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
-    "@babel/plugin-transform-runtime": "^7.6.2",
-    "@babel/preset-env": "^7.6.2",
-    "@babel/register": "^7.7.0",
-    "rollup": "^1.21.4",
-    "rollup-plugin-babel": "^4.3.3",
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
+    "@babel/plugin-transform-runtime": "^7.9.0",
+    "@babel/preset-env": "^7.9.5",
+    "@babel/register": "^7.9.0",
+    "rollup": "^1.32.1",
+    "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-replace": "^2.2.0",
     "rollup-plugin-sourcemaps": "^0.4.2",
-    "rollup-plugin-terser": "^5.1.2"
+    "rollup-plugin-terser": "^5.3.0"
   },
   "devDependencies": {
     "assert": "^2.0.0",
-    "babel-eslint": "^10.0.3",
+    "babel-eslint": "^10.1.0",
     "dom-test": "^0.4.0",
     "eslint": "^5.16.0",
     "express": "^4.17.1",
-    "mocha": "^6.2.0",
+    "mocha": "^6.2.3",
     "npm-watch": "0.6.0",
     "nyc": "^14.1.1",
     "path": "^0.12.7",
     "pre-commit": "^1.2.2",
-    "sinon": "^7.4.1",
-    "tap": "^14.6.1"
+    "sinon": "^7.5.0",
+    "tap": "^14.10.7"
   },
   "watch": {
     "update-opera": {
