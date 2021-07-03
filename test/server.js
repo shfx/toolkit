@@ -10,6 +10,7 @@ app.set('port', PORT);
 app.use('/', express.static('test'));
 app.use('/config', express.static('test/config'));
 app.use('/src', express.static('src'));
+app.use('/dist', express.static('dist'));
 app.use('/core', express.static('src/core'));
 app.use('/loader', express.static('node_modules/lazy-module-loader'));
 

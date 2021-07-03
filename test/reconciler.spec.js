@@ -1,19 +1,18 @@
 describe('Reconciler', () => {
-
   const Reconciler = opr.Toolkit.Reconciler;
   const MoveName = Reconciler.Move.Name;
 
   const A = 'A',
-        B = 'B',
-        C = 'C',
-        D = 'D',
-        E = 'E',
-        F = 'F',
-        G = 'G',
-        H = 'H';
+    B = 'B',
+    C = 'C',
+    D = 'D',
+    E = 'E',
+    F = 'F',
+    G = 'G',
+    H = 'H';
   const X = 'X',
-        Y = 'Y',
-        Z = 'Z';
+    Y = 'Y',
+    Z = 'Z';
 
   const assertSingleMove = moves => {
     assert(Array.isArray(moves));
@@ -37,7 +36,6 @@ describe('Reconciler', () => {
   };
 
   it('inserts item into an empty array', () => {
-
     // given
     const source = [];
     const target = [X];
@@ -52,7 +50,6 @@ describe('Reconciler', () => {
   });
 
   it('inserts item at specified index', () => {
-
     // given
     const source = [A, B, C, D];
     const target = [A, B, X, C, D];
@@ -67,7 +64,6 @@ describe('Reconciler', () => {
   });
 
   it('inserts item at the beginning', () => {
-
     // given
     const source = [A, B, C, D];
     const target = [X, A, B, C, D];
@@ -82,7 +78,6 @@ describe('Reconciler', () => {
   });
 
   it('inserts item at the end', () => {
-
     // given
     const source = [A, B, C, D];
     const target = [A, B, C, D, X];
@@ -97,7 +92,6 @@ describe('Reconciler', () => {
   });
 
   it('removes a single item', () => {
-
     // given
     const source = [X];
     const target = [];
@@ -112,7 +106,6 @@ describe('Reconciler', () => {
   });
 
   it('removes item at specified index', () => {
-
     // given
     const source = [A, B, X, C, D];
     const target = [A, B, C, D];
@@ -127,7 +120,6 @@ describe('Reconciler', () => {
   });
 
   it('removes item at the beginning', () => {
-
     // given
     const source = [X, A, B, C, D];
     const target = [A, B, C, D];
@@ -142,7 +134,6 @@ describe('Reconciler', () => {
   });
 
   it('removes item at the end', () => {
-
     // given
     const source = [A, B, C, D, X];
     const target = [A, B, C, D];
@@ -157,7 +148,6 @@ describe('Reconciler', () => {
   });
 
   it('removes multiple items', () => {
-
     // given
     const source = [A, B, C, D, E, F, G, H];
     const target = [A, B, C];
@@ -176,7 +166,6 @@ describe('Reconciler', () => {
   });
 
   it('moves the item forward', () => {
-
     // given
     const source = [A, X, B, C, D, E, F, G, H];
     const target = [A, B, C, D, E, F, G, X, H];
@@ -191,7 +180,6 @@ describe('Reconciler', () => {
   });
 
   it('moves the item to the end', () => {
-
     // given
     const source = [X, A, B, C, D];
     const target = [A, B, C, D, X];
@@ -206,7 +194,6 @@ describe('Reconciler', () => {
   });
 
   it('moves the item backward', () => {
-
     // given
     const source = [A, B, C, D, E, F, G, X, H];
     const target = [A, X, B, C, D, E, F, G, H];
@@ -221,7 +208,6 @@ describe('Reconciler', () => {
   });
 
   it('moves the item to the beginning', () => {
-
     // given
     const source = [A, B, C, D, X];
     const target = [X, A, B, C, D];
@@ -236,7 +222,6 @@ describe('Reconciler', () => {
   });
 
   it('moves the items around (1)', () => {
-
     // given
     const source = [A, B, C, D, E, F];
     const target = [A, B, F, E, C, D];
@@ -250,7 +235,6 @@ describe('Reconciler', () => {
   });
 
   it('moves the items around (2)', () => {
-
     // given
     const source = [A, B, C, D, E, F];
     const target = [B, C, D, A, G, E];
@@ -264,7 +248,6 @@ describe('Reconciler', () => {
   });
 
   it('moves the items around (3)', () => {
-
     // given
     const source = [A, B, C, D, E, F];
     const target = [C, D, E, F, B, A];
@@ -278,7 +261,6 @@ describe('Reconciler', () => {
   });
 
   it('inserts, moves and removes items (1)', () => {
-
     // given
     const source = [X, A, B, C, Y, D];
     const target = [A, B, C, Z, D, X];
@@ -292,7 +274,6 @@ describe('Reconciler', () => {
   });
 
   it('inserts, moves and removes items (2)', () => {
-
     // given
     const source = [X, A, B, C, D, E, F, G, H, Y];
     const target = [A, Z, B, C, D, E, F, G, H, X];
@@ -306,7 +287,6 @@ describe('Reconciler', () => {
   });
 
   it('inserts, moves and removes items (3)', () => {
-
     // given
     const source = [A, X, B, C, D, E, Y, F, G, H];
     const target = [H, A, Y, B, D, E, F, Z, C];

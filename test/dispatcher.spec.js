@@ -1,11 +1,8 @@
 describe('Dispatcher', () => {
-
   describe('=> Executes commands', () => {
-
     class Root extends opr.Toolkit.Root {}
 
     it('calls "set-state" upon initialization', async () => {
-
       // given
       const container = document.createElement('main');
       const root = createRootInstance(Root);
@@ -20,7 +17,6 @@ describe('Dispatcher', () => {
     });
 
     it('calls "set-state" on direct request', async () => {
-
       // given
       const root = await createWebComponent(Root);
       const state = {foo: 'bar'};
@@ -35,7 +31,6 @@ describe('Dispatcher', () => {
     });
 
     it('calls "update" on direct request', async () => {
-
       // given
       const root = await createWebComponent(Root);
       const state = {foo: 'bar'};
@@ -51,12 +46,9 @@ describe('Dispatcher', () => {
   });
 
   describe('Queues commands', () => {
-
     it('queues "update" from lifecycle method', async () => {
-
       // given
       class Root extends opr.Toolkit.Root {
-
         onCreated() {
           this.commands.update({
             number: 19,
@@ -78,9 +70,11 @@ describe('Dispatcher', () => {
 
       // then
       assert(root.commands.update.called);
-      assert(root.commands.update.calledWith({
-        number: 19,
-      }));
+      assert(
+        root.commands.update.calledWith({
+          number: 19,
+        }),
+      );
     });
   });
 });

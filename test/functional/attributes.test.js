@@ -1,5 +1,4 @@
 describe('Attributes', () => {
-
   let container;
 
   beforeEach(() => {
@@ -9,22 +8,18 @@ describe('Attributes', () => {
 
   afterEach(() => {
     container.remove();
-  })
+  });
 
   it('sets custom attribute for WebComponent', async () => {
-
     const elementName = 'custom-element';
 
     class CustomElement extends opr.Toolkit.WebComponent {
-
       static get elementName() {
         return elementName;
       }
 
       render() {
-        return [
-          'main',
-        ];
+        return ['main'];
       }
     }
 
@@ -38,5 +33,4 @@ describe('Attributes', () => {
     assert.equal(customElement.ref, element);
     assert.equal('yes', element.getAttribute('converted-to-lowecase'));
   });
-
 });

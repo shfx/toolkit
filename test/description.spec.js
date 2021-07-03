@@ -1,15 +1,9 @@
 describe('Description', () => {
-
   const Template = opr.Toolkit.Template;
-  const {
-    ComponentDescription,
-    ElementDescription,
-  } = opr.Toolkit.Description;
+  const {ComponentDescription, ElementDescription} = opr.Toolkit.Description;
 
   describe('is compatible', () => {
-
     it('returns false for different types', () => {
-
       // given
       const componentDescription = new ComponentDescription({
         subtype: 'function',
@@ -23,7 +17,6 @@ describe('Description', () => {
     });
 
     it('returns true for elements with the same name', () => {
-
       // given
       const firstDivDescription = new ElementDescription('div');
       firstDivDescription.text = 'bar';
@@ -37,7 +30,6 @@ describe('Description', () => {
     });
 
     it('returns false for elements with different name', () => {
-
       // given
       const divDescription = new ElementDescription({
         name: 'div',
@@ -52,7 +44,6 @@ describe('Description', () => {
     });
 
     it('returns true for components with the same constructor', () => {
-
       // given
       class Component extends opr.Toolkit.Component {}
 
@@ -68,7 +59,6 @@ describe('Description', () => {
     });
 
     it('returns false for components with different constructors', () => {
-
       // given
       class Component extends opr.Toolkit.Component {}
       class OtherComponent extends opr.Toolkit.Component {}
@@ -77,8 +67,9 @@ describe('Description', () => {
       componentDescription.props = {
         key: 'value',
       };
-      const otherComponentDescription =
-          new ComponentDescription(OtherComponent);
+      const otherComponentDescription = new ComponentDescription(
+        OtherComponent,
+      );
 
       // assert
       assert(!componentDescription.isCompatible(otherComponentDescription));
@@ -87,11 +78,9 @@ describe('Description', () => {
   });
 
   describe('as template', () => {
-
     class Component extends opr.Toolkit.Component {}
 
     it('returns template of Component', () => {
-
       // given
       const description = new ComponentDescription(Component);
 
@@ -103,7 +92,6 @@ describe('Description', () => {
     });
 
     it('returns template of Component with properties', () => {
-
       // given
       const props = {
         foo: 'bar',
@@ -119,33 +107,20 @@ describe('Description', () => {
     });
 
     it('returns template of Component with children', () => {
-
       // given
       const divDescription = new ElementDescription('div');
       const spanDescription = new ElementDescription('span');
       const description = new ComponentDescription(Component);
-      description.children = [
-        divDescription,
-        spanDescription,
-      ];
+      description.children = [divDescription, spanDescription];
 
       // when
       const template = description.asTemplate;
 
       // then
-      assert.deepEqual(template, [
-        Component,
-        [
-          'div',
-        ],
-        [
-          'span',
-        ],
-      ]);
+      assert.deepEqual(template, [Component, ['div'], ['span']]);
     });
 
     it('returns template of Component with properties and children', () => {
-
       // given
       const props = {
         foo: 'bar',
@@ -154,29 +129,16 @@ describe('Description', () => {
       const spanDescription = new ElementDescription('span');
       const description = new ComponentDescription(Component);
       description.props = props;
-      description.children = [
-        divDescription,
-        spanDescription,
-      ];
+      description.children = [divDescription, spanDescription];
 
       // when
       const template = description.asTemplate;
 
       // then
-      assert.deepEqual(template, [
-        Component,
-        props,
-        [
-          'div',
-        ],
-        [
-          'span',
-        ],
-      ]);
+      assert.deepEqual(template, [Component, props, ['div'], ['span']]);
     });
 
     it('returns template of empty Element', () => {
-
       // given
       const description = new ElementDescription('section');
 
@@ -188,7 +150,6 @@ describe('Description', () => {
     });
 
     it('returns template of text Element', () => {
-
       // given
       const text = 'text';
       const description = new ElementDescription('section');
@@ -202,7 +163,6 @@ describe('Description', () => {
     });
 
     it('returns template of Element with children', () => {
-
       // given
       const componentDescription = new ComponentDescription(Component);
       const description = new ElementDescription('section');
@@ -212,18 +172,11 @@ describe('Description', () => {
       const template = description.asTemplate;
 
       // then
-      assert.deepEqual(template, [
-        'section',
-        [
-          Component,
-        ],
-      ]);
+      assert.deepEqual(template, ['section', [Component]]);
     });
 
     describe('returns template of Element', () => {
-
       it('=> with key', () => {
-
         // given
         const key = 'key';
         const description = Template.describe([
@@ -246,7 +199,6 @@ describe('Description', () => {
       });
 
       it('=> with class', () => {
-
         // given
         const classes = ['one', 'two', 'three'];
         const description = Template.describe([
@@ -269,7 +221,6 @@ describe('Description', () => {
       });
 
       it('=> with style', () => {
-
         // given
         const description = Template.describe([
           'section',
@@ -296,7 +247,6 @@ describe('Description', () => {
       });
 
       it('=> with attributes', () => {
-
         // given
         const description = Template.describe([
           'section',
@@ -320,7 +270,6 @@ describe('Description', () => {
       });
 
       it('=> with dataset', () => {
-
         // given
         const description = Template.describe([
           'section',
@@ -348,7 +297,6 @@ describe('Description', () => {
       });
 
       it('=> with listeners', () => {
-
         // given
         const onChange = () => {};
         const onClick = () => {};
@@ -374,7 +322,6 @@ describe('Description', () => {
       });
 
       it('=> with properties', () => {
-
         // given
         const description = Template.describe([
           'video',
@@ -398,7 +345,6 @@ describe('Description', () => {
           },
         ]);
       });
-
     });
   });
 });

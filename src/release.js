@@ -14,30 +14,44 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-{
-  const Toolkit = loader.get('core/toolkit');
-  const nodes = loader.get('core/nodes');
+import Toolkit from './core/toolkit';
+import nodes from './core/nodes';
 
-  Object.assign(Toolkit.prototype, nodes, {
-    Browser: loader.get('core/browser'),
-    Description: loader.get('core/description'),
-    Diff: loader.get('core/diff'),
-    Dispatcher: loader.get('core/dispatcher'),
-    Lifecycle: loader.get('core/lifecycle'),
-    Patch: loader.get('core/patch'),
-    Plugins: loader.get('core/plugins'),
-    Reconciler: loader.get('core/reconciler'),
-    Renderer: loader.get('core/renderer'),
-    Sandbox: loader.get('core/sandbox'),
-    Service: loader.get('core/service'),
-    State: loader.get('core/state'),
-    Reducers: loader.get('core/reducers'),
-    Template: loader.get('core/template'),
-    VirtualDOM: loader.get('core/virtual-dom'),
-    utils: loader.get('core/utils'),
-    noop: () => {},
-  });
+import Browser from './core/browser';
+import Description from './core/description';
+import Diff from './core/diff';
+import Dispatcher from './core/dispatcher';
+import Lifecycle from './core/lifecycle';
+import Patch from './core/patch';
+import Plugins from './core/plugins';
+import Reconciler from './core/reconciler';
+import Renderer from './core/renderer';
+import Sandbox from './core/sandbox';
+import Service from './core/service';
+import State from './core/state';
+import Reducers from './core/reducers';
+import Template from './core/template';
+import VirtualDOM from './core/virtual-dom';
+import utils from './core/utils';
 
-  window.opr = window.opr || {};
-  window.opr.Toolkit = new Toolkit();
-}
+Object.assign(Toolkit.constructor.prototype, nodes, {
+  Browser,
+  Description,
+  Diff,
+  Dispatcher,
+  Lifecycle,
+  Patch,
+  Plugins,
+  Reconciler,
+  Renderer,
+  Sandbox,
+  Service,
+  State,
+  Reducers,
+  Template,
+  VirtualDOM,
+  utils,
+  noop: utils.noop,
+});
+
+export default Toolkit;

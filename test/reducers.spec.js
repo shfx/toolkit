@@ -1,9 +1,6 @@
 describe('Reducers', () => {
-
   describe('core reducer', () => {
-
     it('returns the state provided by the set state command', () => {
-
       // given
       const state = {
         foo: 'bar',
@@ -20,7 +17,6 @@ describe('Reducers', () => {
   });
 
   describe('combine reducers', () => {
-
     // given
     const DOUBLE = Symbol('double');
     const TRIPLE = Symbol('triple');
@@ -60,7 +56,6 @@ describe('Reducers', () => {
     };
 
     it('allows to use setState command from the core reducer', () => {
-
       // given
       const reducer = opr.Toolkit.Reducers.create(createRoot()).reducer;
       const state = {};
@@ -77,7 +72,6 @@ describe('Reducers', () => {
     });
 
     it('allows to use update command from the core reducer', () => {
-
       // given
       const reducer = opr.Toolkit.Reducers.create(createRoot()).reducer;
       const state = {
@@ -97,7 +91,6 @@ describe('Reducers', () => {
     });
 
     it('detects name conflicts', () => {
-
       sinon.stub(console, 'error');
 
       // given
@@ -123,7 +116,6 @@ describe('Reducers', () => {
     });
 
     it('chains reducers and merges commands', () => {
-
       // given
       class SomeRoot extends opr.Toolkit.Root {
         getReducers() {

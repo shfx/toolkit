@@ -1,18 +1,14 @@
 describe('Template => normalize props', () => {
-
-  const {
-    Template,
-  } = opr.Toolkit;
+  const {Template} = opr.Toolkit;
 
   const createComponentClass = defaultProps =>
-      (class Component extends opr.Toolkit.Component {
-        static get defaultProps() {
-          return defaultProps;
-        }
-      });
+    class Component extends opr.Toolkit.Component {
+      static get defaultProps() {
+        return defaultProps;
+      }
+    };
 
   it('returns original props when no default defined', () => {
-
     // given
     const props = {
       foo: 'bar',
@@ -21,28 +17,30 @@ describe('Template => normalize props', () => {
     const ComponentClass = createComponentClass();
 
     // when
-    const normalizedProps =
-        Template.normalizeComponentProps(props, ComponentClass);
+    const normalizedProps = Template.normalizeComponentProps(
+      props,
+      ComponentClass,
+    );
 
     // then
     assert.deepEqual(normalizedProps, props);
   });
 
   it('returns an empty object when no empty props defined', () => {
-
     // given
     const ComponentClass = createComponentClass();
 
     // when
-    const normalizedProps =
-        Template.normalizeComponentProps(undefined, ComponentClass);
+    const normalizedProps = Template.normalizeComponentProps(
+      undefined,
+      ComponentClass,
+    );
 
     // then
     assert.deepEqual(normalizedProps, {});
   });
 
   it('overrides undefined values', () => {
-
     // given
     const props = {
       foo: undefined,
@@ -53,8 +51,10 @@ describe('Template => normalize props', () => {
     });
 
     // when
-    const normalizedProps =
-        Template.normalizeComponentProps(props, ComponentClass);
+    const normalizedProps = Template.normalizeComponentProps(
+      props,
+      ComponentClass,
+    );
 
     // then
     assert.deepEqual(normalizedProps, {
@@ -63,7 +63,6 @@ describe('Template => normalize props', () => {
   });
 
   it('does not override falsy values', () => {
-
     // given
     const props = {
       foo: null,
@@ -78,15 +77,16 @@ describe('Template => normalize props', () => {
     });
 
     // when
-    const normalizedProps =
-        Template.normalizeComponentProps(props, ComponentClass);
+    const normalizedProps = Template.normalizeComponentProps(
+      props,
+      ComponentClass,
+    );
 
     // then
     assert.deepEqual(normalizedProps, props);
   });
 
   it('does not override truthy values', () => {
-
     // given
     const props = {
       foo: {},
@@ -101,8 +101,10 @@ describe('Template => normalize props', () => {
     });
 
     // when
-    const normalizedProps =
-        Template.normalizeComponentProps(props, ComponentClass);
+    const normalizedProps = Template.normalizeComponentProps(
+      props,
+      ComponentClass,
+    );
 
     // then
     assert.deepEqual(normalizedProps, props);

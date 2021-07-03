@@ -1,22 +1,13 @@
 describe('Virtual DOM', () => {
-
-  const {
-    VirtualDOM,
-    Template,
-  } = opr.Toolkit;
+  const {VirtualDOM, Template} = opr.Toolkit;
 
   const render = (ComponentClass, props = {}) => {
-    const description = Template.describe([
-      ComponentClass,
-      props,
-    ]);
+    const description = Template.describe([ComponentClass, props]);
     return VirtualDOM.createFromDescription(description);
   };
 
   describe('=> render component', () => {
-
     it('creates a leaf with a single element', () => {
-
       // given
       class LeafComponent extends opr.Toolkit.Component {
         render() {
@@ -47,7 +38,6 @@ describe('Virtual DOM', () => {
     });
 
     it('creates a leaf with nested elements', () => {
-
       // given
       class NestedElements extends opr.Toolkit.Component {
         render() {
@@ -115,7 +105,6 @@ describe('Virtual DOM', () => {
     });
 
     it('creates a branch with nested components', () => {
-
       // given
       class Application extends opr.Toolkit.Component {
         render() {
@@ -191,6 +180,5 @@ describe('Virtual DOM', () => {
       assert.equal(divElement.parentNode, spanElement);
       assert.equal(paragraphElement.parentNode, divElement);
     });
-
   });
 });

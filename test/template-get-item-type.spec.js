@@ -1,8 +1,5 @@
 describe('Template => get item type', () => {
-
-  const {
-    Template,
-  } = opr.Toolkit;
+  const {Template} = opr.Toolkit;
 
   it('returns "string" for a string', () => {
     assert.equal(Template.getItemType('foo'), 'string');
@@ -38,7 +35,10 @@ describe('Template => get item type', () => {
   });
 
   it('returns "function" for a function', () => {
-    assert.equal(Template.getItemType(props => null), 'function');
+    assert.equal(
+      Template.getItemType(props => null),
+      'function',
+    );
   });
 
   it('returns "component" for a component class', () => {

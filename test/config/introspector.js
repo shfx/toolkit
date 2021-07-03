@@ -1,11 +1,10 @@
 const introspect = async () => {
-
   await loadToolkit();
   mocha.setup('bdd');
 
   opr.Toolkit.configure({
-     plugins: [],
-     debug: true,
+    plugins: [],
+    debug: true,
   });
 
   const esImport = path => eval(`import ('${path}')`);

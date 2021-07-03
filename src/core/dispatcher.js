@@ -14,93 +14,91 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-{
+import Renderer from './renderer';
+import utils from './utils';
 
-  const Mode = {
-    QUEUE: Symbol('queue-commands'),
-    EXECUTE: Symbol('execute-commands'),
-    IGNORE: Symbol('ignore-commands'),
-  };
+const Mode = {
+  QUEUE: Symbol('queue-commands'),
+  EXECUTE: Symbol('execute-commands'),
+  IGNORE: Symbol('ignore-commands'),
+};
 
-  class Dispatcher {
+export default class Dispatcher {
+  static create(root) {
+    return new Dispatcher(root);
+  }
 
-    static create(root) {
-      return new Dispatcher(root);
-    }
+  constructor(root) {
+    const state = root.state;
+    const commands = state.reducer.commands;
 
-    constructor(root) {
-      const state = root.state;
-      const commands = state.reducer.commands;
+    this.names = Object.keys(commands);
+    this.queue = [];
 
-      this.names = Object.keys(commands);
-      this.queue = [];
+    this.execute = command => {
+      const prevState = state.current;
+      const nextState = state.reducer(prevState, command);
+      Renderer.update(root, prevState, nextState, command);
+    };
 
-      this.execute = command => {
-        const prevState = state.current;
-        const nextState = state.reducer(prevState, command);
-        opr.Toolkit.Renderer.update(root, prevState, nextState, command);
-      };
+    this.queueIncoming = () => {
+      this.mode = Mode.QUEUE;
+    };
 
-      this.queueIncoming = () => {
-        this.mode = Mode.QUEUE;
-      }
-
-      this.executeIncoming = () => {
-        this.mode = Mode.EXECUTE;
-      };
-
-      this.ignoreIncoming = () => {
-        this.mode = Mode.IGNORE;
-      };
-
+    this.executeIncoming = () => {
       this.mode = Mode.EXECUTE;
-      let level = 0;
-      for (const name of this.names) {
-        this[name] = async (...args) => {
-          if (this.mode === Mode.IGNORE) {
-            level = 0;
-            return false;
-          }
-          if (this.mode === Mode.QUEUE) {
-            let done;
-            const donePromise = new Promise(resolve => {
-              done = resolve;
-            });
-            this.queue.push({
-              name,
-              args,
-              done,
-            });
-            return donePromise;
-          }
-          const command = commands[name](...args);
-          this.execute(command);
-          if (this.queue.length) {
-            level = level + 1;
-            if (level >= 3) {
-              throw new Error(
-                  'Too many cycles updating state in lifecycle methods!');
-            }
-            const calls = [...this.queue];
-            setTimeout(() => {
-              for (const {name, args, done} of calls) {
-                this[name](...args);
-                done();
-              }
-            });
-            this.queue.length = 0;
-          } else {
-            level = 0;
-            return true;
-          }
-        };
-      }
-    }
+    };
 
-    destroy() {
-      this.execute = opr.Toolkit.noop;
+    this.ignoreIncoming = () => {
+      this.mode = Mode.IGNORE;
+    };
+
+    this.mode = Mode.EXECUTE;
+    let level = 0;
+    for (const name of this.names) {
+      this[name] = async (...args) => {
+        if (this.mode === Mode.IGNORE) {
+          level = 0;
+          return false;
+        }
+        if (this.mode === Mode.QUEUE) {
+          let done;
+          const donePromise = new Promise(resolve => {
+            done = resolve;
+          });
+          this.queue.push({
+            name,
+            args,
+            done,
+          });
+          return donePromise;
+        }
+        const command = commands[name](...args);
+        this.execute(command);
+        if (this.queue.length) {
+          level = level + 1;
+          if (level >= 3) {
+            throw new Error(
+              'Too many cycles updating state in lifecycle methods!',
+            );
+          }
+          const calls = [...this.queue];
+          setTimeout(() => {
+            for (const {name, args, done} of calls) {
+              this[name](...args);
+              done();
+            }
+          });
+          this.queue.length = 0;
+        } else {
+          level = 0;
+          return true;
+        }
+      };
     }
   }
 
-  module.exports = Dispatcher;
+  destroy() {
+    this.execute = utils.noop;
+  }
 }

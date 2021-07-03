@@ -1,7 +1,5 @@
 describe('Toolkit', () => {
-
   it('calls lifecycle methods in proper order', async () => {
-
     // given
     const lifecycle = [];
 
@@ -64,7 +62,6 @@ describe('Toolkit', () => {
   });
 
   it('tracks rendered root components', async () => {
-
     // given
     class MainRoot extends opr.Toolkit.Root {
       render() {

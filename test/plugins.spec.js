@@ -1,14 +1,11 @@
 describe('Plugins', () => {
-
   const plugin = {
     name: 'plugin',
     install: sinon.stub().returns(opr.Toolkit.noop),
   };
 
   describe('=> Install', () => {
-
     it('installs plugin on the root component', async () => {
-
       // given
       opr.Toolkit.reset();
       await opr.Toolkit.configure({

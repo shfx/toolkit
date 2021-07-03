@@ -1,11 +1,5 @@
 describe('Diff => calculate patches', () => {
-
-  const {
-    Diff,
-    Patch,
-    Template,
-    VirtualDOM,
-  } = opr.Toolkit;
+  const {Diff, Patch, Template, VirtualDOM} = opr.Toolkit;
 
   class Root extends opr.Toolkit.Root {
     render() {
@@ -17,8 +11,7 @@ describe('Diff => calculate patches', () => {
     render() {
       return this.children[0] || null;
     }
-    onUpdated() {
-    }
+    onUpdated() {}
   }
 
   class Subcomponent extends opr.Toolkit.Component {
@@ -46,7 +39,6 @@ describe('Diff => calculate patches', () => {
   };
 
   describe('create key', () => {
-
     it('creates valid string key for indices', () => {
       assert.equal(Diff.createKey(10), '00000010');
       assert.equal(Diff.createKey(999), '00000999');
@@ -55,25 +47,20 @@ describe('Diff => calculate patches', () => {
   });
 
   describe('=> on an Element', () => {
-
     const renderNodeAndDescription = (currentTemplate, nextTemplate) => {
       const root = createRootInstance(Root);
       const node = VirtualDOM.createFromDescription(
-          Template.describe(currentTemplate), root);
+        Template.describe(currentTemplate),
+        root,
+      );
       root.setContent(node);
       const description = Template.describe(nextTemplate);
-      return [
-        node,
-        description,
-      ];
+      return [node, description];
     };
 
     it('adds an attribute', () => {
-
       // given
-      const template = [
-        'input',
-      ];
+      const template = ['input'];
       const nextTemplate = [
         'input',
         {
@@ -82,8 +69,10 @@ describe('Diff => calculate patches', () => {
       ];
 
       // when
-      const [element, description] =
-          renderNodeAndDescription(template, nextTemplate);
+      const [element, description] = renderNodeAndDescription(
+        template,
+        nextTemplate,
+      );
       const patches = calculatePatches(element, description);
 
       // then
@@ -97,7 +86,6 @@ describe('Diff => calculate patches', () => {
     });
 
     it('replaces an attribute', () => {
-
       // given
       const template = [
         'button',
@@ -113,8 +101,10 @@ describe('Diff => calculate patches', () => {
       ];
 
       // when
-      const [element, description] =
-          renderNodeAndDescription(template, nextTemplate);
+      const [element, description] = renderNodeAndDescription(
+        template,
+        nextTemplate,
+      );
       const patches = calculatePatches(element, description);
 
       // then
@@ -128,7 +118,6 @@ describe('Diff => calculate patches', () => {
     });
 
     it('removes an attribute', () => {
-
       // given
       const template = [
         'button',
@@ -136,14 +125,13 @@ describe('Diff => calculate patches', () => {
           name: 'prev',
         },
       ];
-      const nextTemplate = [
-        'button',
-        {},
-      ];
+      const nextTemplate = ['button', {}];
 
       // when
-      const [element, description] =
-          renderNodeAndDescription(template, nextTemplate);
+      const [element, description] = renderNodeAndDescription(
+        template,
+        nextTemplate,
+      );
       const patches = calculatePatches(element, description);
 
       // then
@@ -156,12 +144,8 @@ describe('Diff => calculate patches', () => {
     });
 
     it('adds a data attribute', () => {
-
       // given
-      const template = [
-        'input',
-        {},
-      ];
+      const template = ['input', {}];
       const nextTemplate = [
         'input',
         {
@@ -172,8 +156,10 @@ describe('Diff => calculate patches', () => {
       ];
 
       // when
-      const [element, description] =
-          renderNodeAndDescription(template, nextTemplate);
+      const [element, description] = renderNodeAndDescription(
+        template,
+        nextTemplate,
+      );
       const patches = calculatePatches(element, description);
 
       assert.equal(patches.length, 2);
@@ -186,7 +172,6 @@ describe('Diff => calculate patches', () => {
     });
 
     it('replaces a data attribute', () => {
-
       // given
       const template = [
         'div',
@@ -206,8 +191,10 @@ describe('Diff => calculate patches', () => {
       ];
 
       // when
-      const [element, description] =
-          renderNodeAndDescription(template, nextTemplate);
+      const [element, description] = renderNodeAndDescription(
+        template,
+        nextTemplate,
+      );
       const patches = calculatePatches(element, description);
 
       assert.equal(patches.length, 2);
@@ -220,7 +207,6 @@ describe('Diff => calculate patches', () => {
     });
 
     it('removes a data attribute', () => {
-
       // given
       const template = [
         'div',
@@ -233,8 +219,10 @@ describe('Diff => calculate patches', () => {
       const nextTemplate = ['div'];
 
       // when
-      const [element, description] =
-          renderNodeAndDescription(template, nextTemplate);
+      const [element, description] = renderNodeAndDescription(
+        template,
+        nextTemplate,
+      );
       const patches = calculatePatches(element, description);
 
       assert.equal(patches.length, 2);
@@ -244,18 +232,22 @@ describe('Diff => calculate patches', () => {
     });
 
     it('adds a style property', () => {
-
       // given
       const template = ['input', {}];
-      const nextTemplate = ['input', {
-        style: {
-          width: [100, 'px'],
+      const nextTemplate = [
+        'input',
+        {
+          style: {
+            width: [100, 'px'],
+          },
         },
-      }];
+      ];
 
       // when
-      const [element, description] =
-          renderNodeAndDescription(template, nextTemplate);
+      const [element, description] = renderNodeAndDescription(
+        template,
+        nextTemplate,
+      );
       const patches = calculatePatches(element, description);
 
       assert.equal(patches.length, 2);
@@ -268,7 +260,6 @@ describe('Diff => calculate patches', () => {
     });
 
     it('replaces a style property', () => {
-
       // given
       const template = [
         'div',
@@ -288,8 +279,10 @@ describe('Diff => calculate patches', () => {
       ];
 
       // when
-      const [element, description] =
-          renderNodeAndDescription(template, nextTemplate);
+      const [element, description] = renderNodeAndDescription(
+        template,
+        nextTemplate,
+      );
       const patches = calculatePatches(element, description);
 
       assert.equal(patches.length, 2);
@@ -302,7 +295,6 @@ describe('Diff => calculate patches', () => {
     });
 
     it('removes a style property', () => {
-
       // given
       const template = [
         'div',
@@ -315,8 +307,10 @@ describe('Diff => calculate patches', () => {
       const nextTemplate = ['div'];
 
       // when
-      const [element, description] =
-          renderNodeAndDescription(template, nextTemplate);
+      const [element, description] = renderNodeAndDescription(
+        template,
+        nextTemplate,
+      );
       const patches = calculatePatches(element, description);
 
       assert.equal(patches.length, 2);
@@ -328,7 +322,6 @@ describe('Diff => calculate patches', () => {
     });
 
     it('adds a class name', () => {
-
       // given
       const template = [
         'div',
@@ -344,8 +337,10 @@ describe('Diff => calculate patches', () => {
       ];
 
       // when
-      const [element, description] =
-          renderNodeAndDescription(template, nextTemplate);
+      const [element, description] = renderNodeAndDescription(
+        template,
+        nextTemplate,
+      );
       const patches = calculatePatches(element, description);
 
       assert.equal(patches.length, 2);
@@ -357,7 +352,6 @@ describe('Diff => calculate patches', () => {
     });
 
     it('removes a class name', () => {
-
       // given
       const template = [
         'div',
@@ -365,14 +359,13 @@ describe('Diff => calculate patches', () => {
           class: 'some-name',
         },
       ];
-      const nextTemplate = [
-        'div',
-        {},
-      ];
+      const nextTemplate = ['div', {}];
 
       // when
-      const [element, description] =
-          renderNodeAndDescription(template, nextTemplate);
+      const [element, description] = renderNodeAndDescription(
+        template,
+        nextTemplate,
+      );
       const patches = calculatePatches(element, description);
 
       assert.equal(patches.length, 2);
@@ -384,7 +377,6 @@ describe('Diff => calculate patches', () => {
     });
 
     it('adds a listener', () => {
-
       // given
       const listener = () => {};
 
@@ -392,8 +384,10 @@ describe('Diff => calculate patches', () => {
       const nextTemplate = ['span', {onClick: listener}];
 
       // when
-      const [element, description] =
-          renderNodeAndDescription(template, nextTemplate);
+      const [element, description] = renderNodeAndDescription(
+        template,
+        nextTemplate,
+      );
       const patches = calculatePatches(element, description);
 
       // then
@@ -407,7 +401,6 @@ describe('Diff => calculate patches', () => {
     });
 
     it('replaces a listener', () => {
-
       // given
       const listener = () => {};
       const anotherListener = () => {};
@@ -426,8 +419,10 @@ describe('Diff => calculate patches', () => {
       ];
 
       // when
-      const [element, description] =
-          renderNodeAndDescription(template, nextTemplate);
+      const [element, description] = renderNodeAndDescription(
+        template,
+        nextTemplate,
+      );
       const patches = calculatePatches(element, description);
 
       // then
@@ -442,7 +437,6 @@ describe('Diff => calculate patches', () => {
     });
 
     it('removes a listener', () => {
-
       // given
       const listener = () => {};
 
@@ -452,14 +446,13 @@ describe('Diff => calculate patches', () => {
           onClick: listener,
         },
       ];
-      const nextTemplate = [
-        'span',
-        {},
-      ];
+      const nextTemplate = ['span', {}];
 
       // when
-      const [element, description] =
-          renderNodeAndDescription(template, nextTemplate);
+      const [element, description] = renderNodeAndDescription(
+        template,
+        nextTemplate,
+      );
       const patches = calculatePatches(element, description);
 
       // then
@@ -473,11 +466,8 @@ describe('Diff => calculate patches', () => {
     });
 
     it('sets property', () => {
-
       // given
-      const template = [
-        'video',
-      ];
+      const template = ['video'];
       const nextTemplate = [
         'video',
         {
@@ -488,8 +478,10 @@ describe('Diff => calculate patches', () => {
       ];
 
       // when
-      const [element, description] =
-          renderNodeAndDescription(template, nextTemplate);
+      const [element, description] = renderNodeAndDescription(
+        template,
+        nextTemplate,
+      );
       const patches = calculatePatches(element, description);
 
       // then
@@ -503,7 +495,6 @@ describe('Diff => calculate patches', () => {
     });
 
     it('deletes property', () => {
-
       // given
       const template = [
         'video',
@@ -513,13 +504,13 @@ describe('Diff => calculate patches', () => {
           },
         },
       ];
-      const nextTemplate = [
-        'video',
-      ];
+      const nextTemplate = ['video'];
 
       // when
-      const [element, description] =
-          renderNodeAndDescription(template, nextTemplate);
+      const [element, description] = renderNodeAndDescription(
+        template,
+        nextTemplate,
+      );
       const patches = calculatePatches(element, description);
 
       // then
@@ -532,7 +523,6 @@ describe('Diff => calculate patches', () => {
     });
 
     it('replaces property', () => {
-
       // given
       const template = [
         'span',
@@ -552,8 +542,10 @@ describe('Diff => calculate patches', () => {
       ];
 
       // when
-      const [element, description] =
-          renderNodeAndDescription(template, nextTemplate);
+      const [element, description] = renderNodeAndDescription(
+        template,
+        nextTemplate,
+      );
       const patches = calculatePatches(element, description);
 
       // then
@@ -567,7 +559,6 @@ describe('Diff => calculate patches', () => {
     });
 
     it('adds, removes and replaces properties', () => {
-
       // given
       const template = [
         'span',
@@ -589,8 +580,10 @@ describe('Diff => calculate patches', () => {
       ];
 
       // when
-      const [element, description] =
-          renderNodeAndDescription(template, nextTemplate);
+      const [element, description] = renderNodeAndDescription(
+        template,
+        nextTemplate,
+      );
       const patches = calculatePatches(element, description);
 
       // then
@@ -614,7 +607,6 @@ describe('Diff => calculate patches', () => {
     });
 
     describe('reconcile children', () => {
-
       const assertInsertChildNode = (patch, id, at) => {
         assert.equal(patch.type, Patch.Type.INSERT_CHILD);
         if (typeof id === 'function') {
@@ -666,38 +658,44 @@ describe('Diff => calculate patches', () => {
       // };
 
       const createChildren = ({keys}) => ({
-        from: (...items) => items.map(name => [name, {
-                                        key: (keys === true ? name : undefined),
-                                      }]),
+        from: (...items) =>
+          items.map(name => [
+            name,
+            {
+              key: keys === true ? name : undefined,
+            },
+          ]),
       });
 
       describe('=> with keys', () => {
-
-        const getChildren = (...items) => createChildren({
-                                            keys: true,
-                                          }).from(...items);
+        const getChildren = (...items) =>
+          createChildren({
+            keys: true,
+          }).from(...items);
 
         it('throws an error for non-unique keys', () => {
-
           // given
           const template = ['section', ...getChildren('p', 'div', 'span', 'p')];
           const nextTemplate = ['section', ...getChildren('div', 'span', 'p')];
 
           // when
-          const [element, description] =
-              renderNodeAndDescription(template, nextTemplate);
+          const [element, description] = renderNodeAndDescription(
+            template,
+            nextTemplate,
+          );
           assert.throws(() => calculatePatches(element, description), Error);
         });
 
         it('inserts element at the beginning', () => {
-
           // given
           const template = ['section', ...getChildren('div', 'span')];
           const nextTemplate = ['section', ...getChildren('X', 'div', 'span')];
 
           // when
-          const [element, description] =
-              renderNodeAndDescription(template, nextTemplate);
+          const [element, description] = renderNodeAndDescription(
+            template,
+            nextTemplate,
+          );
           const patches = calculatePatches(element, description);
 
           // then
@@ -708,14 +706,15 @@ describe('Diff => calculate patches', () => {
         });
 
         it('inserts element at the end', () => {
-
           // given
           const template = ['section', ...getChildren('div', 'span')];
           const nextTemplate = ['section', ...getChildren('div', 'span', 'X')];
 
           // when
-          const [element, description] =
-              renderNodeAndDescription(template, nextTemplate);
+          const [element, description] = renderNodeAndDescription(
+            template,
+            nextTemplate,
+          );
           const patches = calculatePatches(element, description);
 
           // then
@@ -726,16 +725,21 @@ describe('Diff => calculate patches', () => {
         });
 
         it('moves an element up', () => {
-
           // given
-          const template =
-              ['section', ...getChildren('section', 'p', 'div', 'X', 'span')];
-          const nextTemplate =
-              ['section', ...getChildren('section', 'X', 'p', 'div', 'span')];
+          const template = [
+            'section',
+            ...getChildren('section', 'p', 'div', 'X', 'span'),
+          ];
+          const nextTemplate = [
+            'section',
+            ...getChildren('section', 'X', 'p', 'div', 'span'),
+          ];
 
           // when
-          const [element, description] =
-              renderNodeAndDescription(template, nextTemplate);
+          const [element, description] = renderNodeAndDescription(
+            template,
+            nextTemplate,
+          );
           const patches = calculatePatches(element, description);
 
           // then
@@ -746,16 +750,21 @@ describe('Diff => calculate patches', () => {
         });
 
         it('moves an element down', () => {
-
           // given
-          const template =
-              ['section', ...getChildren('section', 'X', 'p', 'div', 'span')];
-          const nextTemplate =
-              ['section', ...getChildren('section', 'p', 'div', 'X', 'span')];
+          const template = [
+            'section',
+            ...getChildren('section', 'X', 'p', 'div', 'span'),
+          ];
+          const nextTemplate = [
+            'section',
+            ...getChildren('section', 'p', 'div', 'X', 'span'),
+          ];
 
           // when
-          const [element, description] =
-              renderNodeAndDescription(template, nextTemplate);
+          const [element, description] = renderNodeAndDescription(
+            template,
+            nextTemplate,
+          );
           const patches = calculatePatches(element, description);
 
           // then
@@ -766,16 +775,21 @@ describe('Diff => calculate patches', () => {
         });
 
         it('moves an element to the beginning', () => {
-
           // given
-          const template =
-              ['section', ...getChildren('section', 'p', 'div', 'span', 'X')];
-          const nextTemplate =
-              ['section', ...getChildren('X', 'section', 'p', 'div', 'span')];
+          const template = [
+            'section',
+            ...getChildren('section', 'p', 'div', 'span', 'X'),
+          ];
+          const nextTemplate = [
+            'section',
+            ...getChildren('X', 'section', 'p', 'div', 'span'),
+          ];
 
           // when
-          const [element, description] =
-              renderNodeAndDescription(template, nextTemplate);
+          const [element, description] = renderNodeAndDescription(
+            template,
+            nextTemplate,
+          );
           const patches = calculatePatches(element, description);
 
           // then
@@ -786,16 +800,21 @@ describe('Diff => calculate patches', () => {
         });
 
         it('moves an element to the end', () => {
-
           // given
-          const template =
-              ['section', ...getChildren('X', 'section', 'p', 'div', 'span')];
-          const nextTemplate =
-              ['section', ...getChildren('section', 'p', 'div', 'span', 'X')];
+          const template = [
+            'section',
+            ...getChildren('X', 'section', 'p', 'div', 'span'),
+          ];
+          const nextTemplate = [
+            'section',
+            ...getChildren('section', 'p', 'div', 'span', 'X'),
+          ];
 
           // when
-          const [element, description] =
-              renderNodeAndDescription(template, nextTemplate);
+          const [element, description] = renderNodeAndDescription(
+            template,
+            nextTemplate,
+          );
           const patches = calculatePatches(element, description);
 
           // then
@@ -806,16 +825,21 @@ describe('Diff => calculate patches', () => {
         });
 
         it('swaps two elements', () => {
-
           // given
-          const template =
-              ['section', ...getChildren('section', 'X', 'div', 'Y', 'span')];
-          const nextTemplate =
-              ['section', ...getChildren('section', 'Y', 'div', 'X', 'span')];
+          const template = [
+            'section',
+            ...getChildren('section', 'X', 'div', 'Y', 'span'),
+          ];
+          const nextTemplate = [
+            'section',
+            ...getChildren('section', 'Y', 'div', 'X', 'span'),
+          ];
 
           // when
-          const [element, description] =
-              renderNodeAndDescription(template, nextTemplate);
+          const [element, description] = renderNodeAndDescription(
+            template,
+            nextTemplate,
+          );
           const patches = calculatePatches(element, description);
 
           // then
@@ -827,7 +851,6 @@ describe('Diff => calculate patches', () => {
         });
 
         it('swaps three elements', () => {
-
           // given
           const template = [
             'section',
@@ -839,8 +862,10 @@ describe('Diff => calculate patches', () => {
           ];
 
           // when
-          const [element, description] =
-              renderNodeAndDescription(template, nextTemplate);
+          const [element, description] = renderNodeAndDescription(
+            template,
+            nextTemplate,
+          );
           const patches = calculatePatches(element, description);
 
           // then
@@ -853,16 +878,21 @@ describe('Diff => calculate patches', () => {
         });
 
         it('removes an element', () => {
-
           // given
-          const template =
-              ['section', ...getChildren('section', 'p', 'div', 'X', 'span')];
-          const nextTemplate =
-              ['section', ...getChildren('section', 'p', 'div', 'span')];
+          const template = [
+            'section',
+            ...getChildren('section', 'p', 'div', 'X', 'span'),
+          ];
+          const nextTemplate = [
+            'section',
+            ...getChildren('section', 'p', 'div', 'span'),
+          ];
 
           // when
-          const [element, description] =
-              renderNodeAndDescription(template, nextTemplate);
+          const [element, description] = renderNodeAndDescription(
+            template,
+            nextTemplate,
+          );
           const patches = calculatePatches(element, description);
 
           // then
@@ -873,16 +903,21 @@ describe('Diff => calculate patches', () => {
         });
 
         it('inserts and removes elements', () => {
-
           // given
-          const template =
-              ['section', ...getChildren('section', 'p', 'div', 'X', 'span')];
-          const nextTemplate =
-              ['section', ...getChildren('section', 'Y', 'p', 'div', 'span')];
+          const template = [
+            'section',
+            ...getChildren('section', 'p', 'div', 'X', 'span'),
+          ];
+          const nextTemplate = [
+            'section',
+            ...getChildren('section', 'Y', 'p', 'div', 'span'),
+          ];
 
           // when
-          const [element, description] =
-              renderNodeAndDescription(template, nextTemplate);
+          const [element, description] = renderNodeAndDescription(
+            template,
+            nextTemplate,
+          );
           const patches = calculatePatches(element, description);
 
           // then
@@ -894,7 +929,6 @@ describe('Diff => calculate patches', () => {
         });
 
         it('inserts, moves and removes elements', () => {
-
           // given
           const template = [
             'section',
@@ -906,8 +940,10 @@ describe('Diff => calculate patches', () => {
           ];
 
           // when
-          const [element, description] =
-              renderNodeAndDescription(template, nextTemplate);
+          const [element, description] = renderNodeAndDescription(
+            template,
+            nextTemplate,
+          );
           const patches = calculatePatches(element, description);
 
           // then
@@ -922,25 +958,19 @@ describe('Diff => calculate patches', () => {
       });
 
       describe('=> without keys', () => {
-
         const getChildren = (...items) =>
-            createChildren({keys: false}).from(...items);
+          createChildren({keys: false}).from(...items);
 
         it('inserts an element', () => {
-
           // given
-          const template = [
-            'section',
-            ...getChildren('p', 'div'),
-          ];
-          const nextTemplate = [
-            'section',
-            ...getChildren('p', 'div', 'span'),
-          ];
+          const template = ['section', ...getChildren('p', 'div')];
+          const nextTemplate = ['section', ...getChildren('p', 'div', 'span')];
 
           // when
-          const [element, description] =
-              renderNodeAndDescription(template, nextTemplate);
+          const [element, description] = renderNodeAndDescription(
+            template,
+            nextTemplate,
+          );
           const patches = calculatePatches(element, description);
 
           // then
@@ -951,20 +981,15 @@ describe('Diff => calculate patches', () => {
         });
 
         it('removes an element', () => {
-
           // given
-          const template = [
-            'section',
-            ...getChildren('p', 'div', 'span'),
-          ];
-          const nextTemplate = [
-            'section',
-            ...getChildren('p', 'div'),
-          ];
+          const template = ['section', ...getChildren('p', 'div', 'span')];
+          const nextTemplate = ['section', ...getChildren('p', 'div')];
 
           // when
-          const [element, description] =
-              renderNodeAndDescription(template, nextTemplate);
+          const [element, description] = renderNodeAndDescription(
+            template,
+            nextTemplate,
+          );
           const patches = calculatePatches(element, description);
 
           // then
@@ -975,20 +1000,15 @@ describe('Diff => calculate patches', () => {
         });
 
         it('replaces reordered elements', () => {
-
           // given
-          const template = [
-            'section',
-            ...getChildren('p', 'div', 'span'),
-          ];
-          const nextTemplate = [
-            'section',
-            ...getChildren('div', 'span', 'p'),
-          ];
+          const template = ['section', ...getChildren('p', 'div', 'span')];
+          const nextTemplate = ['section', ...getChildren('div', 'span', 'p')];
 
           // when
-          const [element, description] =
-              renderNodeAndDescription(template, nextTemplate);
+          const [element, description] = renderNodeAndDescription(
+            template,
+            nextTemplate,
+          );
           const patches = calculatePatches(element, description);
 
           // then
@@ -1002,20 +1022,15 @@ describe('Diff => calculate patches', () => {
         });
 
         it('replaces and inserts elements', () => {
-
           // given
-          const template = [
-            'section',
-            ...getChildren('p', 'span'),
-          ];
-          const nextTemplate = [
-            'section',
-            ...getChildren('p', 'div', 'span'),
-          ];
+          const template = ['section', ...getChildren('p', 'span')];
+          const nextTemplate = ['section', ...getChildren('p', 'div', 'span')];
 
           // when
-          const [element, description] =
-              renderNodeAndDescription(template, nextTemplate);
+          const [element, description] = renderNodeAndDescription(
+            template,
+            nextTemplate,
+          );
           const patches = calculatePatches(element, description);
 
           // then
@@ -1027,20 +1042,15 @@ describe('Diff => calculate patches', () => {
         });
 
         it('replaces and removes elements', () => {
-
           // given
-          const template = [
-            'section',
-            ...getChildren('p', 'div', 'span'),
-          ];
-          const nextTemplate = [
-            'section',
-            ...getChildren('div', 'div'),
-          ];
+          const template = ['section', ...getChildren('p', 'div', 'span')];
+          const nextTemplate = ['section', ...getChildren('div', 'div')];
 
           // when
-          const [element, description] =
-              renderNodeAndDescription(template, nextTemplate);
+          const [element, description] = renderNodeAndDescription(
+            template,
+            nextTemplate,
+          );
           const patches = calculatePatches(element, description);
 
           // then
@@ -1052,22 +1062,16 @@ describe('Diff => calculate patches', () => {
         });
 
         describe('replaces an element', () => {
-
           it('with an element', () => {
-
             // given
-            const template = [
-              'section',
-              ...getChildren('p', 'div', 'span'),
-            ];
-            const nextTemplate = [
-              'section',
-              ...getChildren('p', 'div', 'a'),
-            ];
+            const template = ['section', ...getChildren('p', 'div', 'span')];
+            const nextTemplate = ['section', ...getChildren('p', 'div', 'a')];
 
             // when
-            const [element, description] =
-                renderNodeAndDescription(template, nextTemplate);
+            const [element, description] = renderNodeAndDescription(
+              template,
+              nextTemplate,
+            );
             const patches = calculatePatches(element, description);
 
             // then
@@ -1077,17 +1081,15 @@ describe('Diff => calculate patches', () => {
           });
 
           it('with a component', () => {
-
             // given
-            const template = [
-              'section',
-              ...getChildren('div', 'span'),
-            ];
+            const template = ['section', ...getChildren('div', 'span')];
             const nextTemplate = ['section', ...getChildren('div', Component)];
 
             // when
-            const [element, description] =
-                renderNodeAndDescription(template, nextTemplate);
+            const [element, description] = renderNodeAndDescription(
+              template,
+              nextTemplate,
+            );
             const patches = calculatePatches(element, description);
 
             // then
@@ -1098,9 +1100,7 @@ describe('Diff => calculate patches', () => {
         });
 
         describe('replaces a component', () => {
-
           it('with an element', () => {
-
             // given
             const template = [
               'section',
@@ -1112,8 +1112,10 @@ describe('Diff => calculate patches', () => {
             ];
 
             // when
-            const [element, description] =
-                renderNodeAndDescription(template, nextTemplate);
+            const [element, description] = renderNodeAndDescription(
+              template,
+              nextTemplate,
+            );
             const patches = calculatePatches(element, description);
 
             // then
@@ -1123,7 +1125,6 @@ describe('Diff => calculate patches', () => {
           });
 
           it('with a component', () => {
-
             // given
             const template = [
               'section',
@@ -1135,38 +1136,33 @@ describe('Diff => calculate patches', () => {
             ];
 
             // when
-            const [element, description] =
-                renderNodeAndDescription(template, nextTemplate);
+            const [element, description] = renderNodeAndDescription(
+              template,
+              nextTemplate,
+            );
             const patches = calculatePatches(element, description);
 
             // then
             assert.equal(patches.length, 2);
-            assertReplaceChildNode(
-                patches[0], Component, Subcomponent);
+            assertReplaceChildNode(patches[0], Component, Subcomponent);
             assertUpdatesNode(patches[1], element);
           });
         });
       });
 
       describe('update child nodes', () => {
-
         it('skips a component', () => {
-
           // given
           const props = {
             value: 'universal',
           };
-          const template = [
-            'section',
-            [
-              Component,
-              props,
-            ],
-          ];
+          const template = ['section', [Component, props]];
 
           // when
-          const [element, description] =
-              renderNodeAndDescription(template, template);
+          const [element, description] = renderNodeAndDescription(
+            template,
+            template,
+          );
           const patches = calculatePatches(element, description);
 
           // then
@@ -1174,33 +1170,22 @@ describe('Diff => calculate patches', () => {
         });
 
         it('updates a component', () => {
-
           // given
           const props = {
             value: 'old',
           };
-          const template = [
-            'section',
-            [
-              Component,
-              props,
-            ],
-          ];
+          const template = ['section', [Component, props]];
 
           const nextProps = {
             value: 'new',
           };
-          const nextTemplate = [
-            'section',
-            [
-              Component,
-              nextProps,
-            ],
-          ];
+          const nextTemplate = ['section', [Component, nextProps]];
 
           // when
-          const [element, description] =
-              renderNodeAndDescription(template, nextTemplate);
+          const [element, description] = renderNodeAndDescription(
+            template,
+            nextTemplate,
+          );
           const patches = calculatePatches(element, description);
 
           // then
@@ -1210,11 +1195,8 @@ describe('Diff => calculate patches', () => {
         });
 
         it('adds an attribute', () => {
-
           // given
-          const template = [
-            'textarea',
-          ];
+          const template = ['textarea'];
 
           const nextTemplate = [
             'textarea',
@@ -1224,8 +1206,10 @@ describe('Diff => calculate patches', () => {
           ];
 
           // when
-          const [element, description] =
-              renderNodeAndDescription(template, nextTemplate);
+          const [element, description] = renderNodeAndDescription(
+            template,
+            nextTemplate,
+          );
           const patches = calculatePatches(element, description);
 
           // then
@@ -1237,13 +1221,10 @@ describe('Diff => calculate patches', () => {
         });
 
         it('adds a listener', () => {
-
           // given
           const onClick = () => {};
 
-          const template = [
-            'section',
-          ];
+          const template = ['section'];
 
           const nextTemplate = [
             'section',
@@ -1253,8 +1234,10 @@ describe('Diff => calculate patches', () => {
           ];
 
           // when
-          const [element, description] =
-              renderNodeAndDescription(template, nextTemplate);
+          const [element, description] = renderNodeAndDescription(
+            template,
+            nextTemplate,
+          );
           const patches = calculatePatches(element, description);
 
           // then
@@ -1268,21 +1251,16 @@ describe('Diff => calculate patches', () => {
     });
 
     describe('set text content', () => {
-
       it('sets text on an empty element', () => {
+        const template = ['section'];
 
-        const template = [
-          'section',
-        ];
-
-        const nextTemplate = [
-          'section',
-          'some text',
-        ];
+        const nextTemplate = ['section', 'some text'];
 
         // when
-        const [element, description] =
-            renderNodeAndDescription(template, nextTemplate);
+        const [element, description] = renderNodeAndDescription(
+          template,
+          nextTemplate,
+        );
         const patches = calculatePatches(element, description);
 
         assert.equal(patches.length, 2);
@@ -1293,20 +1271,15 @@ describe('Diff => calculate patches', () => {
       });
 
       it('replaces existing text node with another text node', () => {
+        const template = ['section', 'some text'];
 
-        const template = [
-          'section',
-          'some text',
-        ];
-
-        const nextTemplate = [
-          'section',
-          'another text',
-        ];
+        const nextTemplate = ['section', 'another text'];
 
         // when
-        const [element, description] =
-            renderNodeAndDescription(template, nextTemplate);
+        const [element, description] = renderNodeAndDescription(
+          template,
+          nextTemplate,
+        );
         const patches = calculatePatches(element, description);
 
         assert.equal(patches.length, 2);
@@ -1317,22 +1290,15 @@ describe('Diff => calculate patches', () => {
       });
 
       it('replaces existing child element with text node', () => {
+        const template = ['section', ['div']];
 
-        const template = [
-          'section',
-          [
-            'div',
-          ],
-        ];
-
-        const nextTemplate = [
-          'section',
-          'some text',
-        ];
+        const nextTemplate = ['section', 'some text'];
 
         // when
-        const [element, description] =
-            renderNodeAndDescription(template, nextTemplate);
+        const [element, description] = renderNodeAndDescription(
+          template,
+          nextTemplate,
+        );
         const patches = calculatePatches(element, description);
 
         assert.equal(patches.length, 2);
@@ -1347,21 +1313,16 @@ describe('Diff => calculate patches', () => {
     });
 
     describe('remove text content', () => {
-
       it('removes existing text content', () => {
+        const template = ['section', 'some text'];
 
-        const template = [
-          'section',
-          'some text',
-        ];
-
-        const nextTemplate = [
-          'section',
-        ];
+        const nextTemplate = ['section'];
 
         // when
-        const [element, description] =
-            renderNodeAndDescription(template, nextTemplate);
+        const [element, description] = renderNodeAndDescription(
+          template,
+          nextTemplate,
+        );
         const patches = calculatePatches(element, description);
 
         assert.equal(patches.length, 2);
@@ -1371,22 +1332,15 @@ describe('Diff => calculate patches', () => {
       });
 
       it('replaces text content with child element', () => {
+        const template = ['section', 'some text'];
 
-        const template = [
-          'section',
-          'some text',
-        ];
-
-        const nextTemplate = [
-          'section',
-          [
-            'div',
-          ],
-        ];
+        const nextTemplate = ['section', ['div']];
 
         // when
-        const [element, description] =
-            renderNodeAndDescription(template, nextTemplate);
+        const [element, description] = renderNodeAndDescription(
+          template,
+          nextTemplate,
+        );
         const patches = calculatePatches(element, description);
 
         assert.equal(patches.length, 2);
@@ -1400,20 +1354,25 @@ describe('Diff => calculate patches', () => {
   });
 
   describe('=> on a Component', () => {
-
-    const renderComponentAndDescription =
-        (props, children, nextProps, nextChildren) => {
-          const root = createRootInstance(Root);
-          const component = VirtualDOM.createFromDescription(
-              Template.describe([Component, props, ...children]), root);
-          root.content = component;
-          const description =
-              Template.describe([Component, nextProps, ...nextChildren]);
-          return [
-            component,
-            description,
-          ];
-        };
+    const renderComponentAndDescription = (
+      props,
+      children,
+      nextProps,
+      nextChildren,
+    ) => {
+      const root = createRootInstance(Root);
+      const component = VirtualDOM.createFromDescription(
+        Template.describe([Component, props, ...children]),
+        root,
+      );
+      root.content = component;
+      const description = Template.describe([
+        Component,
+        nextProps,
+        ...nextChildren,
+      ]);
+      return [component, description];
+    };
 
     const assertComponentUpdate = (patch, component, props) => {
       assert.equal(patch.type, Patch.Type.UPDATE_NODE);
@@ -1422,7 +1381,6 @@ describe('Diff => calculate patches', () => {
     };
 
     it('adds an element', () => {
-
       // given
       const props = {};
       const children = [];
@@ -1430,18 +1388,14 @@ describe('Diff => calculate patches', () => {
       const nextProps = {
         child: true,
       };
-      const nextChildren = [
-        [
-          'div',
-        ],
-      ];
+      const nextChildren = [['div']];
 
       // when
       const [component, description] = renderComponentAndDescription(
-          props,
-          children,
-          nextProps,
-          nextChildren,
+        props,
+        children,
+        nextProps,
+        nextChildren,
       );
 
       const patches = calculatePatches(component, description);
@@ -1458,26 +1412,21 @@ describe('Diff => calculate patches', () => {
     });
 
     it('removes an element', () => {
-
       // given
       const props = {
         child: true,
       };
-      const children = [
-        [
-          'div',
-        ],
-      ];
+      const children = [['div']];
 
       const nextProps = {};
       const nextChildren = [];
 
       // when
       const [component, description] = renderComponentAndDescription(
-          props,
-          children,
-          nextProps,
-          nextChildren,
+        props,
+        children,
+        nextProps,
+        nextChildren,
       );
 
       const patches = calculatePatches(component, description);
@@ -1493,7 +1442,6 @@ describe('Diff => calculate patches', () => {
     });
 
     it('adds a component', () => {
-
       // given
       const props = {};
       const children = [];
@@ -1501,18 +1449,14 @@ describe('Diff => calculate patches', () => {
       const nextProps = {
         child: true,
       };
-      const nextChildren = [
-        [
-          Subcomponent,
-        ],
-      ];
+      const nextChildren = [[Subcomponent]];
 
       // when
       const [component, description] = renderComponentAndDescription(
-          props,
-          children,
-          nextProps,
-          nextChildren,
+        props,
+        children,
+        nextProps,
+        nextChildren,
       );
 
       const patches = calculatePatches(component, description);
@@ -1528,26 +1472,21 @@ describe('Diff => calculate patches', () => {
     });
 
     it('removes a component', () => {
-
       // given
       const props = {
         child: true,
       };
-      const children = [
-        [
-          Subcomponent,
-        ],
-      ];
+      const children = [[Subcomponent]];
 
       const nextProps = {};
       const nextChildren = [];
 
       // when
       const [component, description] = renderComponentAndDescription(
-          props,
-          children,
-          nextProps,
-          nextChildren,
+        props,
+        children,
+        nextProps,
+        nextChildren,
       );
 
       const patches = calculatePatches(component, description);
@@ -1563,34 +1502,24 @@ describe('Diff => calculate patches', () => {
     });
 
     describe('replaces a child element', () => {
-
       it('with an element', () => {
-
         // given
         const props = {
           child: 'div',
         };
-        const children = [
-          [
-            'div',
-          ],
-        ];
+        const children = [['div']];
 
         const nextProps = {
           child: 'span',
         };
-        const nextChildren = [
-          [
-            'span',
-          ],
-        ];
+        const nextChildren = [['span']];
 
         // when
         const [component, description] = renderComponentAndDescription(
-            props,
-            children,
-            nextProps,
-            nextChildren,
+          props,
+          children,
+          nextProps,
+          nextChildren,
         );
 
         const patches = calculatePatches(component, description);
@@ -1608,32 +1537,23 @@ describe('Diff => calculate patches', () => {
       });
 
       it('with a component', () => {
-
         // given
         const props = {
           child: 'div',
         };
-        const children = [
-          [
-            'div',
-          ],
-        ];
+        const children = [['div']];
 
         const nextProps = {
           child: 'component',
         };
-        const nextChildren = [
-          [
-            Subcomponent,
-          ],
-        ];
+        const nextChildren = [[Subcomponent]];
 
         // when
         const [component, description] = renderComponentAndDescription(
-            props,
-            children,
-            nextProps,
-            nextChildren,
+          props,
+          children,
+          nextProps,
+          nextChildren,
         );
 
         const patches = calculatePatches(component, description);
@@ -1649,36 +1569,25 @@ describe('Diff => calculate patches', () => {
 
         assertComponentUpdate(patches[1], component, nextProps);
       });
-
     });
 
     describe('replaces a child component', () => {
-
       it('with an element', () => {
-
         // given
         const props = {child: 'subcomponent'};
-        const children = [
-          [
-            Subcomponent,
-          ],
-        ];
+        const children = [[Subcomponent]];
 
         const nextProps = {
           child: 'div',
         };
-        const nextChildren = [
-          [
-            'div',
-          ],
-        ];
+        const nextChildren = [['div']];
 
         // when
         const [component, description] = renderComponentAndDescription(
-            props,
-            children,
-            nextProps,
-            nextChildren,
+          props,
+          children,
+          nextProps,
+          nextChildren,
         );
 
         const patches = calculatePatches(component, description);
@@ -1696,32 +1605,23 @@ describe('Diff => calculate patches', () => {
       });
 
       it('with a component', () => {
-
         // given
         const props = {
           child: 'subcomponent',
         };
-        const children = [
-          [
-            Subcomponent,
-          ],
-        ];
+        const children = [[Subcomponent]];
 
         const nextProps = {
           child: 'other-component',
         };
-        const nextChildren = [
-          [
-            OtherComponent,
-          ],
-        ];
+        const nextChildren = [[OtherComponent]];
 
         // when
         const [component, description] = renderComponentAndDescription(
-            props,
-            children,
-            nextProps,
-            nextChildren,
+          props,
+          children,
+          nextProps,
+          nextChildren,
         );
 
         const patches = calculatePatches(component, description);
